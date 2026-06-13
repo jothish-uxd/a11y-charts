@@ -1,0 +1,3600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accessible Charts — Open Source Prototype</title>
+  <style>
+    :root {
+      --bg: #eef2f4;
+      --surface: #ffffff;
+      --surface-soft: #f7f9fb;
+      --text: #1f2933;
+      --muted: #52616b;
+      --border: #d5dde3;
+      --border-strong: #b9c5cf;
+      --focus: #111827;
+      --accent: #315fdc;
+      --code-bg: #111827;
+      --code-text: #f9fafb;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      font-size: 90%;
+    }
+
+    a { color: var(--accent); }
+
+    .mobile-topbar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: #17202a;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255,255,255,.12);
+      padding: 12px 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .mobile-topbar strong {
+      display: block;
+      font-size: 1rem;
+      letter-spacing: -.02em;
+    }
+
+    .mobile-topbar span {
+      display: block;
+      margin-top: 2px;
+      color: #c7d2de;
+      font-size: .85rem;
+    }
+
+    .menu-button {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.08);
+      color: #ffffff;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .menu-button:focus-visible {
+      outline: 3px solid #ffffff;
+      outline-offset: 3px;
+    }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 252px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 25px 18px;
+      background: #17202a;
+      color: #ffffff;
+      border-right: 1px solid rgba(255,255,255,.12);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      margin-bottom: 32px;
+    }
+
+    .brand p {
+      margin: 10px 0 0;
+      color: #c7d2de;
+      line-height: 1.45;
+      font-size: .95rem;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 1.25rem;
+      letter-spacing: 0;
+    }
+
+    .nav-group {
+      margin: 24px 0 8px;
+      color: #aebdcb;
+      font-size: .88rem;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .tablist {
+      display: grid;
+      gap: 8px;
+    }
+
+    .tablist + .tablist {
+      margin-top: 8px;
+    }
+
+    .tab-button {
+      width: 100%;
+      appearance: none;
+      border: 1px solid transparent;
+      background: transparent;
+      color: #eef4fb;
+      border-radius: 10px;
+      padding: 11px 12px;
+      text-align: left;
+      cursor: pointer;
+      font: inherit;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tab-button span {
+      color: #94a3b8;
+      font-size: .8rem;
+    }
+
+    .tab-button:hover {
+      background: rgba(255,255,255,.08);
+    }
+
+    .tab-button[aria-selected="true"] {
+      background: #ffffff;
+      color: #17202a;
+      border-color: #ffffff;
+      font-weight: 700;
+    }
+
+    .tab-button[aria-selected="true"] span {
+      color: #52616b;
+    }
+
+    .tab-button:focus-visible,
+    .slice:focus-visible,
+    .copy-button:focus-visible {
+      outline: 3px solid #ffffff;
+      outline-offset: 3px;
+    }
+
+    .main {
+      padding: clamp(18px, 3.6vw, 47px);
+      min-width: 0;
+    }
+
+    .hero {
+      display: grid;
+      gap: 12px;
+      max-width: 1180px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--accent);
+      font-size: .95rem;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.25rem);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      margin: 0;
+      max-width: 76ch;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.55;
+    }
+
+    .panel {
+      display: none;
+      max-width: 1360px;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 4px 18px rgba(0,0,0,.1);
+      padding: clamp(18px, 3.6vw, 40px);
+    }
+
+    .card + .card {
+      margin-top: 24px;
+    }
+
+    .section-title {
+      margin: 0 0 10px;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: 0;
+      line-height: 1.15;
+    }
+
+    .section-copy {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 82ch;
+    }
+
+    .viz-layout {
+      margin-top: 32px;
+      display: grid;
+      grid-template-columns: minmax(290px, 470px) minmax(260px, 1fr);
+      align-items: center;
+      gap: clamp(28px, 6vw, 80px);
+    }
+
+    .chart-wrap {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-width: 0;
+    }
+
+    svg {
+      width: min(450px, 100%);
+      height: auto;
+      overflow: visible;
+    }
+
+    .center-label {
+      position: absolute;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .center-label strong {
+      display: block;
+      color: #5d6369;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+      margin-bottom: 4px;
+    }
+
+    .center-label span {
+      display: block;
+      font-size: clamp(2rem, 5vw, 3.1rem);
+      font-weight: 750;
+      letter-spacing: -0.05em;
+    }
+
+    .legend {
+      display: grid;
+      gap: 16px;
+      align-content: center;
+    }
+
+    .legend h2,
+    .legend h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+      color: var(--muted);
+      letter-spacing: 0;
+      font-weight: 650;
+    }
+
+    .legend-item {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 14px;
+      align-items: center;
+      color: #405563;
+      font-size: 1.02rem;
+    }
+
+    .legend-item strong {
+      display: block;
+      font-weight: 550;
+    }
+
+    .legend-item span:last-child,
+    .legend-item .value {
+      display: block;
+      margin-top: 4px;
+      font-weight: 750;
+      color: #405563;
+    }
+
+    .swatch {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,.1);
+      background: var(--swatch);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .swatch[data-pattern="dots"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.95) 2px, transparent 2.5px);
+      background-size: 9px 9px;
+    }
+
+    .swatch[data-pattern="vertical"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 6px, rgba(255,255,255,.95) 6px 10px);
+    }
+
+    .swatch[data-pattern="diagonalForward"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(255,255,255,.95) 6px 9px);
+    }
+
+    .swatch[data-pattern="crosshatch"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,.9) 7px 9px),
+        repeating-linear-gradient(45deg, transparent 0 7px, rgba(255,255,255,.9) 7px 9px);
+    }
+
+    .swatch[data-pattern="thickThin"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 5px, rgba(255,255,255,.95) 5px 10px, transparent 10px 13px, rgba(255,255,255,.95) 13px 14px);
+    }
+
+    .swatch[data-pattern="triangle"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: conic-gradient(from 30deg at 50% 62%, rgba(255,255,255,.95) 0 60deg, transparent 60deg);
+      background-size: 14px 14px;
+    }
+
+
+
+
+    .line-chart-area {
+      margin-top: 32px;
+      max-width: 980px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .line-chart-svg {
+      width: 100%;
+      min-width: 680px;
+      height: auto;
+      display: block;
+    }
+
+    .axis-line,
+    .grid-line {
+      stroke: #d5dde3;
+      stroke-width: 1;
+    }
+
+    .line-toolbar {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .filter-pill {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font: inherit;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .filter-pill strong {
+      font-weight: 750;
+    }
+
+    .line-legend {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+      align-items: center;
+    }
+
+    .line-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #405563;
+      font-weight: 550;
+    }
+
+    .legend-symbol {
+      width: 34px;
+      height: 16px;
+      overflow: visible;
+    }
+
+    .line-path {
+      fill: none;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity .15s ease;
+    }
+
+    .line-path.is-dimmed {
+      opacity: .18;
+    }
+
+    .line-point {
+      fill: #ffffff;
+      stroke-width: 4;
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .line-point.is-dimmed {
+      opacity: .22;
+    }
+
+    .line-point.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.25rem rgba(0,0,0,.25));
+    }
+
+    .line-point:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .axis-label {
+      fill: #52616b;
+      font-size: 12px;
+      font-family: system-ui, sans-serif;
+    }
+
+    .point-label {
+      fill: #405563;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+
+    .vertical-chart-area {
+      margin-top: 32px;
+      max-width: 980px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .vertical-chart-svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+
+    .vertical-bar {
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .vertical-bar.is-dimmed { opacity: .22; }
+
+    .vertical-bar.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.3rem rgba(0,0,0,.2));
+    }
+
+    .vertical-bar:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .vertical-value-label {
+      fill: #405563;
+      font-size: 12px;
+      font-weight: 750;
+      font-family: system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+
+    .seg-vertical-chart-area {
+      margin-top: 32px;
+      max-width: 980px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .seg-vertical-chart-svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+
+    .seg-vertical-segment {
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .seg-vertical-segment.is-dimmed {
+      opacity: .22;
+    }
+
+    .seg-vertical-segment.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.3rem rgba(0,0,0,.2));
+    }
+
+    .seg-vertical-segment:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .seg-vertical-total-label {
+      fill: #405563;
+      font-size: 12px;
+      font-weight: 750;
+      font-family: system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+    .segmented-chart-wrap {
+      margin-top: 32px;
+      display: grid;
+      gap: 22px;
+      max-width: 980px;
+    }
+
+    .seg-row {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) minmax(0, 1fr) 56px;
+      gap: 14px 8px;
+      align-items: center;
+    }
+
+    .seg-label {
+      color: #405563;
+      font-weight: 600;
+      line-height: 1.25;
+      text-align: right;
+    }
+
+    .seg-track {
+      height: 34px;
+      border-radius: 999px;
+      background: #e8edf2;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+
+    .seg-fill {
+      width: var(--seg-width);
+      min-width: 0;
+      background: var(--seg-color);
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+      border-right: 2px solid #fff;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .seg-fill:last-child {
+      border-right: 0;
+    }
+
+    .seg-fill[data-pattern="diagonalForward"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(255,255,255,.55) 6px 9px);
+    }
+
+    .seg-fill[data-pattern="dots"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.85) 2px, transparent 2.5px);
+      background-size: 9px 9px;
+    }
+
+    .seg-fill[data-pattern="vertical"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 6px, rgba(255,255,255,.65) 6px 10px);
+    }
+
+    .seg-fill[data-pattern="thickThin"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(255,255,255,.72) 5px 10px, transparent 10px 13px, rgba(255,255,255,.72) 13px 14px);
+    }
+
+    .seg-fill[data-pattern="triangle"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: conic-gradient(from 30deg at 50% 62%, rgba(255,255,255,.75) 0 60deg, transparent 60deg);
+      background-size: 14px 14px;
+    }
+
+    .seg-fill[data-pattern="crosshatch"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,.7) 7px 9px),
+        repeating-linear-gradient(45deg, transparent 0 7px, rgba(255,255,255,.7) 7px 9px);
+    }
+
+    .seg-fill::after,
+    .bar-fill::after {
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .seg-fill .seg-inside-value,
+    .bar-fill .bar-inside-value {
+      z-index: 2;
+    }
+
+    .seg-fill.is-dimmed {
+      opacity: .22;
+    }
+
+    .seg-fill.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.35rem rgba(0,0,0,.2));
+    }
+
+    .seg-fill:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+      z-index: 2;
+    }
+
+    .seg-total {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      color: #405563;
+    }
+
+    .seg-legend {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+    }
+
+    .seg-legend .legend-item {
+      width: auto;
+      grid-template-columns: 28px auto;
+      font-size: .95rem;
+    }
+
+    @media (max-width: 700px) {
+      .seg-row {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 56px;
+        gap: 8px;
+      }
+
+      .seg-label {
+        grid-column: 1 / -1;
+      }
+
+      .seg-row .axis-column {
+        grid-column: 2;
+        height: calc(100% + 8px);
+        margin-block: -4px;
+      }
+
+      .seg-row .seg-track {
+        grid-column: 3;
+      }
+
+      .seg-row .seg-total {
+        grid-column: 4;
+      }
+
+      .seg-x-axis {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 56px;
+        gap: 8px;
+      }
+    }
+
+
+
+    .axis-column {
+      align-self: stretch;
+      width: 2px;
+      background: var(--border-strong);
+      height: calc(100% + 14px);
+      margin-block: -7px;
+      min-height: 28px;
+      justify-self: center;
+    }
+
+    .seg-row .axis-column {
+      height: calc(100% + 22px);
+      margin-block: -11px;
+    }
+
+    .bar-row,
+    .seg-row {
+      grid-template-columns: minmax(190px, 280px) 2px minmax(0, 1fr) 56px;
+    }
+
+    .bar-x-axis,
+    .seg-x-axis {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) 2px minmax(0, 1fr) 56px;
+      gap: 14px 8px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .bar-x-axis-line,
+    .seg-x-axis-line {
+      grid-column: 3;
+      height: 2px;
+      background: var(--border-strong);
+      position: relative;
+    }
+
+    .bar-x-axis-label,
+    .seg-x-axis-label {
+      grid-column: 3;
+      color: var(--muted);
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0;
+      padding-top: 4px;
+    }
+
+    .bar-fill .bar-inside-value {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: .9rem;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 2px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+
+    .seg-fill .seg-inside-value {
+      position: relative;
+      z-index: 1;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 2px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+
+
+    .bar-chart-wrap {
+      margin-top: 32px;
+      display: grid;
+      gap: 14px;
+      max-width: 920px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) 2px minmax(0, 1fr) 56px;
+      gap: 14px 8px;
+      align-items: center;
+    }
+
+    .bar-label {
+      color: #405563;
+      font-weight: 550;
+      line-height: 1.25;
+      text-align: right;
+    }
+
+    .bar-track {
+      height: 28px;
+      border-radius: 999px;
+      background: #e8edf2;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: var(--bar-width);
+      border-radius: inherit;
+      background: var(--bar-color);
+      border: 1px solid rgba(0,0,0,.08);
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+      position: relative;
+    }
+
+    .bar-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,.5) 7px 10px);
+      opacity: .55;
+    }
+
+    .bar-fill.is-dimmed {
+      opacity: .22;
+    }
+
+    .bar-fill.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.35rem rgba(0,0,0,.2));
+    }
+
+    .bar-fill:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .bar-value {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 750;
+      color: #405563;
+    }
+
+    @media (max-width: 700px) {
+      .bar-row {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 48px;
+        gap: 8px;
+      }
+
+      .bar-label {
+        grid-column: 1 / -1;
+      }
+
+      .bar-row .axis-column {
+        grid-column: 2;
+        height: calc(100% + 8px);
+        margin-block: -4px;
+      }
+
+      .bar-row .bar-track {
+        grid-column: 3;
+      }
+
+      .bar-row .bar-value {
+        grid-column: 4;
+      }
+
+      .bar-x-axis {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 48px;
+        gap: 8px;
+      }
+    }
+
+
+    .slice {
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .slice.is-dimmed {
+      opacity: .22;
+    }
+
+    .slice.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.35rem rgba(0,0,0,.25));
+    }
+
+    .slice:focus-visible {
+      stroke: var(--focus);
+      stroke-width: 4;
+    }
+
+    .tooltip {
+      position: fixed;
+      z-index: 10;
+      max-width: 270px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: #111827;
+      color: #ffffff;
+      box-shadow: 0 10px 30px rgba(0,0,0,.22);
+      font-size: .95rem;
+      line-height: 1.35;
+      pointer-events: none;
+      opacity: 0;
+      transform: translate(-50%, calc(-100% - 14px));
+      transition: opacity .12s ease;
+    }
+
+
+    .sidebar-credit {
+      margin-top: auto;
+      padding-top: 24px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+
+    .tooltip.is-visible { opacity: 1; }
+
+    .tooltip strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .tooltip span {
+      display: block;
+      color: #d8dee9;
+    }
+
+    .details {
+      margin-top: 36px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: grid;
+      grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
+      gap: 28px;
+    }
+
+    .details h2 {
+      font-size: 1rem;
+      margin: 0 0 10px;
+    }
+
+    .details p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    #visible-summary {
+      font-size: 1rem;
+      max-width: 64ch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .95rem;
+    }
+
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    tbody th {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    th.numeric,
+    td.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .chart-card {
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      border-radius: 16px;
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .chart-card h3 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .chart-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .mini-chart {
+      min-height: 110px;
+      border-radius: 12px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      padding: 12px;
+    }
+
+    .mini-chart svg {
+      width: 100%;
+      height: 90px;
+    }
+
+    .view-button {
+      justify-self: start;
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 8px 13px;
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+
+    .view-button:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .view-button:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+
+    .placeholder-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .placeholder {
+      min-height: 220px;
+      padding: 22px;
+      border: 1px dashed var(--border-strong);
+      border-radius: 16px;
+      background: var(--surface-soft);
+      display: grid;
+      align-content: center;
+      gap: 10px;
+    }
+
+    .placeholder strong {
+      font-size: 1.15rem;
+    }
+
+    .placeholder p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .feature {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    
+    .feature-illustration {
+      margin-bottom: 14px;
+      padding: 10px;
+      border-radius: 12px;
+      background: #faf8f2;
+      border: 1px solid #e7e1d6;
+    }
+
+    .feature-illustration svg {
+      width: 100%;
+      height: 110px;
+      display: block;
+    }
+
+    .sketch {
+      fill: none;
+      stroke: #111;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .accent {
+      stroke: #7c6ee6;
+      fill: none;
+    }
+
+    .sketch-text {
+      fill: #444;
+      font-size: 10px;
+      font-family: system-ui, sans-serif;
+    }
+
+
+    .feature h3 {
+      margin: 0 0 8px;
+      font-size: 1.05rem;
+    }
+
+    .feature p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.52;
+    }
+
+    .callout {
+      margin-top: 24px;
+      padding: 20px;
+      border-radius: 16px;
+      background: #edf4ff;
+      border: 1px solid #c6d7ff;
+      color: #243b66;
+      line-height: 1.55;
+    }
+
+    pre {
+      margin: 20px 0 0;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 14px;
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 960px) {
+      .mobile-topbar {
+        display: flex;
+      }
+
+      .app-shell {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .sidebar {
+        position: fixed;
+        inset: 57px 0 auto 0;
+        z-index: 19;
+        min-height: calc(100vh - 57px);
+        height: auto;
+        max-height: calc(100vh - 57px);
+        overflow-y: auto;
+        padding: 18px;
+        transform: translateY(-120%);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform .16s ease, opacity .16s ease;
+        box-shadow: 0 18px 38px rgba(0,0,0,.26);
+      }
+
+      .sidebar .tablist {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .sidebar.is-open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .sidebar .brand {
+        display: none;
+      }
+
+      .tablist {
+        grid-template-columns: 1fr;
+      }
+
+      .main {
+        padding: 22px;
+      }
+
+      .viz-layout,
+      .details {
+        grid-template-columns: 1fr;
+      }
+
+      .legend {
+        grid-template-columns: 1fr;
+      }
+
+      .placeholder-grid,
+      .feature-grid,
+      .home-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      body {
+        font-size: 100%;
+      }
+
+      .tablist {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        border-radius: 14px;
+        padding: 18px;
+      }
+
+      .main {
+        padding: 14px;
+      }
+
+      .hero {
+        margin-bottom: 18px;
+      }
+
+      th, td {
+        padding: 9px 6px;
+        font-size: .9rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .slice,
+      .tooltip,
+      .sidebar { transition: none; }
+    }
+
+    @media (forced-colors: active) {
+  
+
+
+    .line-chart-area {
+      margin-top: 32px;
+      max-width: 980px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .line-chart-svg {
+      width: 100%;
+      min-width: 680px;
+      height: auto;
+      display: block;
+    }
+
+    .axis-line,
+    .grid-line {
+      stroke: #d5dde3;
+      stroke-width: 1;
+    }
+
+    .line-toolbar {
+      margin-top: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .filter-pill {
+      appearance: none;
+      border: 1px solid var(--border-strong);
+      background: #ffffff;
+      border-radius: 999px;
+      padding: 9px 14px;
+      font: inherit;
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .filter-pill strong {
+      font-weight: 750;
+    }
+
+    .line-legend {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+      align-items: center;
+    }
+
+    .line-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #405563;
+      font-weight: 550;
+    }
+
+    .legend-symbol {
+      width: 34px;
+      height: 16px;
+      overflow: visible;
+    }
+
+    .line-path {
+      fill: none;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: opacity .15s ease;
+    }
+
+    .line-path.is-dimmed {
+      opacity: .18;
+    }
+
+    .line-point {
+      fill: #ffffff;
+      stroke-width: 4;
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .line-point.is-dimmed {
+      opacity: .22;
+    }
+
+    .line-point.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.25rem rgba(0,0,0,.25));
+    }
+
+    .line-point:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .axis-label {
+      fill: #52616b;
+      font-size: 12px;
+      font-family: system-ui, sans-serif;
+    }
+
+    .point-label {
+      fill: #405563;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+
+    .vertical-chart-area {
+      margin-top: 32px;
+      max-width: 980px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .vertical-chart-svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+
+    .vertical-bar {
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .vertical-bar.is-dimmed { opacity: .22; }
+
+    .vertical-bar.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.3rem rgba(0,0,0,.2));
+    }
+
+    .vertical-bar:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .vertical-value-label {
+      fill: #405563;
+      font-size: 12px;
+      font-weight: 750;
+      font-family: system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+
+    .seg-vertical-chart-area {
+      margin-top: 32px;
+      max-width: 980px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .seg-vertical-chart-svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+
+    .seg-vertical-segment {
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+    }
+
+    .seg-vertical-segment.is-dimmed {
+      opacity: .22;
+    }
+
+    .seg-vertical-segment.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.3rem rgba(0,0,0,.2));
+    }
+
+    .seg-vertical-segment:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .seg-vertical-total-label {
+      fill: #405563;
+      font-size: 12px;
+      font-weight: 750;
+      font-family: system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+    .segmented-chart-wrap {
+      margin-top: 32px;
+      display: grid;
+      gap: 22px;
+      max-width: 980px;
+    }
+
+    .seg-row {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) minmax(0, 1fr) 56px;
+      gap: 14px 8px;
+      align-items: center;
+    }
+
+    .seg-label {
+      color: #405563;
+      font-weight: 600;
+      line-height: 1.25;
+      text-align: right;
+    }
+
+    .seg-track {
+      height: 34px;
+      border-radius: 999px;
+      background: #e8edf2;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+
+    .seg-fill {
+      width: var(--seg-width);
+      min-width: 0;
+      background: var(--seg-color);
+      position: relative;
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+      border-right: 2px solid #fff;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .seg-fill:last-child {
+      border-right: 0;
+    }
+
+    .seg-fill[data-pattern="diagonalForward"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 6px, rgba(255,255,255,.55) 6px 9px);
+    }
+
+    .seg-fill[data-pattern="dots"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(255,255,255,.85) 2px, transparent 2.5px);
+      background-size: 9px 9px;
+    }
+
+    .seg-fill[data-pattern="vertical"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 6px, rgba(255,255,255,.65) 6px 10px);
+    }
+
+    .seg-fill[data-pattern="thickThin"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 5px, rgba(255,255,255,.72) 5px 10px, transparent 10px 13px, rgba(255,255,255,.72) 13px 14px);
+    }
+
+    .seg-fill[data-pattern="triangle"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: conic-gradient(from 30deg at 50% 62%, rgba(255,255,255,.75) 0 60deg, transparent 60deg);
+      background-size: 14px 14px;
+    }
+
+    .seg-fill[data-pattern="crosshatch"]::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,.7) 7px 9px),
+        repeating-linear-gradient(45deg, transparent 0 7px, rgba(255,255,255,.7) 7px 9px);
+    }
+
+    .seg-fill::after,
+    .bar-fill::after {
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .seg-fill .seg-inside-value,
+    .bar-fill .bar-inside-value {
+      z-index: 2;
+    }
+
+    .seg-fill.is-dimmed {
+      opacity: .22;
+    }
+
+    .seg-fill.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.35rem rgba(0,0,0,.2));
+    }
+
+    .seg-fill:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+      z-index: 2;
+    }
+
+    .seg-total {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+      color: #405563;
+    }
+
+    .seg-legend {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px 22px;
+    }
+
+    .seg-legend .legend-item {
+      width: auto;
+      grid-template-columns: 28px auto;
+      font-size: .95rem;
+    }
+
+    @media (max-width: 700px) {
+      .seg-row {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 56px;
+        gap: 8px;
+      }
+
+      .seg-label {
+        grid-column: 1 / -1;
+      }
+
+      .seg-row .axis-column {
+        grid-column: 2;
+        height: calc(100% + 8px);
+        margin-block: -4px;
+      }
+
+      .seg-row .seg-track {
+        grid-column: 3;
+      }
+
+      .seg-row .seg-total {
+        grid-column: 4;
+      }
+
+      .seg-x-axis {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 56px;
+        gap: 8px;
+      }
+    }
+
+
+
+    .axis-column {
+      align-self: stretch;
+      width: 2px;
+      background: var(--border-strong);
+      height: calc(100% + 14px);
+      margin-block: -7px;
+      min-height: 28px;
+      justify-self: center;
+    }
+
+    .seg-row .axis-column {
+      height: calc(100% + 22px);
+      margin-block: -11px;
+    }
+
+    .bar-row,
+    .seg-row {
+      grid-template-columns: minmax(190px, 280px) 2px minmax(0, 1fr) 56px;
+    }
+
+    .bar-x-axis,
+    .seg-x-axis {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) 2px minmax(0, 1fr) 56px;
+      gap: 14px 8px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .bar-x-axis-line,
+    .seg-x-axis-line {
+      grid-column: 3;
+      height: 2px;
+      background: var(--border-strong);
+      position: relative;
+    }
+
+    .bar-x-axis-label,
+    .seg-x-axis-label {
+      grid-column: 3;
+      color: var(--muted);
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0;
+      padding-top: 4px;
+    }
+
+    .bar-fill .bar-inside-value {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: .9rem;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 2px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+
+    .seg-fill .seg-inside-value {
+      position: relative;
+      z-index: 1;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: .85rem;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 1px 2px rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+
+
+    .bar-chart-wrap {
+      margin-top: 32px;
+      display: grid;
+      gap: 14px;
+      max-width: 920px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: minmax(190px, 280px) 2px minmax(0, 1fr) 56px;
+      gap: 14px 8px;
+      align-items: center;
+    }
+
+    .bar-label {
+      color: #405563;
+      font-weight: 550;
+      line-height: 1.25;
+      text-align: right;
+    }
+
+    .bar-track {
+      height: 28px;
+      border-radius: 999px;
+      background: #e8edf2;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: var(--bar-width);
+      border-radius: inherit;
+      background: var(--bar-color);
+      border: 1px solid rgba(0,0,0,.08);
+      cursor: pointer;
+      outline: none;
+      transition: opacity .15s ease, filter .15s ease;
+      position: relative;
+    }
+
+    .bar-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, transparent 0 7px, rgba(255,255,255,.5) 7px 10px);
+      opacity: .55;
+    }
+
+    .bar-fill.is-dimmed {
+      opacity: .22;
+    }
+
+    .bar-fill.is-active {
+      opacity: 1;
+      filter: drop-shadow(0 0 0.35rem rgba(0,0,0,.2));
+    }
+
+    .bar-fill:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .bar-value {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 750;
+      color: #405563;
+    }
+
+    @media (max-width: 700px) {
+      .bar-row {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 48px;
+        gap: 8px;
+      }
+
+      .bar-label {
+        grid-column: 1 / -1;
+      }
+
+      .bar-row .axis-column {
+        grid-column: 2;
+        height: calc(100% + 8px);
+        margin-block: -4px;
+      }
+
+      .bar-row .bar-track {
+        grid-column: 3;
+      }
+
+      .bar-row .bar-value {
+        grid-column: 4;
+      }
+
+      .bar-x-axis {
+        grid-template-columns: 1fr 2px minmax(0, 1fr) 48px;
+        gap: 8px;
+      }
+    }
+
+
+    .slice {
+        forced-color-adjust: none;
+        stroke: CanvasText;
+      }
+      .swatch {
+        border: 2px solid CanvasText;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="tooltip" class="tooltip" role="status" aria-live="polite"></div>
+
+  <header class="mobile-topbar">
+    <div>
+      <strong>Accessible Charts</strong>
+      <span> prototype</span>
+    </div>
+    <button class="menu-button" id="menuButton" type="button" aria-expanded="false" aria-controls="sidebar">
+      <span aria-hidden="true">☰</span>
+      Menu
+    </button>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar" aria-label="Accessible chart navigation">
+      <div class="brand">
+        <h2 class="brand-title">Accessible Charts</h2>
+        <p> chart patterns designed for perception, interaction, explanation, and implementation.</p>
+      </div>
+      <div class="tablist" role="tablist" aria-label="Overview">
+        <button class="tab-button" id="tab-home" role="tab" aria-selected="true" aria-controls="panel-home" data-tab="home">
+          Home
+        </button>
+      </div>
+      <div class="tablist" role="tablist" aria-label="Chart examples">
+        <button class="tab-button" id="tab-donut" role="tab" aria-selected="false" aria-controls="panel-donut" data-tab="donut">
+          Donut
+        </button>
+        <button class="tab-button" id="tab-bar" role="tab" aria-selected="false" aria-controls="panel-bar" data-tab="bar">
+          Horizontal bars
+        </button>
+        <button class="tab-button" id="tab-vertical-bars" role="tab" aria-selected="false" aria-controls="panel-vertical-bars" data-tab="vertical-bars">
+          Vertical bars
+        </button>
+        <button class="tab-button" id="tab-segmented-vertical" role="tab" aria-selected="false" aria-controls="panel-segmented-vertical" data-tab="segmented-vertical">
+          Segmented vertical
+        </button>
+        <button class="tab-button" id="tab-segmented-bar" role="tab" aria-selected="false" aria-controls="panel-segmented-bar" data-tab="segmented-bar">
+          Segmented horizontal
+        </button>
+        <button class="tab-button" id="tab-line" role="tab" aria-selected="false" aria-controls="panel-line" data-tab="line">
+          Multi-line
+        </button>
+      </div>
+    
+      <div class="sidebar-credit">
+        An experiment in accessible visualization by Jothish • © 2026
+      </div>
+
+    </aside>
+
+    <main class="main">
+<section class="panel active" id="panel-home" role="tabpanel" aria-labelledby="tab-home">
+        <div class="card">
+          <h1>Charts that explain themselves.</h1>
+          <p class="hero-copy">
+            This prototype explores how  chart components can be usable beyond sight alone. The goal is not only to render charts, but to provide semantic structure, keyboard access, redundant visual encoding, and plain-language summaries that help everyone understand the data faster.
+          </p>
+
+          <div class="home-grid" aria-label="Chart gallery">
+            <article class="chart-card">
+              <div class="mini-chart" aria-hidden="true">
+                <svg viewBox="0 0 180 90">
+                  <circle cx="90" cy="45" r="32" fill="none" stroke="#3f7eed" stroke-width="16" stroke-dasharray="70 140"/>
+                  <circle cx="90" cy="45" r="32" fill="none" stroke="#e52b91" stroke-width="16" stroke-dasharray="40 170" stroke-dashoffset="-72"/>
+                  <circle cx="90" cy="45" r="32" fill="none" stroke="#f77913" stroke-width="16" stroke-dasharray="30 180" stroke-dashoffset="-115"/>
+                </svg>
+              </div>
+              <h3>Donut</h3>
+              <p>Part-to-whole composition across a small set of categories.</p>
+              <button class="view-button" type="button" data-jump-tab="donut">View details</button>
+            </article>
+
+            <article class="chart-card">
+              <div class="mini-chart" aria-hidden="true">
+                <svg viewBox="0 0 180 90">
+                  <rect x="18" y="16" width="120" height="10" rx="5" fill="#3f7eed"/>
+                  <rect x="18" y="38" width="88" height="10" rx="5" fill="#16a1b5"/>
+                  <rect x="18" y="60" width="58" height="10" rx="5" fill="#e52b91"/>
+                </svg>
+              </div>
+              <h3>Horizontal bar</h3>
+              <p>Ranked comparison with enough space for category labels.</p>
+              <button class="view-button" type="button" data-jump-tab="bar">View details</button>
+            </article>
+
+            <article class="chart-card">
+              <div class="mini-chart" aria-hidden="true">
+                <svg viewBox="0 0 180 90">
+                  <rect x="28" y="25" width="20" height="46" rx="5" fill="#3f7eed"/>
+                  <rect x="68" y="12" width="20" height="59" rx="5" fill="#16a1b5"/>
+                  <rect x="108" y="36" width="20" height="35" rx="5" fill="#e52b91"/>
+                </svg>
+              </div>
+              <h3>Vertical bars</h3>
+              <p>Familiar dashboard-style category comparison.</p>
+              <button class="view-button" type="button" data-jump-tab="vertical-bars">View details</button>
+            </article>
+
+            <article class="chart-card">
+              <div class="mini-chart" aria-hidden="true">
+                <svg viewBox="0 0 180 90">
+                  <rect x="18" y="18" width="62" height="12" rx="6" fill="#e52b91"/>
+                  <rect x="80" y="18" width="72" height="12" rx="6" fill="#3f7eed"/>
+                  <rect x="18" y="48" width="44" height="12" rx="6" fill="#f77913"/>
+                  <rect x="62" y="48" width="58" height="12" rx="6" fill="#16a1b5"/>
+                </svg>
+              </div>
+              <h3>Segmented horizontal</h3>
+              <p>Compare totals while showing what each total is made of.</p>
+              <button class="view-button" type="button" data-jump-tab="segmented-bar">View details</button>
+            </article>
+
+            <article class="chart-card">
+              <div class="mini-chart" aria-hidden="true">
+                <svg viewBox="0 0 180 90">
+                  <rect x="35" y="42" width="24" height="28" rx="5" fill="#3f7eed"/>
+                  <rect x="35" y="20" width="24" height="22" rx="5" fill="#e52b91"/>
+                  <rect x="82" y="35" width="24" height="35" rx="5" fill="#16a1b5"/>
+                  <rect x="82" y="16" width="24" height="19" rx="5" fill="#f77913"/>
+                </svg>
+              </div>
+              <h3>Segmented vertical</h3>
+              <p>Stacked column comparison where composition and total height both matter.</p>
+              <button class="view-button" type="button" data-jump-tab="segmented-vertical">View details</button>
+            </article>
+
+            <article class="chart-card">
+              <div class="mini-chart" aria-hidden="true">
+                <svg viewBox="0 0 180 90">
+                  <path d="M18 68 L48 52 L78 56 L108 32 L148 24" fill="none" stroke="#3f7eed" stroke-width="4"/>
+                  <path d="M18 42 L48 38 L78 28 L108 45 L148 50" fill="none" stroke="#f77913" stroke-width="4" stroke-dasharray="7 6"/>
+                  <path d="M18 72 L48 66 L78 55 L108 48 L148 34" fill="none" stroke="#8c35e8" stroke-width="4" stroke-dasharray="2 6"/>
+                </svg>
+              </div>
+              <h3>Multi-line</h3>
+              <p>Compare trends, peaks, changes, and movement over time.</p>
+              <button class="view-button" type="button" data-jump-tab="line">View details</button>
+            </article>
+          </div>
+        </div>
+      
+        <div class="card">
+          <h2 class="section-title">Accessibility details</h2>
+          <p class="section-copy">
+            These patterns are shared across the chart examples. The goal is to make accessibility part of the chart architecture, not an afterthought.
+          </p>
+
+          <div class="feature-grid">
+            <article class="feature">
+              <h3>Generated summaries</h3>
+              <p>Each chart provides a plain-language summary before the table so people can understand the main takeaway without inspecting every data point.</p>
+            </article>
+
+            <article class="feature">
+              <h3>Keyboard interaction</h3>
+              <p>Chart marks can be reached by keyboard. Hover behavior is mirrored for focus states so keyboard users get the same information.</p>
+            </article>
+
+            <article class="feature">
+              <h3>Screen-reader labels</h3>
+              <p>SVG titles, descriptions, and mark-level labels explain what each visual element represents.</p>
+            </article>
+
+            <article class="feature">
+              <h3>Semantic tables</h3>
+              <p>The same data is available in a real table with right-aligned numeric headers and values.</p>
+            </article>
+
+            <article class="feature">
+              <h3>Redundant encoding</h3>
+              <p>Color is paired with patterns, shapes, and stroke styles so meaning is not dependent on color alone.</p>
+            </article>
+
+            <article class="feature">
+              <h3>DOM order</h3>
+              <p>The page follows a logical reading order: title, summary, visualization, legend, and table.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+<section class="panel" id="panel-donut" role="tabpanel" aria-labelledby="tab-donut" hidden>
+        <div class="card">
+          <h2 class="section-title">Donut</h2>
+
+          <figure aria-labelledby="chart-title" aria-describedby="chart-summary visible-summary">
+            <h3 id="chart-title" class="sr-only">Donut chart showing Star Wars character groups</h3>
+            <p id="chart-summary" class="sr-only">
+              Loading chart summary.
+            </p>
+
+            <div class="viz-layout">
+              <div class="chart-wrap">
+                <svg id="chart" viewBox="0 0 420 420" role="img" aria-labelledby="svg-title svg-desc">
+                  <title id="svg-title">Donut chart showing Star Wars character groups</title>
+                  <desc id="svg-desc">Seven categories show 32 characters by broad allegiance or role. Each slice has a keyboard-focusable label and corresponding table row.</desc>
+                  <defs id="patterns"></defs>
+                </svg>
+                <div class="center-label" aria-hidden="true">
+                  <strong>Total characters</strong>
+                  <span id="totalLabel">32</span>
+                </div>
+              </div>
+
+              <div class="legend" id="legend">
+                <h3>Character groups</h3>
+              </div>
+            </div>
+
+            <div class="details">
+              <section aria-labelledby="summary-heading" role="region">
+                <h2 id="summary-heading">Chart Summary</h2>
+                <p id="visible-summary">Loading chart summary.</p>
+              </section>
+
+              <section aria-labelledby="table-title">
+                <h2 id="table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Star Wars character group data used in the accessible donut chart</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Category</th>
+                      <th scope="col" class="numeric">Count</th>
+                      <th scope="col" class="numeric">Share</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-bar" role="tabpanel" aria-labelledby="tab-bar" hidden>
+        <div class="card">
+          <h2 class="section-title">Horizontal bar</h2>
+
+          <figure aria-labelledby="bar-chart-title" aria-describedby="bar-chart-summary bar-visible-summary">
+            <h3 id="bar-chart-title" class="sr-only">Horizontal bar chart showing Star Wars character groups</h3>
+            <p id="bar-chart-summary" class="sr-only">Loading bar chart summary.</p>
+
+            <div class="bar-chart-wrap" id="barChart" role="list" aria-label="Star Wars character groups ranked by count"></div>
+
+            <div class="details">
+              <section aria-labelledby="bar-summary-heading" role="region">
+                <h2 id="bar-summary-heading">Chart Summary</h2>
+                <p id="bar-visible-summary">Loading bar chart summary.</p>
+              </section>
+
+              <section aria-labelledby="bar-table-title">
+                <h2 id="bar-table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Star Wars character group data used in the accessible horizontal bar chart</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Category</th>
+                      <th scope="col" class="numeric">Count</th>
+                      <th scope="col" class="numeric">Share</th>
+                      <th scope="col" class="numeric">Rank</th>
+                    </tr>
+                  </thead>
+                  <tbody id="barTableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-vertical-bars" role="tabpanel" aria-labelledby="tab-vertical-bars" hidden>
+        <div class="card">
+          <h2 class="section-title">Vertical bars</h2>
+
+          <figure aria-labelledby="vertical-chart-title" aria-describedby="vertical-chart-summary vertical-visible-summary">
+            <h3 id="vertical-chart-title" class="sr-only">Vertical bar chart showing Star Wars character groups</h3>
+            <p id="vertical-chart-summary" class="sr-only">Loading vertical bar chart summary.</p>
+
+            <div class="vertical-chart-area">
+              <svg class="vertical-chart-svg" id="verticalChart" viewBox="0 0 900 420" role="img" aria-labelledby="vertical-svg-title vertical-svg-desc">
+                <title id="vertical-svg-title">Star Wars character groups as vertical bars</title>
+                <desc id="vertical-svg-desc">A vertical bar chart comparing seven character groups. Each bar can be focused by keyboard.</desc>
+                <defs id="verticalPatterns"></defs>
+              </svg>
+            </div>
+
+            <div class="details">
+              <section aria-labelledby="vertical-summary-heading" role="region">
+                <h2 id="vertical-summary-heading">Chart Summary</h2>
+                <p id="vertical-visible-summary">Loading vertical bar chart summary.</p>
+              </section>
+
+              <section aria-labelledby="vertical-table-title">
+                <h2 id="vertical-table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Star Wars character group data used in the accessible vertical bar chart</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Category</th>
+                      <th scope="col" class="numeric">Count</th>
+                      <th scope="col" class="numeric">Share</th>
+                      <th scope="col" class="numeric">Rank</th>
+                    </tr>
+                  </thead>
+                  <tbody id="verticalTableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-segmented-vertical" role="tabpanel" aria-labelledby="tab-segmented-vertical" hidden>
+        <div class="card">
+          <h2 class="section-title">Segmented vertical</h2>
+
+          <figure aria-labelledby="seg-vertical-chart-title" aria-describedby="seg-vertical-chart-summary seg-vertical-visible-summary">
+            <h3 id="seg-vertical-chart-title" class="sr-only">Segmented vertical bar chart showing Star Wars factions by character type</h3>
+            <p id="seg-vertical-chart-summary" class="sr-only">Loading segmented vertical bar chart summary.</p>
+
+            <div class="seg-vertical-chart-area">
+              <svg class="seg-vertical-chart-svg" id="segVerticalChart" viewBox="0 0 900 420" role="img" aria-labelledby="seg-vertical-svg-title seg-vertical-svg-desc">
+                <title id="seg-vertical-svg-title">Star Wars factions as segmented vertical bars</title>
+                <desc id="seg-vertical-svg-desc">A segmented vertical bar chart comparing faction totals and composition. Each segment can be focused by keyboard.</desc>
+                <defs id="segVerticalPatterns"></defs>
+              </svg>
+            </div>
+
+            <div class="seg-legend" id="segVerticalLegend" aria-label="Segment legend"></div>
+
+            <div class="details">
+              <section aria-labelledby="seg-vertical-summary-heading" role="region">
+                <h2 id="seg-vertical-summary-heading">Chart Summary</h2>
+                <p id="seg-vertical-visible-summary">Loading segmented vertical bar chart summary.</p>
+              </section>
+
+              <section aria-labelledby="seg-vertical-table-title">
+                <h2 id="seg-vertical-table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Star Wars faction data used in the accessible segmented vertical bar chart</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Faction</th>
+                      <th scope="col" class="numeric">Force users</th>
+                      <th scope="col" class="numeric">Non-Force users</th>
+                      <th scope="col" class="numeric">Droids / other</th>
+                      <th scope="col" class="numeric">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="segVerticalTableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-segmented-bar" role="tabpanel" aria-labelledby="tab-segmented-bar" hidden>
+        <div class="card">
+          <h2 class="section-title">Segmented horizontal</h2>
+
+          <figure aria-labelledby="seg-chart-title" aria-describedby="seg-chart-summary seg-visible-summary">
+            <h3 id="seg-chart-title" class="sr-only">Segmented horizontal bar chart showing Star Wars factions by character type</h3>
+            <p id="seg-chart-summary" class="sr-only">Loading segmented bar chart summary.</p>
+
+            <div class="segmented-chart-wrap" id="segmentedChart" role="list" aria-label="Star Wars factions with segmented character types"></div>
+            <div class="seg-legend" id="segmentedLegend" aria-label="Segment legend"></div>
+
+            <div class="details">
+              <section aria-labelledby="seg-summary-heading" role="region">
+                <h2 id="seg-summary-heading">Chart Summary</h2>
+                <p id="seg-visible-summary">Loading segmented bar chart summary.</p>
+              </section>
+
+              <section aria-labelledby="seg-table-title">
+                <h2 id="seg-table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Star Wars faction data used in the accessible segmented horizontal bar chart</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Faction</th>
+                      <th scope="col" class="numeric">Force users</th>
+                      <th scope="col" class="numeric">Non-Force users</th>
+                      <th scope="col" class="numeric">Droids / other</th>
+                      <th scope="col" class="numeric">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="segTableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-line" role="tabpanel" aria-labelledby="tab-line" hidden>
+        <div class="card">
+          <h2 class="section-title">Multi-line</h2>
+
+          <figure aria-labelledby="line-chart-title" aria-describedby="line-chart-summary line-visible-summary">
+            <h3 id="line-chart-title" class="sr-only">Accessible line chart showing sample Rebel activity over time</h3>
+            <p id="line-chart-summary" class="sr-only">Loading line chart summary.</p>
+
+            <div class="line-toolbar" aria-label="Chart filters">
+              <button class="filter-pill" type="button"><strong>Applied filter</strong> · Saga periods</button>
+              <button class="filter-pill" type="button">Faction · All</button>
+              <button class="filter-pill" type="button">Metric · Activity score</button>
+            </div>
+
+            <div class="line-legend" id="lineLegend" aria-label="Multi-line legend"></div>
+
+            <div class="line-chart-area">
+              <svg class="line-chart-svg" id="lineChart" viewBox="0 0 900 420" role="img" aria-labelledby="line-svg-title line-svg-desc">
+                <title id="line-svg-title">Sample faction activity trends</title>
+                <desc id="line-svg-desc">A multi-line chart showing sample activity trends for Rebels, Empire, and Independent groups across seven saga periods. Each point can be focused by keyboard.</desc>
+              </svg>
+            </div>
+
+            <div class="details">
+              <section aria-labelledby="line-summary-heading" role="region">
+                <h2 id="line-summary-heading">Chart Summary</h2>
+                <p id="line-visible-summary">Loading line chart summary.</p>
+              </section>
+
+              <section aria-labelledby="line-table-title">
+                <h2 id="line-table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Sample Rebel activity data used in the accessible line chart</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Saga period</th>
+                      <th scope="col" class="numeric">Rebels</th>
+                      <th scope="col" class="numeric">Empire</th>
+                      <th scope="col" class="numeric">Independent</th>
+                    </tr>
+                  </thead>
+                  <tbody id="lineTableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+          </main>
+  </div>
+
+  <script>
+    const data = [
+      { category: "Rebel / Resistance, non-Jedi", count: 9, color: "#3f7eed", pattern: "diagonalForward" },
+      { category: "Imperial officer / trooper", count: 6, color: "#16a1b5", pattern: "dots" },
+      { category: "Rebel / Resistance Jedi", count: 5, color: "#e52b91", pattern: "vertical" },
+      { category: "Sith / dark side", count: 4, color: "#f77913", pattern: "thickThin" },
+      { category: "Scoundrel / independent", count: 3, color: "#8c35e8", pattern: "solid" },
+      { category: "Droid ally", count: 3, color: "#5a9c05", pattern: "triangle" },
+      { category: "Other / unknown", count: 2, color: "#3e5562", pattern: "crosshatch" }
+    ];
+
+    const segmentedData = [
+      {
+        faction: "Rebel Alliance",
+        segments: [
+          { key: "forceUsers", label: "Force users", count: 5, color: "#e52b91", pattern: "vertical" },
+          { key: "nonForceUsers", label: "Non-Force users", count: 9, color: "#3f7eed", pattern: "diagonalForward" }
+        ]
+      },
+      {
+        faction: "Galactic Empire",
+        segments: [
+          { key: "forceUsers", label: "Force users", count: 4, color: "#f77913", pattern: "thickThin" },
+          { key: "nonForceUsers", label: "Non-Force users", count: 6, color: "#16a1b5", pattern: "dots" }
+        ]
+      },
+      {
+        faction: "Independent / Scoundrels",
+        segments: [
+          { key: "nonForceUsers", label: "Non-Force users", count: 3, color: "#8c35e8", pattern: "solid" },
+          { key: "droidsOther", label: "Droids / other", count: 3, color: "#5a9c05", pattern: "triangle" }
+        ]
+      },
+      {
+        faction: "Other / unknown",
+        segments: [
+          { key: "droidsOther", label: "Droids / other", count: 2, color: "#3e5562", pattern: "crosshatch" }
+        ]
+      }
+    ];
+
+    const total = data.reduce((sum, d) => sum + d.count, 0);
+    const segmentedTotal = segmentedData.reduce((sum, row) => sum + row.segments.reduce((rowSum, segment) => rowSum + segment.count, 0), 0);
+
+    const lineData = [
+      { period: "Episode I", rebels: 18, empire: 34, independent: 12 },
+      { period: "Episode II", rebels: 24, empire: 38, independent: 18 },
+      { period: "Episode III", rebels: 31, empire: 52, independent: 24 },
+      { period: "Episode IV", rebels: 52, empire: 46, independent: 32 },
+      { period: "Episode V", rebels: 68, empire: 58, independent: 40 },
+      { period: "Episode VI", rebels: 74, empire: 49, independent: 47 },
+      { period: "Episode VII", rebels: 61, empire: 43, independent: 55 }
+    ];
+
+    const lineSeries = [
+      { key: "rebels", label: "Rebels", color: "#3f7eed", shape: "circle", dash: "" },
+      { key: "empire", label: "Empire", color: "#f77913", shape: "square", dash: "8 7" },
+      { key: "independent", label: "Independent", color: "#8c35e8", shape: "triangle", dash: "2 7" }
+    ];
+    const svg = document.getElementById("chart");
+    const defs = document.getElementById("patterns");
+    const tableBody = document.getElementById("tableBody");
+    const legend = document.getElementById("legend");
+    const tooltip = document.getElementById("tooltip");
+    const visibleSummary = document.getElementById("visible-summary");
+    const hiddenSummary = document.getElementById("chart-summary");
+    const barChart = document.getElementById("barChart");
+    const barTableBody = document.getElementById("barTableBody");
+    const barVisibleSummary = document.getElementById("bar-visible-summary");
+    const barHiddenSummary = document.getElementById("bar-chart-summary");
+    const verticalChart = document.getElementById("verticalChart");
+    const verticalPatterns = document.getElementById("verticalPatterns");
+    const verticalTableBody = document.getElementById("verticalTableBody");
+    const verticalVisibleSummary = document.getElementById("vertical-visible-summary");
+    const verticalHiddenSummary = document.getElementById("vertical-chart-summary");
+    const segVerticalChart = document.getElementById("segVerticalChart");
+    const segVerticalPatterns = document.getElementById("segVerticalPatterns");
+    const segVerticalLegend = document.getElementById("segVerticalLegend");
+    const segVerticalTableBody = document.getElementById("segVerticalTableBody");
+    const segVerticalVisibleSummary = document.getElementById("seg-vertical-visible-summary");
+    const segVerticalHiddenSummary = document.getElementById("seg-vertical-chart-summary");
+    const segmentedChart = document.getElementById("segmentedChart");
+    const segmentedLegend = document.getElementById("segmentedLegend");
+    const segTableBody = document.getElementById("segTableBody");
+    const segVisibleSummary = document.getElementById("seg-visible-summary");
+    const segHiddenSummary = document.getElementById("seg-chart-summary");
+    const lineChart = document.getElementById("lineChart");
+    const lineLegend = document.getElementById("lineLegend");
+    const lineTableBody = document.getElementById("lineTableBody");
+    const lineVisibleSummary = document.getElementById("line-visible-summary");
+    const lineHiddenSummary = document.getElementById("line-chart-summary");
+
+    const cx = 210;
+    const cy = 210;
+    const outerRadius = 145;
+    const innerRadius = 96;
+    const gap = 0.012;
+
+    function polarToCartesian(cx, cy, radius, angle) {
+      const radians = (angle - 90) * Math.PI / 180;
+      return {
+        x: cx + radius * Math.cos(radians),
+        y: cy + radius * Math.sin(radians)
+      };
+    }
+
+    function donutSlicePath(startAngle, endAngle) {
+      const largeArc = endAngle - startAngle > 180 ? 1 : 0;
+      const outerStart = polarToCartesian(cx, cy, outerRadius, endAngle);
+      const outerEnd = polarToCartesian(cx, cy, outerRadius, startAngle);
+      const innerStart = polarToCartesian(cx, cy, innerRadius, startAngle);
+      const innerEnd = polarToCartesian(cx, cy, innerRadius, endAngle);
+
+      return [
+        `M ${outerStart.x} ${outerStart.y}`,
+        `A ${outerRadius} ${outerRadius} 0 ${largeArc} 0 ${outerEnd.x} ${outerEnd.y}`,
+        `L ${innerStart.x} ${innerStart.y}`,
+        `A ${innerRadius} ${innerRadius} 0 ${largeArc} 1 ${innerEnd.x} ${innerEnd.y}`,
+        "Z"
+      ].join(" ");
+    }
+
+    function formatPercent(value) {
+      return `${value.toFixed(1)}%`;
+    }
+
+    function generateChartSummary() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+      const largest = sorted[0];
+      const second = sorted[1];
+      const smallest = sorted[sorted.length - 1];
+      const topThreeCount = sorted.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
+      const largestPercent = (largest.count / total) * 100;
+      const secondPercent = (second.count / total) * 100;
+      const smallestPercent = (smallest.count / total) * 100;
+      const topThreePercent = (topThreeCount / total) * 100;
+
+      const visibleText = `This chart shows the distribution of ${total} Star Wars characters across ${data.length} character groups. ${largest.category} is the largest segment with ${largest.count} characters (${formatPercent(largestPercent)}), followed by ${second.category} with ${second.count} characters (${formatPercent(secondPercent)}). Together, the three largest groups account for ${topThreeCount} characters, or ${formatPercent(topThreePercent)} of the total. The smallest segment is ${smallest.category} with ${smallest.count} characters (${formatPercent(smallestPercent)}).`;
+
+      const screenReaderText = `Chart summary. ${visibleText} The chart can also be explored by keyboard, and the full values are available in the data table that follows.`;
+
+      visibleSummary.textContent = visibleText;
+      hiddenSummary.textContent = screenReaderText;
+    }
+
+    function patternMarkup(id, color, pattern) {
+      if (pattern === "solid") return "";
+      const common = `patternUnits="userSpaceOnUse" width="16" height="16"`;
+      const base = `<rect width="16" height="16" fill="${color}"></rect>`;
+
+      const patterns = {
+        diagonalForward: `${base}<path d="M-4 16 L16 -4 M4 20 L20 4" stroke="white" stroke-width="3"></path>`,
+        diagonalBack: `${base}<path d="M0 -4 L20 16 M-4 4 L12 20" stroke="white" stroke-width="3"></path>`,
+        crosshatch: `${base}<path d="M-4 16 L16 -4 M4 20 L20 4 M0 -4 L20 16 M-4 4 L12 20" stroke="white" stroke-width="2.2"></path>`,
+        thickThin: `${base}<path d="M-4 16 L16 -4 M6 20 L20 6" stroke="white" stroke-width="4.5"></path><path d="M2 18 L18 2" stroke="white" stroke-width="1.4"></path>`,
+        dots: `${base}<circle cx="4" cy="4" r="2.2" fill="white"></circle><circle cx="12" cy="12" r="2.2" fill="white"></circle>`,
+        vertical: `${base}<rect x="3" y="0" width="2.5" height="16" fill="white"></rect><rect x="10" y="0" width="2.5" height="16" fill="white"></rect>`,
+        triangle: `${base}<path d="M8 2 L14 13 H2 Z" fill="white"></path>`
+      };
+
+      return `<pattern id="${id}" ${common}>${patterns[pattern]}</pattern>`;
+    }
+
+    function renderPatterns() {
+      defs.innerHTML = data
+        .map((d, i) => patternMarkup(`pattern-${i}`, d.color, d.pattern))
+        .join("");
+    }
+
+    function showTooltip(event, d, percent) {
+      tooltip.innerHTML = `
+        <strong>${d.category}</strong>
+        <span>${d.count} of ${total} characters</span>
+        <span>${percent}% of total</span>
+      `;
+      tooltip.classList.add("is-visible");
+      moveTooltip(event);
+    }
+
+    function moveTooltip(event) {
+      const x = event.clientX || window.innerWidth / 2;
+      const y = event.clientY || window.innerHeight / 2;
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("is-visible");
+    }
+
+    function setActiveSlice(activePath) {
+      document.querySelectorAll(".slice").forEach(slice => {
+        slice.classList.toggle("is-active", slice === activePath);
+        slice.classList.toggle("is-dimmed", slice !== activePath);
+      });
+    }
+
+    function clearActiveSlice() {
+      document.querySelectorAll(".slice").forEach(slice => {
+        slice.classList.remove("is-active", "is-dimmed");
+      });
+      hideTooltip();
+    }
+
+    function renderChart() {
+      let currentAngle = 0;
+
+      data.forEach((d, i) => {
+        const sliceAngle = (d.count / total) * 360;
+        const startAngle = currentAngle + gap * 180 / Math.PI;
+        const endAngle = currentAngle + sliceAngle - gap * 180 / Math.PI;
+        const percent = ((d.count / total) * 100).toFixed(1);
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("d", donutSlicePath(startAngle, endAngle));
+        path.setAttribute("fill", d.pattern === "solid" ? d.color : `url(#pattern-${i})`);
+        path.setAttribute("stroke", "#ffffff");
+        path.setAttribute("stroke-width", "5");
+        path.setAttribute("class", "slice");
+        path.setAttribute("tabindex", "0");
+        path.setAttribute("role", "listitem");
+        path.setAttribute("aria-label", `${d.category}: ${d.count} of ${total} characters, ${percent} percent.`);
+        path.dataset.category = d.category;
+
+        path.addEventListener("mouseenter", (event) => {
+          setActiveSlice(path);
+          showTooltip(event, d, percent);
+        });
+
+        path.addEventListener("mousemove", moveTooltip);
+        path.addEventListener("mouseleave", clearActiveSlice);
+
+        path.addEventListener("focus", () => {
+          setActiveSlice(path);
+          const rect = path.getBoundingClientRect();
+          showTooltip(
+            { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 },
+            d,
+            percent
+          );
+        });
+
+        path.addEventListener("blur", clearActiveSlice);
+
+        svg.appendChild(path);
+        currentAngle += sliceAngle;
+      });
+    }
+
+    function renderLegend() {
+      data.forEach((d) => {
+        const percent = ((d.count / total) * 100).toFixed(1);
+        const item = document.createElement("div");
+        item.className = "legend-item";
+        item.innerHTML = `
+          <span class="swatch" style="--swatch:${d.color}" data-pattern="${d.pattern}" aria-hidden="true"></span>
+          <div>
+            <strong>${d.category}</strong>
+            <span class="value">${d.count} · ${percent}%</span>
+          </div>
+        `;
+
+        legend.appendChild(item);
+      });
+    }
+
+    function renderTable() {
+      data.forEach(d => {
+        const percent = ((d.count / total) * 100).toFixed(1);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <th scope="row">${d.category}</th>
+          <td class="numeric">${d.count}</td>
+          <td class="numeric">${percent}%</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+
+    function generateBarChartSummary() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+      const largest = sorted[0];
+      const second = sorted[1];
+      const smallest = sorted[sorted.length - 1];
+      const range = largest.count - smallest.count;
+      const topThreeCount = sorted.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
+      const topThreePercent = (topThreeCount / total) * 100;
+
+      const visibleText = `This bar chart ranks ${total} Star Wars characters across ${data.length} character groups. ${largest.category} ranks first with ${largest.count} characters, followed by ${second.category} with ${second.count}. The top three groups account for ${topThreeCount} characters, or ${formatPercent(topThreePercent)} of the total. The range between the largest and smallest groups is ${range} characters.`;
+
+      const screenReaderText = `Chart summary. ${visibleText} Each bar can be focused by keyboard and the full values are available in the data table that follows.`;
+
+      barVisibleSummary.textContent = visibleText;
+      barHiddenSummary.textContent = screenReaderText;
+    }
+
+    function setActiveBar(activeBar) {
+      document.querySelectorAll(".bar-fill").forEach(bar => {
+        bar.classList.toggle("is-active", bar === activeBar);
+        bar.classList.toggle("is-dimmed", bar !== activeBar);
+      });
+    }
+
+    function clearActiveBar() {
+      document.querySelectorAll(".bar-fill").forEach(bar => {
+        bar.classList.remove("is-active", "is-dimmed");
+      });
+      hideTooltip();
+    }
+
+    function renderBarChart() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+      const axisMax = 20;
+
+      sorted.forEach((d, index) => {
+        const rank = index + 1;
+        const percent = ((d.count / total) * 100).toFixed(1);
+        const width = (d.count / axisMax) * 100;
+
+        const row = document.createElement("div");
+        row.className = "bar-row";
+
+        const label = document.createElement("div");
+        label.className = "bar-label";
+        label.textContent = d.category;
+
+        const track = document.createElement("div");
+        track.className = "bar-track";
+
+        const fill = document.createElement("div");
+        fill.className = "bar-fill";
+        fill.style.setProperty("--bar-width", `${width}%`);
+        fill.style.setProperty("--bar-color", d.color);
+        fill.setAttribute("tabindex", "0");
+        fill.setAttribute("role", "listitem");
+        fill.setAttribute("aria-label", `${d.category}: ${d.count} of ${total} characters, ${percent} percent. Rank ${rank} of ${sorted.length}.`);
+        fill.innerHTML = `<span class="bar-inside-value">${d.count}</span>`;
+
+        fill.addEventListener("mouseenter", (event) => {
+          setActiveBar(fill);
+          showTooltip(event, d, percent);
+        });
+
+        fill.addEventListener("mousemove", moveTooltip);
+        fill.addEventListener("mouseleave", clearActiveBar);
+
+        fill.addEventListener("focus", () => {
+          setActiveBar(fill);
+          const rect = fill.getBoundingClientRect();
+          showTooltip(
+            { clientX: rect.right, clientY: rect.top + rect.height / 2 },
+            d,
+            percent
+          );
+        });
+
+        fill.addEventListener("blur", clearActiveBar);
+
+        const value = document.createElement("div");
+        value.className = "bar-value";
+        value.setAttribute("aria-hidden", "true");
+        value.textContent = "";
+
+        track.appendChild(fill);
+        const axis = document.createElement("div");
+        axis.className = "axis-column";
+        axis.setAttribute("aria-hidden", "true");
+
+        row.appendChild(label);
+        row.appendChild(axis);
+        row.appendChild(track);
+        row.appendChild(value);
+        barChart.appendChild(row);
+      });
+
+      const axisRow = document.createElement("div");
+      axisRow.className = "bar-x-axis";
+      axisRow.setAttribute("aria-hidden", "true");
+      axisRow.innerHTML = `
+        <div></div>
+        <div></div>
+        <div>
+          <div class="bar-x-axis-line"></div>
+          <div class="bar-x-axis-label"><span>0</span><span>${axisMax}</span></div>
+        </div>
+        <div></div>
+      `;
+      barChart.appendChild(axisRow);
+    }
+
+    function renderBarTable() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+
+      sorted.forEach((d, index) => {
+        const percent = ((d.count / total) * 100).toFixed(1);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <th scope="row">${d.category}</th>
+          <td class="numeric">${d.count}</td>
+          <td class="numeric">${percent}%</td>
+          <td class="numeric">${index + 1}</td>
+        `;
+        barTableBody.appendChild(row);
+      });
+    }
+
+
+
+    function generateVerticalSummary() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+      const largest = sorted[0];
+      const second = sorted[1];
+      const smallest = sorted[sorted.length - 1];
+      const topThreeCount = sorted.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
+      const topThreePercent = (topThreeCount / total) * 100;
+      const visibleText = `This vertical bar chart compares ${total} Star Wars characters across ${data.length} character groups. ${largest.category} is the tallest bar with ${largest.count} characters, followed by ${second.category} with ${second.count}. The three largest groups account for ${topThreeCount} characters, or ${formatPercent(topThreePercent)} of the total. The smallest group is ${smallest.category} with ${smallest.count} characters.`;
+      verticalVisibleSummary.textContent = visibleText;
+      verticalHiddenSummary.textContent = `Chart summary. ${visibleText} Each bar can be focused by keyboard and the full values are available in the data table that follows.`;
+    }
+
+    function renderVerticalPatterns() {
+      verticalPatterns.innerHTML = data
+        .map((d, i) => patternMarkup(`vertical-pattern-${i}`, d.color, d.pattern))
+        .join("");
+    }
+
+    function setActiveVerticalBar(activeBar) {
+      document.querySelectorAll(".vertical-bar").forEach(bar => {
+        bar.classList.toggle("is-active", bar === activeBar);
+        bar.classList.toggle("is-dimmed", bar !== activeBar);
+      });
+    }
+
+    function clearActiveVerticalBar() {
+      document.querySelectorAll(".vertical-bar").forEach(bar => {
+        bar.classList.remove("is-active", "is-dimmed");
+      });
+      hideTooltip();
+    }
+
+    function renderVerticalChart() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+      const width = 900;
+      const height = 420;
+      const margin = { top: 36, right: 36, bottom: 100, left: 58 };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+      const maxValue = Math.max(...sorted.map(d => d.count));
+      const yMax = Math.ceil(maxValue / 2) * 2;
+      const barGap = 22;
+      const barWidth = (chartWidth - barGap * (sorted.length - 1)) / sorted.length;
+      const ns = "http://www.w3.org/2000/svg";
+
+      function x(index) { return margin.left + index * (barWidth + barGap); }
+      function y(value) { return margin.top + chartHeight - (value / yMax) * chartHeight; }
+
+      [0, 2, 4, 6, 8, 10].forEach(tick => {
+        if (tick > yMax) return;
+        const gy = y(tick);
+        const line = document.createElementNS(ns, "line");
+        line.setAttribute("x1", margin.left);
+        line.setAttribute("x2", width - margin.right);
+        line.setAttribute("y1", gy);
+        line.setAttribute("y2", gy);
+        line.setAttribute("class", tick === 0 ? "axis-line" : "grid-line");
+        verticalChart.appendChild(line);
+
+        const label = document.createElementNS(ns, "text");
+        label.setAttribute("x", margin.left - 14);
+        label.setAttribute("y", gy + 4);
+        label.setAttribute("text-anchor", "end");
+        label.setAttribute("class", "axis-label");
+        label.textContent = tick;
+        verticalChart.appendChild(label);
+      });
+
+      sorted.forEach((d, index) => {
+        const barHeight = chartHeight - (y(d.count) - margin.top);
+        const percent = ((d.count / total) * 100).toFixed(1);
+        const bx = x(index);
+        const by = y(d.count);
+        const originalIndex = data.findIndex(item => item.category === d.category);
+
+        const rect = document.createElementNS(ns, "rect");
+        rect.setAttribute("x", bx);
+        rect.setAttribute("y", by);
+        rect.setAttribute("width", barWidth);
+        rect.setAttribute("height", barHeight);
+        rect.setAttribute("rx", "8");
+        rect.setAttribute("class", "vertical-bar");
+        rect.setAttribute("fill", d.pattern === "solid" ? d.color : `url(#vertical-pattern-${originalIndex})`);
+        rect.setAttribute("tabindex", "0");
+        rect.setAttribute("role", "listitem");
+        rect.setAttribute("aria-label", `${d.category}: ${d.count} of ${total} characters, ${percent} percent. Rank ${index + 1} of ${sorted.length}.`);
+        rect.addEventListener("mouseenter", (event) => { setActiveVerticalBar(rect); showTooltip(event, d, percent); });
+        rect.addEventListener("mousemove", moveTooltip);
+        rect.addEventListener("mouseleave", clearActiveVerticalBar);
+        rect.addEventListener("focus", () => {
+          setActiveVerticalBar(rect);
+          const box = rect.getBoundingClientRect();
+          showTooltip({ clientX: box.left + box.width / 2, clientY: box.top }, d, percent);
+        });
+        rect.addEventListener("blur", clearActiveVerticalBar);
+        verticalChart.appendChild(rect);
+
+        const valueLabel = document.createElementNS(ns, "text");
+        valueLabel.setAttribute("x", bx + barWidth / 2);
+        valueLabel.setAttribute("y", by - 10);
+        valueLabel.setAttribute("text-anchor", "middle");
+        valueLabel.setAttribute("class", "vertical-value-label");
+        valueLabel.textContent = d.count;
+        verticalChart.appendChild(valueLabel);
+
+        const categoryLabel = document.createElementNS(ns, "text");
+        categoryLabel.setAttribute("x", bx + barWidth / 2);
+        categoryLabel.setAttribute("y", height - 58);
+        categoryLabel.setAttribute("text-anchor", "middle");
+        categoryLabel.setAttribute("class", "axis-label");
+        categoryLabel.textContent = d.category.split(" ")[0].replace("/", "");
+        verticalChart.appendChild(categoryLabel);
+      });
+    }
+
+    function renderVerticalTable() {
+      const sorted = [...data].sort((a, b) => b.count - a.count);
+      sorted.forEach((d, index) => {
+        const percent = ((d.count / total) * 100).toFixed(1);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <th scope="row">${d.category}</th>
+          <td class="numeric">${d.count}</td>
+          <td class="numeric">${percent}%</td>
+          <td class="numeric">${index + 1}</td>
+        `;
+        verticalTableBody.appendChild(row);
+      });
+    }
+
+    function rowTotal(row) {
+      return row.segments.reduce((sum, segment) => sum + segment.count, 0);
+    }
+
+    function generateSegmentedSummary() {
+      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
+      const largest = sortedRows[0];
+      const second = sortedRows[1];
+      const largestTotal = rowTotal(largest);
+      const secondTotal = rowTotal(second);
+      const largestSegment = largest.segments.reduce((max, segment) => segment.count > max.count ? segment : max, largest.segments[0]);
+      const largestSegmentShare = (largestSegment.count / largestTotal) * 100;
+
+      const visibleText = `This segmented bar chart compares ${segmentedTotal} Star Wars characters across ${segmentedData.length} factions. ${largest.faction} is the largest faction with ${largestTotal} characters, followed by ${second.faction} with ${secondTotal}. Within ${largest.faction}, ${largestSegment.label.toLowerCase()} make up the largest segment with ${largestSegment.count} characters, or ${formatPercent(largestSegmentShare)} of that faction.`;
+
+      const screenReaderText = `Chart summary. ${visibleText} Each segment can be focused by keyboard and the full values are available in the data table that follows.`;
+
+      segVisibleSummary.textContent = visibleText;
+      segHiddenSummary.textContent = screenReaderText;
+    }
+
+    function setActiveSegment(activeSegment) {
+      document.querySelectorAll(".seg-fill").forEach(segment => {
+        segment.classList.toggle("is-active", segment === activeSegment);
+        segment.classList.toggle("is-dimmed", segment !== activeSegment);
+      });
+    }
+
+    function clearActiveSegment() {
+      document.querySelectorAll(".seg-fill").forEach(segment => {
+        segment.classList.remove("is-active", "is-dimmed");
+      });
+      hideTooltip();
+    }
+
+
+    function generateSegmentedVerticalSummary() {
+      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
+      const largest = sortedRows[0];
+      const second = sortedRows[1];
+      const largestTotal = rowTotal(largest);
+      const secondTotal = rowTotal(second);
+      const largestSegment = largest.segments.reduce((max, segment) => segment.count > max.count ? segment : max, largest.segments[0]);
+      const largestSegmentShare = (largestSegment.count / largestTotal) * 100;
+
+      const visibleText = `This segmented vertical bar chart compares ${segmentedTotal} Star Wars characters across ${segmentedData.length} factions. ${largest.faction} is the tallest column with ${largestTotal} characters, followed by ${second.faction} with ${secondTotal}. Within ${largest.faction}, ${largestSegment.label.toLowerCase()} make up the largest segment with ${largestSegment.count} characters, or ${formatPercent(largestSegmentShare)} of that faction.`;
+
+      segVerticalVisibleSummary.textContent = visibleText;
+      segVerticalHiddenSummary.textContent = `Chart summary. ${visibleText} Each column segment can be focused by keyboard and the full values are available in the data table that follows.`;
+    }
+
+    function renderSegmentedVerticalPatterns() {
+      const segments = segmentedData.flatMap(row => row.segments);
+      segVerticalPatterns.innerHTML = segments
+        .map((segment, i) => patternMarkup(`seg-vertical-pattern-${i}`, segment.color, segment.pattern))
+        .join("");
+    }
+
+    function setActiveVerticalSegment(activeSegment) {
+      document.querySelectorAll(".seg-vertical-segment").forEach(segment => {
+        segment.classList.toggle("is-active", segment === activeSegment);
+        segment.classList.toggle("is-dimmed", segment !== activeSegment);
+      });
+    }
+
+    function clearActiveVerticalSegment() {
+      document.querySelectorAll(".seg-vertical-segment").forEach(segment => {
+        segment.classList.remove("is-active", "is-dimmed");
+      });
+      hideTooltip();
+    }
+
+    function renderSegmentedVerticalChart() {
+      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
+      const allSegments = segmentedData.flatMap(row => row.segments);
+      const width = 900;
+      const height = 420;
+      const margin = { top: 36, right: 36, bottom: 100, left: 58 };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+      const maxValue = Math.max(...sortedRows.map(rowTotal));
+      const yMax = Math.ceil(maxValue / 2) * 2;
+      const barGap = 58;
+      const barWidth = (chartWidth - barGap * (sortedRows.length - 1)) / sortedRows.length;
+      const ns = "http://www.w3.org/2000/svg";
+
+      function x(index) { return margin.left + index * (barWidth + barGap); }
+      function y(value) { return margin.top + chartHeight - (value / yMax) * chartHeight; }
+
+      [0, 4, 8, 12, 16].forEach(tick => {
+        if (tick > yMax) return;
+        const gy = y(tick);
+        const line = document.createElementNS(ns, "line");
+        line.setAttribute("x1", margin.left);
+        line.setAttribute("x2", width - margin.right);
+        line.setAttribute("y1", gy);
+        line.setAttribute("y2", gy);
+        line.setAttribute("class", tick === 0 ? "axis-line" : "grid-line");
+        segVerticalChart.appendChild(line);
+
+        const label = document.createElementNS(ns, "text");
+        label.setAttribute("x", margin.left - 14);
+        label.setAttribute("y", gy + 4);
+        label.setAttribute("text-anchor", "end");
+        label.setAttribute("class", "axis-label");
+        label.textContent = tick;
+        segVerticalChart.appendChild(label);
+      });
+
+      sortedRows.forEach((row, rowIndex) => {
+        const totalForRow = rowTotal(row);
+        let cumulative = 0;
+        const bx = x(rowIndex);
+
+        row.segments.forEach(segment => {
+          const previous = cumulative;
+          cumulative += segment.count;
+          const segY = y(cumulative);
+          const segHeight = y(previous) - y(cumulative);
+          const segmentShare = (segment.count / totalForRow) * 100;
+          const datasetShare = (segment.count / segmentedTotal) * 100;
+          const patternIndex = allSegments.findIndex(s => s === segment);
+
+          const rect = document.createElementNS(ns, "rect");
+          rect.setAttribute("x", bx);
+          rect.setAttribute("y", segY);
+          rect.setAttribute("width", barWidth);
+          rect.setAttribute("height", segHeight);
+          rect.setAttribute("class", "seg-vertical-segment");
+          rect.setAttribute("fill", segment.pattern === "solid" ? segment.color : `url(#seg-vertical-pattern-${patternIndex})`);
+          rect.setAttribute("tabindex", "0");
+          rect.setAttribute("role", "listitem");
+          rect.setAttribute("aria-label", `${row.faction}, ${segment.label}: ${segment.count} characters, ${formatPercent(segmentShare)} of faction, ${formatPercent(datasetShare)} of all characters. Faction total ${totalForRow}.`);
+
+          rect.addEventListener("mouseenter", (event) => {
+            setActiveVerticalSegment(rect);
+            tooltip.innerHTML = `
+              <strong>${row.faction}: ${segment.label}</strong>
+              <span>${segment.count} characters</span>
+              <span>${formatPercent(segmentShare)} of faction</span>
+              <span>${formatPercent(datasetShare)} of all characters</span>
+            `;
+            tooltip.classList.add("is-visible");
+            moveTooltip(event);
+          });
+
+          rect.addEventListener("mousemove", moveTooltip);
+          rect.addEventListener("mouseleave", clearActiveVerticalSegment);
+
+          rect.addEventListener("focus", () => {
+            setActiveVerticalSegment(rect);
+            const box = rect.getBoundingClientRect();
+            tooltip.innerHTML = `
+              <strong>${row.faction}: ${segment.label}</strong>
+              <span>${segment.count} characters</span>
+              <span>${formatPercent(segmentShare)} of faction</span>
+              <span>${formatPercent(datasetShare)} of all characters</span>
+            `;
+            tooltip.classList.add("is-visible");
+            moveTooltip({ clientX: box.left + box.width / 2, clientY: box.top });
+          });
+
+          rect.addEventListener("blur", clearActiveVerticalSegment);
+          segVerticalChart.appendChild(rect);
+
+        });
+
+        const totalLabel = document.createElementNS(ns, "text");
+        totalLabel.setAttribute("x", bx + barWidth / 2);
+        totalLabel.setAttribute("y", y(totalForRow) - 10);
+        totalLabel.setAttribute("text-anchor", "middle");
+        totalLabel.setAttribute("class", "seg-vertical-total-label");
+        totalLabel.textContent = totalForRow;
+        segVerticalChart.appendChild(totalLabel);
+
+        const categoryLabel = document.createElementNS(ns, "text");
+        categoryLabel.setAttribute("x", bx + barWidth / 2);
+        categoryLabel.setAttribute("y", height - 58);
+        categoryLabel.setAttribute("text-anchor", "middle");
+        categoryLabel.setAttribute("class", "axis-label");
+        categoryLabel.textContent = row.faction.replace("Galactic ", "").replace(" / Scoundrels", "");
+        segVerticalChart.appendChild(categoryLabel);
+      });
+    }
+
+    function renderSegmentedVerticalLegend() {
+      const legendItems = [
+        { label: "Rebel / Resistance non-Force", color: "#3f7eed", pattern: "diagonalForward" },
+        { label: "Imperial non-Force", color: "#16a1b5", pattern: "dots" },
+        { label: "Rebel / Resistance Force users", color: "#e52b91", pattern: "vertical" },
+        { label: "Dark side Force users", color: "#f77913", pattern: "thickThin" },
+        { label: "Independent non-Force", color: "#8c35e8", pattern: "solid" },
+        { label: "Droids / other", color: "#5a9c05", pattern: "triangle" },
+        { label: "Unknown", color: "#3e5562", pattern: "crosshatch" }
+      ];
+
+      legendItems.forEach(item => {
+        const el = document.createElement("div");
+        el.className = "legend-item";
+        el.innerHTML = `
+          <span class="swatch" style="--swatch:${item.color}" data-pattern="${item.pattern}" aria-hidden="true"></span>
+          <div><strong>${item.label}</strong></div>
+        `;
+        segVerticalLegend.appendChild(el);
+      });
+    }
+
+    function renderSegmentedVerticalTable() {
+      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
+
+      sortedRows.forEach(row => {
+        const values = { forceUsers: 0, nonForceUsers: 0, droidsOther: 0 };
+        row.segments.forEach(segment => { values[segment.key] += segment.count; });
+        const totalForRow = rowTotal(row);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <th scope="row">${row.faction}</th>
+          <td class="numeric">${values.forceUsers}</td>
+          <td class="numeric">${values.nonForceUsers}</td>
+          <td class="numeric">${values.droidsOther}</td>
+          <td class="numeric">${totalForRow}</td>
+        `;
+        segVerticalTableBody.appendChild(tr);
+      });
+    }
+
+    function renderSegmentedChart() {
+      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
+      const axisMax = 20;
+
+      sortedRows.forEach((row, rowIndex) => {
+        const totalForRow = rowTotal(row);
+        const barWidth = (totalForRow / axisMax) * 100;
+
+        const rowEl = document.createElement("div");
+        rowEl.className = "seg-row";
+
+        const label = document.createElement("div");
+        label.className = "seg-label";
+        label.textContent = row.faction;
+
+        const track = document.createElement("div");
+        track.className = "seg-track";
+        track.style.width = `${barWidth}%`;
+
+        row.segments.forEach((segment, segmentIndex) => {
+          const segmentShare = (segment.count / totalForRow) * 100;
+          const datasetShare = (segment.count / segmentedTotal) * 100;
+
+          const fill = document.createElement("div");
+          fill.className = "seg-fill";
+          fill.style.setProperty("--seg-width", `${segmentShare}%`);
+          fill.style.setProperty("--seg-color", segment.color);
+          fill.dataset.pattern = segment.pattern;
+          fill.setAttribute("tabindex", "0");
+          fill.setAttribute("role", "listitem");
+          fill.setAttribute("aria-label", `${row.faction}, ${segment.label}: ${segment.count} characters, ${formatPercent(segmentShare)} of faction, ${formatPercent(datasetShare)} of all characters. Faction total ${totalForRow}.`);
+
+          fill.addEventListener("mouseenter", (event) => {
+            setActiveSegment(fill);
+            tooltip.innerHTML = `
+              <strong>${row.faction}: ${segment.label}</strong>
+              <span>${segment.count} characters</span>
+              <span>${formatPercent(segmentShare)} of faction</span>
+              <span>${formatPercent(datasetShare)} of all characters</span>
+            `;
+            tooltip.classList.add("is-visible");
+            moveTooltip(event);
+          });
+
+          fill.addEventListener("mousemove", moveTooltip);
+          fill.addEventListener("mouseleave", clearActiveSegment);
+
+          fill.addEventListener("focus", () => {
+            setActiveSegment(fill);
+            const rect = fill.getBoundingClientRect();
+            tooltip.innerHTML = `
+              <strong>${row.faction}: ${segment.label}</strong>
+              <span>${segment.count} characters</span>
+              <span>${formatPercent(segmentShare)} of faction</span>
+              <span>${formatPercent(datasetShare)} of all characters</span>
+            `;
+            tooltip.classList.add("is-visible");
+            moveTooltip({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
+          });
+
+          fill.addEventListener("blur", clearActiveSegment);
+
+          track.appendChild(fill);
+        });
+
+        const totalEl = document.createElement("div");
+        totalEl.className = "seg-total";
+        totalEl.textContent = totalForRow;
+
+        const axis = document.createElement("div");
+        axis.className = "axis-column";
+        axis.setAttribute("aria-hidden", "true");
+
+        rowEl.appendChild(label);
+        rowEl.appendChild(axis);
+        rowEl.appendChild(track);
+        rowEl.appendChild(totalEl);
+        segmentedChart.appendChild(rowEl);
+      });
+
+      const axisRow = document.createElement("div");
+      axisRow.className = "seg-x-axis";
+      axisRow.setAttribute("aria-hidden", "true");
+      axisRow.innerHTML = `
+        <div></div>
+        <div></div>
+        <div>
+          <div class="seg-x-axis-line"></div>
+          <div class="seg-x-axis-label"><span>0</span><span>${axisMax}</span></div>
+        </div>
+        <div></div>
+      `;
+      segmentedChart.appendChild(axisRow);
+    }
+
+    function renderSegmentedLegend() {
+      const legendItems = [
+        { label: "Rebel / Resistance non-Force", color: "#3f7eed", pattern: "diagonalForward" },
+        { label: "Imperial non-Force", color: "#16a1b5", pattern: "dots" },
+        { label: "Rebel / Resistance Force users", color: "#e52b91", pattern: "vertical" },
+        { label: "Dark side Force users", color: "#f77913", pattern: "thickThin" },
+        { label: "Independent non-Force", color: "#8c35e8", pattern: "solid" },
+        { label: "Droids / other", color: "#5a9c05", pattern: "triangle" },
+        { label: "Unknown", color: "#3e5562", pattern: "crosshatch" }
+      ];
+
+      legendItems.forEach(item => {
+        const el = document.createElement("div");
+        el.className = "legend-item";
+        el.innerHTML = `
+          <span class="swatch" style="--swatch:${item.color}" data-pattern="${item.pattern}" aria-hidden="true"></span>
+          <div><strong>${item.label}</strong></div>
+        `;
+        segmentedLegend.appendChild(el);
+      });
+    }
+
+    function renderSegmentedTable() {
+      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
+
+      sortedRows.forEach(row => {
+        const values = {
+          forceUsers: 0,
+          nonForceUsers: 0,
+          droidsOther: 0
+        };
+
+        row.segments.forEach(segment => {
+          values[segment.key] += segment.count;
+        });
+
+        const totalForRow = rowTotal(row);
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <th scope="row">${row.faction}</th>
+          <td class="numeric">${values.forceUsers}</td>
+          <td class="numeric">${values.nonForceUsers}</td>
+          <td class="numeric">${values.droidsOther}</td>
+          <td class="numeric">${totalForRow}</td>
+        `;
+        segTableBody.appendChild(tr);
+      });
+    }
+
+
+    function generateLineSummary() {
+      const summaries = lineSeries.map(series => {
+        const first = lineData[0][series.key];
+        const last = lineData[lineData.length - 1][series.key];
+        const change = last - first;
+        const peak = lineData.reduce((max, point) => point[series.key] > max[series.key] ? point : max, lineData[0]);
+        return { ...series, first, last, change, peakPeriod: peak.period, peakValue: peak[series.key] };
+      });
+
+      const strongestGrowth = summaries.reduce((max, item) => item.change > max.change ? item : max, summaries[0]);
+      const finalLeader = summaries.reduce((max, item) => item.last > max.last ? item : max, summaries[0]);
+
+      const visibleText = `This multi-line chart compares activity trends for ${lineSeries.length} groups across ${lineData.length} saga periods. ${strongestGrowth.label} show the strongest growth, moving from ${strongestGrowth.first} to ${strongestGrowth.last}, a net change of +${strongestGrowth.change}. By the final period, ${finalLeader.label} have the highest activity score at ${finalLeader.last}. Peaks occur at different moments, which makes this chart useful for comparing both direction and timing.`;
+
+      const screenReaderText = `Chart summary. ${visibleText} Each point can be focused by keyboard and the full values are available in the data table that follows.`;
+
+      lineVisibleSummary.textContent = visibleText;
+      lineHiddenSummary.textContent = screenReaderText;
+    }
+
+    function renderLineLegend() {
+      lineSeries.forEach(series => {
+        const item = document.createElement("div");
+        item.className = "line-legend-item";
+        item.innerHTML = `
+          <svg class="legend-symbol" viewBox="0 0 40 20" aria-hidden="true">
+            <line x1="2" y1="10" x2="38" y2="10" stroke="${series.color}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${series.dash}"></line>
+            ${legendShapeMarkup(series, 20, 10)}
+          </svg>
+          <span>${series.label}</span>
+        `;
+        lineLegend.appendChild(item);
+      });
+    }
+
+    function legendShapeMarkup(series, x, y) {
+      if (series.shape === "circle") return `<circle cx="${x}" cy="${y}" r="5" fill="#fff" stroke="${series.color}" stroke-width="3"></circle>`;
+      if (series.shape === "square") return `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" fill="#fff" stroke="${series.color}" stroke-width="3"></rect>`;
+      return `<path d="M ${x} ${y - 6} L ${x + 6} ${y + 6} L ${x - 6} ${y + 6} Z" fill="#fff" stroke="${series.color}" stroke-width="3"></path>`;
+    }
+
+    function createPointShape(ns, series, xValue, yValue) {
+      let el;
+      if (series.shape === "circle") {
+        el = document.createElementNS(ns, "circle");
+        el.setAttribute("cx", xValue);
+        el.setAttribute("cy", yValue);
+        el.setAttribute("r", "8");
+      } else if (series.shape === "square") {
+        el = document.createElementNS(ns, "rect");
+        el.setAttribute("x", xValue - 8);
+        el.setAttribute("y", yValue - 8);
+        el.setAttribute("width", "16");
+        el.setAttribute("height", "16");
+        el.setAttribute("rx", "3");
+      } else {
+        el = document.createElementNS(ns, "path");
+        el.setAttribute("d", `M ${xValue} ${yValue - 10} L ${xValue + 10} ${yValue + 8} L ${xValue - 10} ${yValue + 8} Z`);
+      }
+      return el;
+    }
+
+    function setActivePoint(activePoint, activeSeriesKey) {
+      document.querySelectorAll(".line-point").forEach(point => {
+        point.classList.toggle("is-active", point === activePoint);
+        point.classList.toggle("is-dimmed", point !== activePoint);
+      });
+
+      document.querySelectorAll(".line-path").forEach(path => {
+        path.classList.toggle("is-dimmed", path.dataset.series !== activeSeriesKey);
+      });
+    }
+
+    function clearActivePoint() {
+      document.querySelectorAll(".line-point").forEach(point => {
+        point.classList.remove("is-active", "is-dimmed");
+      });
+      document.querySelectorAll(".line-path").forEach(path => {
+        path.classList.remove("is-dimmed");
+      });
+      hideTooltip();
+    }
+
+    function renderLineChart() {
+      const width = 900;
+      const height = 420;
+      const margin = { top: 36, right: 42, bottom: 70, left: 58 };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+      const allValues = lineData.flatMap(d => lineSeries.map(series => d[series.key]));
+      const maxScore = Math.max(...allValues);
+      const minScore = 0;
+      const yMax = Math.ceil(maxScore / 10) * 10;
+
+      function x(index) {
+        return margin.left + (index / (lineData.length - 1)) * chartWidth;
+      }
+
+      function y(value) {
+        return margin.top + chartHeight - ((value - minScore) / (yMax - minScore)) * chartHeight;
+      }
+
+      const ns = "http://www.w3.org/2000/svg";
+
+      [0, 20, 40, 60, 80].forEach(tick => {
+        const gy = y(tick);
+        const line = document.createElementNS(ns, "line");
+        line.setAttribute("x1", margin.left);
+        line.setAttribute("x2", width - margin.right);
+        line.setAttribute("y1", gy);
+        line.setAttribute("y2", gy);
+        line.setAttribute("class", tick === 0 ? "axis-line" : "grid-line");
+        lineChart.appendChild(line);
+
+        const label = document.createElementNS(ns, "text");
+        label.setAttribute("x", margin.left - 14);
+        label.setAttribute("y", gy + 4);
+        label.setAttribute("text-anchor", "end");
+        label.setAttribute("class", "axis-label");
+        label.textContent = tick;
+        lineChart.appendChild(label);
+      });
+
+      lineData.forEach((d, index) => {
+        const label = document.createElementNS(ns, "text");
+        label.setAttribute("x", x(index));
+        label.setAttribute("y", height - 34);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("class", "axis-label");
+        label.textContent = d.period.replace("Episode ", "Ep ");
+        lineChart.appendChild(label);
+      });
+
+      lineSeries.forEach(series => {
+        const pathData = lineData.map((d, index) => `${index === 0 ? "M" : "L"} ${x(index)} ${y(d[series.key])}`).join(" ");
+        const path = document.createElementNS(ns, "path");
+        path.setAttribute("d", pathData);
+        path.setAttribute("class", "line-path");
+        path.setAttribute("stroke", series.color);
+        path.setAttribute("stroke-dasharray", series.dash);
+        path.dataset.series = series.key;
+        lineChart.appendChild(path);
+      });
+
+      lineSeries.forEach(series => {
+        lineData.forEach((d, index) => {
+          const previous = index === 0 ? null : lineData[index - 1];
+          const change = previous ? d[series.key] - previous[series.key] : 0;
+          const px = x(index);
+          const py = y(d[series.key]);
+
+          const point = createPointShape(ns, series, px, py);
+          point.setAttribute("class", "line-point");
+          point.setAttribute("fill", "#ffffff");
+          point.setAttribute("stroke", series.color);
+          point.setAttribute("tabindex", "0");
+          point.setAttribute("role", "listitem");
+          point.dataset.series = series.key;
+          point.setAttribute("aria-label", `${series.label}, ${d.period}: activity score ${d[series.key]}. ${index === 0 ? "Starting value." : `Change from previous period ${change > 0 ? "+" : ""}${change}.`}`);
+
+          point.addEventListener("mouseenter", (event) => {
+            setActivePoint(point, series.key);
+            tooltip.innerHTML = `
+              <strong>${series.label}: ${d.period}</strong>
+              <span>Activity score: ${d[series.key]}</span>
+              <span>${index === 0 ? "Starting value" : `Change: ${change > 0 ? "+" : ""}${change}`}</span>
+            `;
+            tooltip.classList.add("is-visible");
+            moveTooltip(event);
+          });
+
+          point.addEventListener("mousemove", moveTooltip);
+          point.addEventListener("mouseleave", clearActivePoint);
+
+          point.addEventListener("focus", () => {
+            setActivePoint(point, series.key);
+            const rect = point.getBoundingClientRect();
+            tooltip.innerHTML = `
+              <strong>${series.label}: ${d.period}</strong>
+              <span>Activity score: ${d[series.key]}</span>
+              <span>${index === 0 ? "Starting value" : `Change: ${change > 0 ? "+" : ""}${change}`}</span>
+            `;
+            tooltip.classList.add("is-visible");
+            moveTooltip({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
+          });
+
+          point.addEventListener("blur", clearActivePoint);
+          lineChart.appendChild(point);
+        });
+      });
+    }
+
+    function renderLineTable() {
+      lineData.forEach((d) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <th scope="row">${d.period}</th>
+          <td class="numeric">${d.rebels}</td>
+          <td class="numeric">${d.empire}</td>
+          <td class="numeric">${d.independent}</td>
+        `;
+        lineTableBody.appendChild(tr);
+      });
+    }
+
+    function setupMobileMenu() {
+      const menuButton = document.getElementById("menuButton");
+      const sidebar = document.getElementById("sidebar");
+      const mobileQuery = window.matchMedia("(max-width: 960px)");
+
+      function openMenu() {
+        sidebar.classList.add("is-open");
+        menuButton.setAttribute("aria-expanded", "true");
+        const firstTab = sidebar.querySelector('[role="tab"]');
+        if (firstTab) firstTab.focus();
+      }
+
+      function closeMenu({ returnFocus = false } = {}) {
+        sidebar.classList.remove("is-open");
+        menuButton.setAttribute("aria-expanded", "false");
+        if (returnFocus) menuButton.focus();
+      }
+
+      function toggleMenu() {
+        const isOpen = sidebar.classList.contains("is-open");
+        if (isOpen) closeMenu({ returnFocus: true });
+        else openMenu();
+      }
+
+      menuButton.addEventListener("click", toggleMenu);
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && sidebar.classList.contains("is-open")) {
+          closeMenu({ returnFocus: true });
+        }
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!mobileQuery.matches) return;
+        if (!sidebar.classList.contains("is-open")) return;
+        if (sidebar.contains(event.target) || menuButton.contains(event.target)) return;
+        closeMenu();
+      });
+
+      sidebar.addEventListener("click", (event) => {
+        if (!mobileQuery.matches) return;
+        if (event.target.closest('[role="tab"]')) {
+          closeMenu();
+        }
+      });
+
+      mobileQuery.addEventListener("change", (event) => {
+        if (!event.matches) closeMenu();
+      });
+    }
+
+    function setupTabs() {
+      const tabs = document.querySelectorAll('[role="tab"]');
+      const panels = document.querySelectorAll('[role="tabpanel"]');
+
+      function activateTab(tab) {
+        tabs.forEach(t => t.setAttribute("aria-selected", String(t === tab)));
+        panels.forEach(panel => {
+          const isActive = panel.id === tab.getAttribute("aria-controls");
+          panel.classList.toggle("active", isActive);
+          panel.hidden = !isActive;
+        });
+      }
+
+      document.querySelectorAll("[data-jump-tab]").forEach(button => {
+        button.addEventListener("click", () => {
+          const targetTab = document.querySelector(`[data-tab="${button.dataset.jumpTab}"]`);
+          if (targetTab) {
+            activateTab(targetTab);
+            targetTab.focus();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        });
+      });
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => activateTab(tab));
+        tab.addEventListener("keydown", (event) => {
+          const currentIndex = Array.from(tabs).indexOf(tab);
+          let nextIndex = currentIndex;
+
+          if (event.key === "ArrowDown" || event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabs.length;
+          if (event.key === "ArrowUp" || event.key === "ArrowLeft") nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+          if (event.key === "Home") nextIndex = 0;
+          if (event.key === "End") nextIndex = tabs.length - 1;
+
+          if (nextIndex !== currentIndex) {
+            event.preventDefault();
+            tabs[nextIndex].focus();
+            activateTab(tabs[nextIndex]);
+          }
+        });
+      });
+    }
+
+    generateChartSummary();
+    generateBarChartSummary();
+    generateVerticalSummary();
+    generateSegmentedSummary();
+    generateSegmentedVerticalSummary();
+    generateLineSummary();
+    renderPatterns();
+    renderVerticalPatterns();
+    renderSegmentedVerticalPatterns();
+    renderChart();
+    renderLegend();
+    renderTable();
+    renderBarChart();
+    renderBarTable();
+    renderVerticalChart();
+    renderVerticalTable();
+    renderSegmentedVerticalChart();
+    renderSegmentedVerticalLegend();
+    renderSegmentedVerticalTable();
+    renderSegmentedChart();
+    renderSegmentedLegend();
+    renderSegmentedTable();
+    renderLineLegend();
+    renderLineChart();
+    renderLineTable();
+    setupTabs();
+    setupMobileMenu();
+  </script>
+</body>
+</html>
