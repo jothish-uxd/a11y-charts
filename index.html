@@ -609,6 +609,16 @@
     /* Long type unions wrap on narrow screens instead of pushing the page sideways. */
     @media (max-width: 700px) { .options-table code.type { white-space: normal; overflow-wrap: anywhere; } }
     .tooltip.is-below { transform: translate(-50%, 14px); }
+    .radar-chart-svg { width: 100%; max-width: 700px; min-width: 460px; height: auto; display: block; margin: 0 auto; }
+    .radar-ring { fill: none; stroke: var(--rule); stroke-width: 1; }
+    .radar-ring.is-outer { stroke: var(--rule-strong); }
+    .radar-spoke { stroke: var(--rule); stroke-width: 1; }
+    .radar-axis { fill: var(--chart-text); font-size: 15px; font-weight: 500; font-family: var(--font); }
+    .radar-tick { fill: var(--axis-text); font-size: 12.5px; font-family: var(--font); }
+    .radar-shape { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; transition: opacity .15s ease; }
+    .radar-shape.is-dimmed, .radar-point.is-dimmed { opacity: .15; }
+    .radar-point:focus { outline: none; }
+    .radar-point:focus-visible, .radar-point.is-active { stroke: var(--focus); stroke-width: 3.5; }
     .spiral-chart-svg { width: 100%; max-width: 640px; min-width: 460px; height: auto; display: block; margin: 0 auto; }
     .spiral-track { fill: none; stroke: var(--rule-strong); stroke-width: 1.5; }
     .spiral-spoke { stroke: var(--rule); stroke-width: 1; }
@@ -832,6 +842,8 @@
       .spiral-bar { forced-color-adjust: none; fill: CanvasText; stroke: Canvas; }
       .spiral-bar:focus-visible, .spiral-bar.is-active { stroke: Highlight; }
       .spiral-track { stroke: CanvasText; }
+      .radar-shape { forced-color-adjust: none; stroke: CanvasText; }
+      .radar-point:focus-visible, .radar-point.is-active { stroke: Highlight; }
       .bar-fill, .seg-fill { forced-color-adjust: none; border: 1px solid CanvasText; }
       .swatch { border: 2px solid CanvasText; }
       .slice:focus-visible, .vertical-bar:focus-visible, .seg-vertical-segment:focus-visible, .line-point:focus-visible { stroke: Highlight; }
@@ -969,6 +981,7 @@
         <h2 class="nav-heading" id="nav-compare"><button class="nav-toggle" type="button" aria-expanded="true" aria-controls="nav-compare-list"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg><span>Comparison</span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg></button></h2>
         <ul class="nav-list" id="nav-compare-list" aria-labelledby="nav-compare">
           <li><a class="nav-link" href="#bar">Horizontal bars</a></li>
+          <li><a class="nav-link" href="#radar">Radar chart</a></li>
           <li><a class="nav-link" href="#vertical-bars">Vertical bars</a></li>
         </ul>
       </div>
@@ -1020,6 +1033,7 @@
   <section class="doc-section is-wide tab-panel" id="charts" role="tabpanel" aria-labelledby="tab-charts" tabindex="0">
     <h2 class="sr-only" id="h-gallery">Charts</h2>
     <nav class="gallery" aria-labelledby="h-gallery"><a class="gallery-item" href="#bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="14" width="120" height="12" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="34" width="86" height="12" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="30" y="54" width="56" height="12" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="28" y="8" width="2" height="64" fill="var(--rule-strong)"/></svg><strong>Horizontal bars</strong><span>Ranked comparison with room for long labels.</span></a>
+<a class="gallery-item" href="#radar"><svg viewBox="0 0 180 80" aria-hidden="true"><polygon points="90.0,6.0 119.4,23.0 119.4,57.0 90.0,74.0 60.6,57.0 60.6,23.0" fill="none" stroke="var(--rule-strong)" stroke-width="1"/><polygon points="90.0,23.0 104.7,31.5 104.7,48.5 90.0,57.0 75.3,48.5 75.3,31.5" fill="none" stroke="var(--rule-strong)" stroke-width="1"/><polygon points="90.0,16.2 110.6,28.1 112.1,52.7 90.0,60.4 69.4,51.9 78.2,33.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><polygon points="90.0,9.4 116.5,24.7 104.7,48.5 90.0,45.1 87.6,41.4 86.5,38.0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="5 4" stroke-linejoin="round"/><polygon points="90.0,12.8 101.8,33.2 107.7,50.2 90.0,67.2 63.5,55.3 63.5,24.7" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="1.5 4" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Radar chart</strong><span>Profiles across several measures.</span></a>
 <a class="gallery-item" href="#vertical-bars"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="44" y="20" width="22" height="52" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="80" y="8" width="22" height="64" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="116" y="34" width="22" height="38" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="36" y="72" width="110" height="2" fill="var(--rule-strong)"/></svg><strong>Vertical bars</strong><span>Column comparison for dashboards.</span></a>
 <a class="gallery-item" href="#donut"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90.79 10.01 A30 30 0 0 1 108.26 63.80 L100.35 53.49 A17 17 0 0 0 90.45 23.01Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M106.99 64.72 A30 30 0 0 1 66.20 58.26 L76.51 50.35 A17 17 0 0 0 99.63 54.01Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="1"/><path d="M65.28 56.99 A30 30 0 0 1 65.28 23.01 L75.99 30.37 A17 17 0 0 0 75.99 49.63Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="1"/><path d="M66.20 21.74 A30 30 0 0 1 89.21 10.01 L89.55 23.01 A17 17 0 0 0 76.51 29.65Z" fill="url(#mono-solid)" stroke="currentColor" stroke-width="1"/></svg><strong>Donut</strong><span>Part-to-whole across a few categories.</span></a>
 <a class="gallery-item" href="#segmented-bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="18" width="60" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="92" y="18" width="66" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="46" width="42" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="74" y="46" width="54" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="28" y="10" width="2" height="58" fill="var(--rule-strong)"/></svg><strong>Segmented horizontal</strong><span>Stacked bars with long row labels.</span></a>
@@ -1259,6 +1273,102 @@ barChart(document.querySelector(&quot;#ranking&quot;), {
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="bar"></nav>
+</section><section class="panel" id="panel-radar" aria-labelledby="h-radar" hidden>
+  <p class="page-kicker">Comparison · Live</p>
+  <h1 class="page-title" id="h-radar" tabindex="-1">Radar chart</h1>
+  <p class="page-lede">Compare the profile of a few items across several measures on one shared scale. When readers need exact differences, grouped bars are easier to read.</p>
+  <div class="preview"><figure aria-labelledby="radar-chart-title" aria-describedby="radar-chart-summary radar-visible-summary">
+            <h3 id="radar-chart-title" class="sr-only">Radar chart comparing three sample starfighters on six measures</h3>
+            <p id="radar-chart-summary" class="sr-only">Loading radar chart summary.</p>
+<div class="preview-stage">
+
+            <p class="key-hint" id="radar-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>←</kbd> <kbd>→</kbd> around the measures, <kbd>↑</kbd> <kbd>↓</kbd> between craft, <kbd>Home</kbd> <kbd>End</kbd> to the first and last measure.</p>
+
+            <div class="line-legend" id="radarLegend" aria-label="Radar chart legend"></div>
+
+            <div class="chart-scroll">
+              <svg class="radar-chart-svg" id="radarChart" viewBox="0 0 900 600" role="group" aria-roledescription="radar chart" aria-labelledby="radar-svg-title" aria-describedby="radar-svg-desc radar-keys">
+                <title id="radar-svg-title">Sample starfighters compared on six measures</title>
+                <desc id="radar-svg-desc">Six spokes, one per measure, scored from 0 at the center to 10 at the edge. Each craft is an outline joining its six scores.</desc>
+              </svg>
+            </div>
+
+            </div>
+<div class="hears" aria-hidden="true">
+  <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
+  <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
+</div>
+<div class="details">
+              <section aria-labelledby="radar-summary-heading" role="region">
+                <h2 id="radar-summary-heading">Summary</h2>
+                <p id="radar-visible-summary">Loading radar chart summary.</p>
+              </section>
+
+              <section aria-labelledby="radar-table-title">
+                <h2 id="radar-table-title">Data table</h2>
+                <div class="table-scroll">
+                <table>
+                  <caption class="sr-only">Sample starfighter scores out of 10. Measures in rows, craft in columns.</caption>
+                  <thead><tr id="radarTableHead"><th scope="col">Measure</th></tr></thead>
+                  <tbody id="radarTableBody"></tbody>
+                </table>
+                </div>
+              </section>
+            </div>
+          </figure></div>
+
+  <section class="doc-section" aria-labelledby="usage-radar">
+    <h2 id="usage-radar">Usage</h2>
+    <p class="note">Proposed API. The package isn't on npm yet; this is the interface the extracted library will expose.</p>
+    <div class="code-block">
+  <div class="code-block-bar"><span>radar.js</span><button class="copy-button" type="button" data-copy-label="radar.js"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
+  <pre><code data-lang="js">import { radarChart } from &quot;accessible-charts&quot;;
+import &quot;accessible-charts/styles.css&quot;;
+
+const axes = [&quot;Speed&quot;, &quot;Maneuverability&quot;, &quot;Firepower&quot;, &quot;Shields&quot;, &quot;Hyperdrive&quot;, &quot;Cargo&quot;];
+
+const series = [
+  { label: &quot;X-wing&quot;, values: [7, 7, 7, 6, 7, 4] },
+  { label: &quot;TIE fighter&quot;, values: [9, 9, 5, 1, 0, 1] },
+  { label: &quot;Millennium Falcon&quot;, values: [8, 4, 6, 8, 9, 9] },
+];
+
+radarChart(document.querySelector(&quot;#starfighters&quot;), {
+  title: &quot;Starfighters compared&quot;,
+  axes,
+  series,
+  max: 10,           // every axis shares one scale
+  unit: &quot;out of 10&quot;,
+});</code></pre>
+</div>
+  </section>
+
+  <section class="doc-section" aria-labelledby="options-radar">
+    <h2 id="options-radar">Options</h2>
+    <table class="options-table">
+  <caption class="sr-only">Options</caption>
+  <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+  <tbody><tr><td><code>title</code></td><td><code class="type">string</code></td><td>Required. Accessible name for the chart; also used as the SVG <code>&lt;title&gt;</code>.</td></tr>
+<tr><td><code>axes</code></td><td><code class="type">string[]</code></td><td>Required. The measures, in order around the chart, starting at 12 o'clock and going clockwise.</td></tr>
+<tr><td><code>series</code></td><td><code class="type">Array</code></td><td>Required. One <code>{ label, values }</code> per item, with one value per axis.</td></tr>
+<tr><td><code>max</code></td><td><code class="type">number</code></td><td>Top of the shared scale. Radar charts only read honestly when every axis uses the same scale.</td></tr>
+<tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Read after each value, for example <code>"out of 10"</code>.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names each item's strongest and weakest measure, who leads where, and the most balanced item.</td></tr>
+<tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table, with measures in rows and items in columns. Defaults to <code>true</code>.</td></tr>
+<tr><td><code>shapes</code></td><td><code class="type">string[]</code></td><td>Override the marker and dash order for series. Defaults to solid with hollow circles, dashed with filled squares, dotted with hollow triangles.</td></tr></tbody>
+</table>
+  </section>
+
+  <section class="doc-section" aria-labelledby="a11y-radar">
+    <h2 id="a11y-radar">Built-in accessibility</h2>
+    <ul class="a11y-list"><li>The whole chart is one Tab stop. Left and Right arrows move around the measures, wrapping at the ends because the chart is a circle; Up and Down switch between craft; Home and End jump to the first and last measure.</li>
+<li>Each point's name gives the craft, the measure, the score, and where it ranks against the other craft on that measure, with their scores, so a comparison never depends on judging distances by eye.</li>
+<li>Craft are told apart by line style and marker shape, the same encoding as the multi-line chart, and outlines have no fill so no shape hides another.</li>
+<li>Focusing a point dims the other craft, so one profile can be traced around the chart.</li>
+<li>The summary names each craft's strongest and weakest measure, who leads on what, and the most balanced craft; the table lists every score.</li></ul>
+  </section>
+
+  <nav class="pager" aria-label="More charts" data-current="radar"></nav>
 </section><section class="panel" id="panel-vertical-bars" aria-labelledby="h-vertical-bars" hidden>
   <p class="page-kicker">Comparison · Live</p>
   <h1 class="page-title" id="h-vertical-bars" tabindex="-1">Vertical bars</h1>
@@ -3095,6 +3205,171 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 
 
 
+
+    /* ---------------- Radar chart ---------------- */
+    // Sample data: starfighters scored 0-10 on six measures (not canon figures).
+    const RADAR_AXES = ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"];
+    const RADAR_MAX = 10;
+    const radarSeries = [
+      { label: "X-wing", values: [7, 7, 7, 6, 7, 4], shape: "circle", dash: "", filled: false },
+      { label: "TIE fighter", values: [9, 9, 5, 1, 0, 1], shape: "square", dash: "10 7", filled: true },
+      { label: "Millennium Falcon", values: [8, 4, 6, 8, 9, 9], shape: "triangle", dash: "1.5 7", filled: false }
+    ];
+    const radarChart = document.getElementById("radarChart");
+    const radarLegend = document.getElementById("radarLegend");
+    const radarTableHead = document.getElementById("radarTableHead");
+    const radarTableBody = document.getElementById("radarTableBody");
+    const radarVisibleSummary = document.getElementById("radar-visible-summary");
+    const radarHiddenSummary = document.getElementById("radar-chart-summary");
+    const ORDINAL = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
+
+    // Where a craft ranks on one measure, counting ties honestly.
+    function radarRank(si, ai) {
+      const v = radarSeries[si].values[ai];
+      const better = radarSeries.filter(s => s.values[ai] > v).length;
+      const tied = radarSeries.some((s, j) => j !== si && s.values[ai] === v);
+      return `${tied ? "tied for " : ""}${ORDINAL[better]} of ${radarSeries.length}`;
+    }
+
+    function generateRadarSummary() {
+      const lower = a => a.toLowerCase();
+      const profiles = radarSeries.map(s => {
+        const hi = Math.max(...s.values), lo = Math.min(...s.values);
+        const leads = RADAR_AXES.filter((_, ai) => radarSeries.every(o => o === s || s.values[ai] > o.values[ai]));
+        return { s, hi, lo, range: hi - lo, leads,
+          best: RADAR_AXES.filter((_, ai) => s.values[ai] === hi), worst: RADAR_AXES.filter((_, ai) => s.values[ai] === lo) };
+      });
+      const balanced = profiles.reduce((m, p) => p.range < m.range ? p : m, profiles[0]);
+      const sentences = profiles.map(p => {
+        const lead = p.leads.length ? `leads on ${joinNames(p.leads.map(lower))}` : `leads on nothing outright`;
+        return `The ${p.s.label} ${lead}, and is weakest on ${joinNames(p.worst.map(lower))} (${p.lo}).`;
+      });
+      const visibleText = `This radar chart compares ${radarSeries.length} sample starfighters on ${RADAR_AXES.length} measures, each scored out of ${RADAR_MAX}. ${sentences.join(" ")} The ${balanced.s.label} is the most balanced, scoring between ${balanced.lo} and ${balanced.hi} on every measure.`;
+      radarVisibleSummary.textContent = visibleText;
+      radarHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move around the measures and between craft, and every score is in the table that follows.`;
+    }
+
+    function renderRadarLegend() {
+      radarLegend.innerHTML = radarSeries.map(s => `
+        <div class="line-legend-item">
+          <svg class="legend-symbol" viewBox="0 0 40 20" aria-hidden="true">
+            <line x1="2" y1="10" x2="38" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="${s.dash ? s.dash.split(" ").map(n => n * 0.6).join(" ") : ""}"></line>
+            ${legendShapeMarkup({ ...s, color: "currentColor" }, 20, 10)}
+          </svg>
+          <span>${s.label}</span>
+        </div>`).join("");
+    }
+
+    function renderRadarChart() {
+      const ns = "http://www.w3.org/2000/svg";
+      const cx = 450, cy = 304, R = 228;
+      const add = (tag, attrs, text, parent = radarChart) => {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+        if (text != null) el.textContent = text;
+        parent.appendChild(el);
+        return el;
+      };
+      const angle = ai => ai / RADAR_AXES.length * 2 * Math.PI;           // 12 o'clock, clockwise
+      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+      const point = (v, ai) => at((v / RADAR_MAX) * R, angle(ai));
+
+      const grid = add("g", { "aria-hidden": "true" });
+      [2, 4, 6, 8, 10].forEach(t => {
+        add("polygon", { points: RADAR_AXES.map((_, ai) => at(t / RADAR_MAX * R, angle(ai)).join(",")).join(" "), class: t === RADAR_MAX ? "radar-ring is-outer" : "radar-ring" }, null, grid);
+        // Scale labels sit in the gap between the first two spokes, where no data point can land.
+        const gap = Math.PI / RADAR_AXES.length;
+        const [tx, ty] = at(t / RADAR_MAX * R * Math.cos(gap), gap);
+        add("text", { x: tx, y: ty + 4, "text-anchor": "middle", class: "radar-tick" }, t, grid);
+      });
+      RADAR_AXES.forEach((name, ai) => {
+        const [x, y] = at(R, angle(ai));
+        add("line", { x1: cx, y1: cy, x2: x, y2: y, class: "radar-spoke" }, null, grid);
+        const [lx, ly] = at(R + 30, angle(ai));
+        const sin = Math.sin(angle(ai));
+        add("text", { x: lx, y: ly + 5, "text-anchor": Math.abs(sin) < 0.2 ? "middle" : sin > 0 ? "start" : "end", class: "radar-axis" }, name, grid);
+      });
+
+      const shapes = radarSeries.map(s => add("polygon", {
+        points: s.values.map((v, ai) => point(v, ai).join(",")).join(" "),
+        class: "radar-shape", "stroke-dasharray": s.dash, "aria-hidden": "true"
+      }));
+
+      // Points: one craft at a time, clockwise from 12 o'clock.
+      const points = [];
+      radarSeries.forEach((s, si) => {
+        s.values.forEach((v, ai) => {
+          const [x, y] = point(v, ai);
+          const el = createPointShape(ns, s, x, y);
+          el.setAttribute("class", `line-point radar-point${s.filled ? " is-filled" : ""}`);
+          el.setAttribute("stroke", "currentColor");
+          el.setAttribute("role", "img");
+          el.setAttribute("tabindex", si === 0 && ai === 0 ? "0" : "-1");
+          const others = radarSeries.filter((_, j) => j !== si).map(o => `${o.label} ${o.values[ai]}`).join(", ");
+          el.setAttribute("aria-label", `${s.label}, ${RADAR_AXES[ai]}: ${v} out of ${RADAR_MAX}. ${radarRank(si, ai)} on ${RADAR_AXES[ai].toLowerCase()}; ${others}. Measure ${ai + 1} of ${RADAR_AXES.length}.`);
+          radarChart.appendChild(el);
+          points.push({ el, si, ai, v });
+        });
+      });
+
+      const find = (si, ai) => points.find(p => p.si === si && p.ai === ai);
+      function highlight(p) {
+        shapes.forEach((sh, i) => sh.classList.toggle("is-dimmed", i !== p.si));
+        points.forEach(q => { q.el.classList.toggle("is-dimmed", q.si !== p.si); q.el.classList.toggle("is-active", q === p); });
+        const s = radarSeries[p.si];
+        tooltip.innerHTML = `<strong>${s.label} · ${RADAR_AXES[p.ai]}</strong><span>${p.v} out of ${RADAR_MAX}</span><span>${radarRank(p.si, p.ai).replace(/^./, c => c.toUpperCase())}</span>`;
+        tooltip.classList.add("is-visible");
+      }
+      function clear() {
+        shapes.forEach(sh => sh.classList.remove("is-dimmed"));
+        points.forEach(q => q.el.classList.remove("is-dimmed", "is-active"));
+        hideTooltip();
+      }
+      function go(si, ai) {
+        const target = find(si, ai);
+        points.forEach(q => q.el.setAttribute("tabindex", q === target ? "0" : "-1"));
+        target.el.focus();
+      }
+      points.forEach(p => {
+        p.el.addEventListener("focus", () => {
+          // Whichever point has focus is the chart's Tab stop, however it got focus.
+          points.forEach(q => q.el.setAttribute("tabindex", q === p ? "0" : "-1"));
+          highlight(p);
+          const r = p.el.getBoundingClientRect();
+          moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top });
+        });
+        p.el.addEventListener("blur", clear);
+        p.el.addEventListener("mouseenter", e => { highlight(p); moveTooltip(e); });
+        p.el.addEventListener("mousemove", moveTooltip);
+        p.el.addEventListener("mouseleave", () => { if (document.activeElement !== p.el) clear(); });
+        p.el.addEventListener("click", () => go(p.si, p.ai));
+        p.el.addEventListener("keydown", e => {
+          const n = RADAR_AXES.length, last = radarSeries.length - 1;
+          const moves = {
+            ArrowRight: [p.si, (p.ai + 1) % n], ArrowLeft: [p.si, (p.ai - 1 + n) % n],   // around the circle, wrapping
+            ArrowDown: [Math.min(last, p.si + 1), p.ai], ArrowUp: [Math.max(0, p.si - 1), p.ai],
+            Home: [p.si, 0], End: [p.si, n - 1]
+          };
+          if (!(e.key in moves)) return;
+          e.preventDefault();
+          go(...moves[e.key]);
+        });
+      });
+    }
+
+    function renderRadarTable() {
+      radarSeries.forEach(s => {
+        const th = document.createElement("th");
+        th.scope = "col"; th.className = "numeric"; th.textContent = s.label;
+        radarTableHead.appendChild(th);
+      });
+      RADAR_AXES.forEach((name, ai) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<th scope="row">${name}</th>` + radarSeries.map(s => `<td class="numeric">${s.values[ai]}</td>`).join("");
+        radarTableBody.appendChild(tr);
+      });
+    }
+
     /* ---------------- Spiral graph ---------------- */
     // Sample data: monthly cantina visits (thousands) over four years. One turn of the spiral per year.
     const SPIRAL_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -3910,6 +4185,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     generateSegmentedSummary();
     generateSegmentedVerticalSummary();
     generateLineSummary();
+    generateRadarSummary();
     generateSpiralSummary();
     generateArcSummary();
     generateScatterSummary();
@@ -3932,6 +4208,9 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     renderLineLegend();
     renderLineChart();
     renderLineTable();
+    renderRadarLegend();
+    renderRadarChart();
+    renderRadarTable();
     renderSpiralChart();
     renderSpiralTable();
     renderArcLegend();
