@@ -596,6 +596,19 @@
     .vertical-chart-svg, .seg-vertical-chart-svg { width: 100%; max-width: 680px; min-width: 560px; height: auto; display: block; margin: 0 auto; }
     .line-chart-svg { width: 100%; max-width: 700px; min-width: 540px; height: auto; display: block; margin: 0 auto; }
     .scatter-chart-svg { width: 100%; max-width: 720px; min-width: 540px; height: auto; display: block; margin: 0 auto; }
+    .arc-chart-svg { width: 100%; max-width: 780px; min-width: 600px; height: auto; display: block; margin: 0 auto; }
+    .arc-link { fill: none; stroke: var(--ink); stroke-linecap: round; opacity: .7; transition: opacity .15s ease; }
+    .arc-link.is-dimmed { opacity: .08; }
+    .arc-link.is-active { opacity: 1; }
+    .arc-baseline { stroke: var(--rule-strong); stroke-width: 1.5; }
+    .arc-group-rule { stroke: var(--rule-strong); stroke-width: 1.5; }
+    .arc-group-label { fill: var(--ink-soft); font-size: 14.5px; font-weight: 500; font-family: var(--font); }
+    .arc-node-label { fill: var(--chart-text); font-size: 14.5px; font-family: var(--font); }
+    .arc-node-label.is-dimmed { opacity: .35; }
+    .legend-arc { width: 34px; height: 14px; overflow: visible; }
+    /* Long type unions wrap on narrow screens instead of pushing the page sideways. */
+    @media (max-width: 700px) { .options-table code.type { white-space: normal; overflow-wrap: anywhere; } }
+    .tooltip.is-below { transform: translate(-50%, 14px); }
     .axis-title { fill: var(--axis-text); font-size: 14.5px; font-weight: 500; font-family: var(--font); }
     .trend-line { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; opacity: .55; }
     .trend-label { fill: var(--ink-soft); font-size: 13.5px; font-family: var(--font); }
@@ -798,6 +811,8 @@
     @media (forced-colors: active) {
       .slice, .vertical-bar, .seg-vertical-segment, .line-point { forced-color-adjust: none; stroke: CanvasText; }
       .trend-line { stroke: CanvasText; opacity: 1; }
+      .arc-link { forced-color-adjust: none; stroke: CanvasText; }
+      .arc-link.is-active { stroke: Highlight; }
       .bar-fill, .seg-fill { forced-color-adjust: none; border: 1px solid CanvasText; }
       .swatch { border: 2px solid CanvasText; }
       .slice:focus-visible, .vertical-bar:focus-visible, .seg-vertical-segment:focus-visible, .line-point:focus-visible { stroke: Highlight; }
@@ -955,6 +970,7 @@
       <div class="nav-group">
         <h2 class="nav-heading" id="nav-relationship"><button class="nav-toggle" type="button" aria-expanded="true" aria-controls="nav-relationship-list"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><circle cx="8" cy="15" r="1.4"/><circle cx="12" cy="11" r="1.4"/><circle cx="16.5" cy="12.5" r="1.4"/><circle cx="18" cy="6.5" r="1.4"/></svg><span>Relationship</span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg></button></h2>
         <ul class="nav-list" id="nav-relationship-list" aria-labelledby="nav-relationship">
+          <li><a class="nav-link" href="#arc">Arc diagram</a></li>
           <li><a class="nav-link" href="#scatter">Scatter plot</a></li>
         </ul>
       </div>
@@ -989,6 +1005,7 @@
 <a class="gallery-item" href="#segmented-bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="18" width="60" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="92" y="18" width="66" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="46" width="42" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="74" y="46" width="54" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="28" y="10" width="2" height="58" fill="var(--rule-strong)"/></svg><strong>Segmented horizontal</strong><span>Stacked bars with long row labels.</span></a>
 <a class="gallery-item" href="#segmented-vertical"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="56" y="38" width="26" height="34" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="56" y="14" width="26" height="22" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="98" y="32" width="26" height="40" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="98" y="16" width="26" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="46" y="72" width="88" height="2" fill="var(--rule-strong)"/></svg><strong>Segmented vertical</strong><span>Stacked columns: totals and composition.</span></a>
 <a class="gallery-item" href="#line"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M20 64 L52 50 L84 54 L116 30 L160 22" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M20 40 L52 36 L84 26 L116 42 L160 48" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="7 6"/><path d="M20 70 L52 64 L84 54 L116 46 L160 32" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="2 6"/></svg><strong>Multi-line</strong><span>Trends and timing across series.</span></a>
+<a class="gallery-item" href="#arc"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M30 64 A 22 22 0 0 1 74 64" fill="none" stroke="currentColor" stroke-width="3"/><path d="M52 64 A 22 18 0 0 1 96 64" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M30 64 A 66 48 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M96 64 A 33 30 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 4"/><path d="M118 64 A 22 16 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 64 H170" stroke="var(--rule-strong)" stroke-width="1"/><circle cx="30" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="52" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="74" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><path d="M96 58.5 L101 67.5 L91 67.5 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><rect x="114" y="60" width="8" height="8" rx="1" fill="currentColor"/><rect x="158" y="60" width="8" height="8" rx="1" fill="currentColor"/></svg><strong>Arc diagram</strong><span>Who connects to whom, and how strongly.</span></a>
 <a class="gallery-item" href="#scatter"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M22 66 L160 18" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/><circle cx="40" cy="58" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="82" cy="44" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="128" cy="28" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><rect x="54" y="56" width="8" height="8" rx="1" fill="currentColor"/><rect x="100" y="40" width="8" height="8" rx="1" fill="currentColor"/><rect x="146" y="22" width="8" height="8" rx="1" fill="currentColor"/><path d="M30 14 L35 23 L25 23 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M70 48 L75 57 L65 57 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M116 30 L121 39 L111 39 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 72 H164 M20 72 V8" fill="none" stroke="var(--rule-strong)" stroke-width="1"/></svg><strong>Scatter plot</strong><span>How two measures move together.</span></a></nav>
   </section>
 
@@ -1613,6 +1630,111 @@ lineChart(document.querySelector(&quot;#activity&quot;), {
 
   <nav class="pager" aria-label="More charts" data-current="line"></nav>
 </section>
+<section class="panel" id="panel-arc" aria-labelledby="h-arc" hidden>
+  <p class="page-kicker">Relationship · Live</p>
+  <h1 class="page-title" id="h-arc" tabindex="-1">Arc diagram</h1>
+  <p class="page-lede">Show who connects to whom along a single line, and how strong each connection is.</p>
+  <div class="preview"><figure aria-labelledby="arc-chart-title" aria-describedby="arc-chart-summary arc-visible-summary">
+            <h3 id="arc-chart-title" class="sr-only">Arc diagram of sample shared scenes between ten Star Wars characters</h3>
+            <p id="arc-chart-summary" class="sr-only">Loading arc diagram summary.</p>
+<div class="preview-stage">
+
+            <div class="line-legend" id="arcLegend" aria-label="Arc diagram legend"></div>
+
+            <div class="chart-scroll">
+              <svg class="arc-chart-svg" id="arcChart" viewBox="0 0 900 470" role="img" aria-labelledby="arc-svg-title arc-svg-desc">
+                <title id="arc-svg-title">Sample shared scenes between Star Wars characters</title>
+                <desc id="arc-svg-desc">An arc diagram with ten characters along a line, grouped by faction, and an arc for each pair who share scenes. Thicker arcs mean more shared scenes; dashed arcs cross factions. Each character can be focused by keyboard.</desc>
+              </svg>
+            </div>
+
+            </div>
+<div class="hears" aria-hidden="true">
+  <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
+  <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
+</div>
+<div class="details">
+              <section aria-labelledby="arc-summary-heading" role="region">
+                <h2 id="arc-summary-heading">Summary</h2>
+                <p id="arc-visible-summary">Loading arc diagram summary.</p>
+              </section>
+
+              <section aria-labelledby="arc-table-title">
+                <h2 id="arc-table-title">Connections</h2>
+                <div class="table-scroll">
+                <table>
+                  <caption class="sr-only">Every connection in the arc diagram, strongest first. Sample data.</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Character</th>
+                      <th scope="col">Connected to</th>
+                      <th scope="col" class="numeric">Shared scenes</th>
+                      <th scope="col">Factions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="arcTableBody"></tbody>
+                </table>
+                </div>
+              </section>
+            </div>
+          </figure></div>
+
+  <section class="doc-section" aria-labelledby="usage-arc">
+    <h2 id="usage-arc">Usage</h2>
+    <p class="note">Proposed API. The package isn't on npm yet; this is the interface the extracted library will expose.</p>
+    <div class="code-block">
+  <div class="code-block-bar"><span>arc.js</span><button class="copy-button" type="button" data-copy-label="arc.js"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
+  <pre><code data-lang="js">import { arcDiagram } from &quot;accessible-charts&quot;;
+import &quot;accessible-charts/styles.css&quot;;
+
+const nodes = [
+  { id: &quot;luke&quot;, label: &quot;Luke Skywalker&quot;, short: &quot;Luke&quot;, group: &quot;Rebels&quot; },
+  { id: &quot;vader&quot;, label: &quot;Darth Vader&quot;, short: &quot;Vader&quot;, group: &quot;Empire&quot; },
+  // …one object per node
+];
+
+const links = [
+  { source: &quot;luke&quot;, target: &quot;vader&quot;, value: 6 },
+  // …one object per connection
+];
+
+arcDiagram(document.querySelector(&quot;#scenes&quot;), {
+  title: &quot;Characters who share scenes&quot;,
+  unit: &quot;shared scenes&quot;,
+  nodes,
+  links,
+  order: &quot;group&quot;, // keep each group together along the line
+});</code></pre>
+</div>
+  </section>
+
+  <section class="doc-section" aria-labelledby="options-arc">
+    <h2 id="options-arc">Options</h2>
+    <table class="options-table">
+  <caption class="sr-only">Options</caption>
+  <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+  <tbody><tr><td><code>title</code></td><td><code class="type">string</code></td><td>Required. Accessible name for the chart; also used as the SVG <code>&lt;title&gt;</code>.</td></tr>
+<tr><td><code>nodes</code></td><td><code class="type">Array</code></td><td>Required. One <code>{ id, label, short, group }</code> per node. <code>short</code> is the name drawn under the node; <code>label</code> is read aloud.</td></tr>
+<tr><td><code>links</code></td><td><code class="type">Array</code></td><td>Required. One <code>{ source, target, value }</code> per connection. <code>value</code> sets the arc's thickness.</td></tr>
+<tr><td><code>unit</code></td><td><code class="type">string</code></td><td>What a link's value counts, for example <code>"shared scenes"</code>. Read with every connection.</td></tr>
+<tr><td><code>order</code></td><td><code class="type">&quot;group&quot; | &quot;input&quot; | &quot;connections&quot;</code></td><td>Node order along the line. <code>"group"</code> keeps groups together; <code>"connections"</code> puts the most connected first. Defaults to <code>"group"</code>.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the most connected node, the strongest pair, and how many links cross groups.</td></tr>
+<tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table of connections. Defaults to <code>true</code>. Turn off only if the same data is shown elsewhere on the page.</td></tr>
+<tr><td><code>shapes</code></td><td><code class="type">string[]</code></td><td>Override the marker order for groups. Defaults to hollow circle, filled square, hollow triangle, then further shape and fill combinations.</td></tr></tbody>
+</table>
+  </section>
+
+  <section class="doc-section" aria-labelledby="a11y-arc">
+    <h2 id="a11y-arc">Built-in accessibility</h2>
+    <ul class="a11y-list"><li>Each character is focusable, and its name says how many connections it has and lists them strongest first, so the network can be explored one character at a time.</li>
+<li>Focusing a character dims every arc that isn't theirs, so its connections stand out from the rest.</li>
+<li>Arc thickness shows the number of shared scenes, and solid versus dashed shows whether a connection stays inside a faction or crosses factions. Both are also in the names and the table.</li>
+<li>Factions are told apart by marker shape and fill, and labelled under the line.</li>
+<li>The table lists every connection, strongest first, and the summary names the most connected character, the strongest pair, and who bridges factions.</li></ul>
+  </section>
+
+  <nav class="pager" aria-label="More charts" data-current="arc"></nav>
+</section>
 <section class="panel" id="panel-scatter" aria-labelledby="h-scatter" hidden>
   <p class="page-kicker">Relationship · Live</p>
   <h1 class="page-title" id="h-scatter" tabindex="-1">Scatter plot</h1>
@@ -1941,7 +2063,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     }
 
     function hideTooltip() {
-      tooltip.classList.remove("is-visible");
+      tooltip.classList.remove("is-visible", "is-below");
     }
 
     function setActiveSlice(activePath) {
@@ -2855,6 +2977,206 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     }
 
 
+
+    /* ---------------- Arc diagram ---------------- */
+    // Sample data: scenes each pair of characters shares. Nodes are ordered by faction along the line.
+    const arcGroups = [
+      { key: "rebels", label: "Rebels", shape: "circle", filled: false },
+      { key: "independent", label: "Independent", shape: "triangle", filled: false },
+      { key: "empire", label: "Empire", shape: "square", filled: true }
+    ];
+    const arcNodes = [
+      { id: "obiwan", label: "Obi-Wan Kenobi", short: "Obi-Wan", group: "rebels" },
+      { id: "luke", label: "Luke Skywalker", short: "Luke", group: "rebels" },
+      { id: "leia", label: "Leia Organa", short: "Leia", group: "rebels" },
+      { id: "han", label: "Han Solo", short: "Han", group: "rebels" },
+      { id: "chewie", label: "Chewbacca", short: "Chewbacca", group: "rebels" },
+      { id: "lando", label: "Lando Calrissian", short: "Lando", group: "independent" },
+      { id: "boba", label: "Boba Fett", short: "Boba Fett", group: "independent" },
+      { id: "vader", label: "Darth Vader", short: "Vader", group: "empire" },
+      { id: "tarkin", label: "Grand Moff Tarkin", short: "Tarkin", group: "empire" },
+      { id: "palpatine", label: "Emperor Palpatine", short: "Palpatine", group: "empire" }
+    ];
+    const arcLinks = [
+      { source: "han", target: "chewie", value: 15 },
+      { source: "luke", target: "leia", value: 14 },
+      { source: "leia", target: "han", value: 13 },
+      { source: "luke", target: "han", value: 12 },
+      { source: "luke", target: "chewie", value: 9 },
+      { source: "leia", target: "chewie", value: 8 },
+      { source: "obiwan", target: "luke", value: 7 },
+      { source: "luke", target: "vader", value: 6 },
+      { source: "vader", target: "palpatine", value: 5 },
+      { source: "vader", target: "tarkin", value: 4 },
+      { source: "han", target: "lando", value: 4 },
+      { source: "obiwan", target: "han", value: 3 },
+      { source: "leia", target: "vader", value: 3 },
+      { source: "leia", target: "lando", value: 3 },
+      { source: "han", target: "boba", value: 3 },
+      { source: "leia", target: "tarkin", value: 2 },
+      { source: "luke", target: "palpatine", value: 2 },
+      { source: "lando", target: "vader", value: 2 },
+      { source: "boba", target: "vader", value: 2 },
+      { source: "obiwan", target: "vader", value: 1 }
+    ];
+    const arcChart = document.getElementById("arcChart");
+    const arcLegend = document.getElementById("arcLegend");
+    const arcTableBody = document.getElementById("arcTableBody");
+    const arcVisibleSummary = document.getElementById("arc-visible-summary");
+    const arcHiddenSummary = document.getElementById("arc-chart-summary");
+    const arcNodeById = Object.fromEntries(arcNodes.map(n => [n.id, n]));
+    const arcGroupOf = key => arcGroups.find(g => g.key === key);
+    const isCross = l => arcNodeById[l.source].group !== arcNodeById[l.target].group;
+    const scenesWord = n => `${n} shared ${n === 1 ? "scene" : "scenes"}`;
+
+    // Each node's connections, strongest first, plus how many other factions it reaches.
+    arcNodes.forEach(n => {
+      n.links = arcLinks
+        .filter(l => l.source === n.id || l.target === n.id)
+        .map(l => ({ other: arcNodeById[l.source === n.id ? l.target : l.source], value: l.value }))
+        .sort((a, b) => b.value - a.value || a.other.label.localeCompare(b.other.label));
+      n.total = n.links.reduce((t, l) => t + l.value, 0);
+      n.reaches = new Set(n.links.map(l => l.other.group).filter(g => g !== n.group));
+    });
+
+    function joinNames(names) {
+      return names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+    }
+
+    function generateArcSummary() {
+      const mostConnected = arcNodes.reduce((m, n) => n.links.length > m.links.length || (n.links.length === m.links.length && n.total > m.total) ? n : m, arcNodes[0]);
+      const busiest = arcNodes.reduce((m, n) => n.total > m.total ? n : m, arcNodes[0]);
+      const strongest = arcLinks.reduce((m, l) => l.value > m.value ? l : m, arcLinks[0]);
+      const cross = arcLinks.filter(isCross).length;
+      const bridges = arcNodes.filter(n => n.reaches.size >= arcGroups.length - 1).map(n => n.label);
+      const busiestNote = busiest === mostConnected ? "" : ` ${busiest.label} shares the most scenes overall, ${busiest.total}.`;
+      const visibleText = `This arc diagram shows ${arcLinks.length} connections between ${arcNodes.length} sample characters in ${arcGroups.length} factions. ${mostConnected.label} has the most connections, ${mostConnected.links.length}.${busiestNote} The strongest pair is ${arcNodeById[strongest.source].label} and ${arcNodeById[strongest.target].label}, with ${scenesWord(strongest.value)}. ${cross} of the ${arcLinks.length} connections cross factions${bridges.length ? `, and ${joinNames(bridges)} each connect to both other factions` : ""}.`;
+      arcVisibleSummary.textContent = visibleText;
+      arcHiddenSummary.textContent = `Chart summary. ${visibleText} Each character can be focused by keyboard to hear its connections, and every connection is in the table that follows.`;
+    }
+
+    function renderArcLegend() {
+      const items = arcGroups.map(g => `
+        <div class="line-legend-item">
+          <svg class="legend-symbol" viewBox="10 0 20 20" style="width:20px" aria-hidden="true">${legendShapeMarkup({ ...g, color: "currentColor" }, 20, 10)}</svg>
+          <span>${g.label}</span>
+        </div>`);
+      items.push(`
+        <div class="line-legend-item">
+          <svg class="legend-arc" viewBox="0 0 34 14" aria-hidden="true"><path d="M2 12 A 15 10 0 0 1 32 12" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
+          <span>Same faction</span>
+        </div>`, `
+        <div class="line-legend-item">
+          <svg class="legend-arc" viewBox="0 0 34 14" aria-hidden="true"><path d="M2 12 A 15 10 0 0 1 32 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="5 4"/></svg>
+          <span>Across factions</span>
+        </div>`, `
+        <div class="line-legend-item">
+          <svg class="legend-arc" viewBox="0 0 34 14" aria-hidden="true"><path d="M2 4 H32" stroke="currentColor" stroke-width="1.5"/><path d="M2 11 H32" stroke="currentColor" stroke-width="5"/></svg>
+          <span>Thicker means more shared scenes</span>
+        </div>`);
+      arcLegend.innerHTML = items.join("");
+    }
+
+    function setActiveArcNode(node) {
+      const linked = new Set([node.id, ...node.links.map(l => l.other.id)]);
+      arcChart.querySelectorAll(".arc-link").forEach(a => {
+        const on = a.dataset.source === node.id || a.dataset.target === node.id;
+        a.classList.toggle("is-active", on);
+        a.classList.toggle("is-dimmed", !on);
+      });
+      arcChart.querySelectorAll(".line-point").forEach(pt => {
+        pt.classList.toggle("is-active", pt.dataset.node === node.id);
+        pt.classList.toggle("is-sibling", pt.dataset.node !== node.id && linked.has(pt.dataset.node));
+        pt.classList.toggle("is-dimmed", !linked.has(pt.dataset.node));
+      });
+      arcChart.querySelectorAll(".arc-node-label").forEach(t => t.classList.toggle("is-dimmed", !linked.has(t.dataset.node)));
+    }
+    function clearActiveArcNode() {
+      arcChart.querySelectorAll(".arc-link, .line-point, .arc-node-label").forEach(el => el.classList.remove("is-active", "is-dimmed", "is-sibling"));
+      hideTooltip();
+    }
+
+    function renderArcChart() {
+      const width = 900, baseline = 330, left = 70, right = 830;
+      const ns = "http://www.w3.org/2000/svg";
+      const add = (tag, attrs, text, parent = arcChart) => {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+        if (text != null) el.textContent = text;
+        parent.appendChild(el);
+        return el;
+      };
+      const step = (right - left) / (arcNodes.length - 1);
+      arcNodes.forEach((n, i) => { n.x = left + i * step; });
+      const maxValue = Math.max(...arcLinks.map(l => l.value));
+      const widthFor = v => 1.5 + (v / maxValue) * 6;
+
+      add("line", { x1: left - 30, x2: right + 30, y1: baseline, y2: baseline, class: "arc-baseline", "aria-hidden": "true" });
+
+      // Thick arcs first, so thin ones stay visible on top.
+      const arcLayer = add("g", { "aria-hidden": "true" });
+      [...arcLinks].sort((a, b) => b.value - a.value).forEach(l => {
+        const a = arcNodeById[l.source], b = arcNodeById[l.target];
+        const x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x);
+        const rx = (x2 - x1) / 2, ry = Math.min(rx, 290) * 0.95;
+        add("path", {
+          d: `M ${x1} ${baseline} A ${rx} ${ry} 0 0 1 ${x2} ${baseline}`,
+          class: "arc-link", "stroke-width": widthFor(l.value).toFixed(2),
+          "stroke-dasharray": isCross(l) ? "7 6" : "", "data-source": l.source, "data-target": l.target
+        }, null, arcLayer);
+      });
+
+      // Faction rules and labels under the names.
+      arcGroups.forEach(g => {
+        const members = arcNodes.filter(n => n.group === g.key);
+        const x1 = members[0].x - step * 0.38, x2 = members[members.length - 1].x + step * 0.38;
+        add("line", { x1, x2, y1: 418, y2: 418, class: "arc-group-rule", "aria-hidden": "true" });
+        add("text", { x: (x1 + x2) / 2, y: 444, "text-anchor": "middle", class: "arc-group-label", "aria-hidden": "true" }, g.label);
+      });
+
+      // Nodes, left to right, so keyboard order follows reading order.
+      arcNodes.forEach((n, i) => {
+        const group = arcGroupOf(n.group);
+        add("text", { x: n.x, y: baseline + 40, "text-anchor": "middle", class: "arc-node-label", "data-node": n.id, "aria-hidden": "true" }, n.short);
+        const point = createPointShape(ns, group, n.x, baseline);
+        point.setAttribute("class", group.filled ? "line-point is-filled" : "line-point");
+        point.setAttribute("stroke", "currentColor");
+        point.setAttribute("tabindex", "0");
+        point.setAttribute("role", "listitem");
+        point.dataset.node = n.id;
+        const list = n.links.map(l => `${l.other.label} ${l.value}`).join(", ");
+        point.setAttribute("aria-label", `${n.label}, ${group.label}. ${n.links.length} ${n.links.length === 1 ? "connection" : "connections"}, ${n.total} shared scenes in all. Strongest first: ${list}. ${i + 1} of ${arcNodes.length}.`);
+        const tip = () => `
+          <strong>${n.label} · ${group.label}</strong>
+          <span>${n.links.length} connections, ${n.total} shared scenes</span>
+          <span>${n.links.slice(0, 3).map(l => `${l.other.short} ${l.value}`).join(" · ")}${n.links.length > 3 ? " · …" : ""}</span>`;
+        point.addEventListener("mouseenter", e => { setActiveArcNode(n); tooltip.innerHTML = tip(); tooltip.classList.add("is-visible", "is-below"); moveTooltip({ clientX: e.clientX, clientY: point.getBoundingClientRect().bottom }); });
+        point.addEventListener("mouseleave", clearActiveArcNode);
+        point.addEventListener("focus", () => {
+          setActiveArcNode(n);
+          const r = point.getBoundingClientRect();
+          tooltip.innerHTML = tip(); tooltip.classList.add("is-visible", "is-below");
+          // Below the line, so the tooltip never covers the arcs being highlighted.
+          moveTooltip({ clientX: r.left + r.width / 2, clientY: r.bottom });
+        });
+        point.addEventListener("blur", clearActiveArcNode);
+        arcChart.appendChild(point);
+      });
+    }
+
+    function renderArcTable() {
+      [...arcLinks].sort((a, b) => b.value - a.value || arcNodeById[a.source].label.localeCompare(arcNodeById[b.source].label)).forEach(l => {
+        const a = arcNodeById[l.source], b = arcNodeById[l.target];
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <th scope="row">${a.label}</th>
+          <td>${b.label}</td>
+          <td class="numeric">${l.value}</td>
+          <td>${isCross(l) ? `Across: ${arcGroupOf(a.group).label} and ${arcGroupOf(b.group).label}` : `Same: ${arcGroupOf(a.group).label}`}</td>`;
+        arcTableBody.appendChild(tr);
+      });
+    }
+
     /* ---------------- Scatter plot ---------------- */
     // Sample data: training hours and mission success (%) for 24 pilots.
     const scatterSeries = [
@@ -3311,6 +3633,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     generateSegmentedSummary();
     generateSegmentedVerticalSummary();
     generateLineSummary();
+    generateArcSummary();
     generateScatterSummary();
     renderPatterns();
     renderVerticalPatterns();
@@ -3331,6 +3654,9 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     renderLineLegend();
     renderLineChart();
     renderLineTable();
+    renderArcLegend();
+    renderArcChart();
+    renderArcTable();
     renderScatterLegend();
     renderScatterChart();
     renderScatterTable();
