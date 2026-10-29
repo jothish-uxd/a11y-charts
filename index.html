@@ -609,6 +609,16 @@
     /* Long type unions wrap on narrow screens instead of pushing the page sideways. */
     @media (max-width: 700px) { .options-table code.type { white-space: normal; overflow-wrap: anywhere; } }
     .tooltip.is-below { transform: translate(-50%, 14px); }
+    .radial-chart-svg { width: 100%; max-width: 620px; min-width: 440px; height: auto; display: block; margin: 0 auto; }
+    .rb-track { fill: var(--track); }
+    .rb-bar { stroke: var(--ink); stroke-width: 1.2; stroke-linejoin: round; cursor: pointer; transition: opacity .15s ease; }
+    .rb-bar:focus { outline: none; }
+    .rb-bar:focus-visible, .rb-bar.is-active { stroke: var(--focus); stroke-width: 3.5; }
+    .rb-bar.is-dimmed, .rb-name.is-dimmed { opacity: .22; }
+    .rb-name { fill: var(--chart-text); font-size: 15px; font-weight: 500; font-family: var(--font); }
+    .rb-value { fill: var(--ink); font-size: 14px; font-weight: 600; font-family: var(--font); font-variant-numeric: tabular-nums; }
+    .rb-scale { fill: var(--axis-text); font-size: 12.5px; font-family: var(--font); }
+    .rb-scale-line { stroke: var(--rule); stroke-width: 1; }
     .sunburst-chart-svg { width: 100%; max-width: 560px; min-width: 420px; height: auto; display: block; margin: 0 auto; overflow: visible; }
     .sb-legend { margin: 0; }
     .sb-wedge { stroke: var(--ink); stroke-width: 1.2; stroke-linejoin: round; cursor: pointer; transition: opacity .15s ease; }
@@ -858,6 +868,9 @@
       .spiral-track { stroke: CanvasText; }
       .radar-shape { forced-color-adjust: none; stroke: CanvasText; }
       .sb-wedge { forced-color-adjust: none; stroke: CanvasText; }
+      .rb-bar { forced-color-adjust: none; stroke: CanvasText; }
+      .rb-bar:focus-visible, .rb-bar.is-active { stroke: Highlight; }
+      .rb-track { forced-color-adjust: none; fill: Canvas; stroke: GrayText; }
       .chip-bg { forced-color-adjust: none; fill: Canvas; stroke: CanvasText; }
       .svg-chip text { forced-color-adjust: none; fill: CanvasText; }
       .sb-wedge:focus-visible, .sb-wedge.is-active { stroke: Highlight; }
@@ -1000,6 +1013,7 @@
         <ul class="nav-list" id="nav-compare-list" aria-labelledby="nav-compare">
           <li><a class="nav-link" href="#bar">Horizontal bars</a></li>
           <li><a class="nav-link" href="#radar">Radar chart</a></li>
+          <li><a class="nav-link" href="#radial">Radial bar chart</a></li>
           <li><a class="nav-link" href="#vertical-bars">Vertical bars</a></li>
         </ul>
       </div>
@@ -1053,6 +1067,7 @@
     <h2 class="sr-only" id="h-gallery">Charts</h2>
     <nav class="gallery" aria-labelledby="h-gallery"><a class="gallery-item" href="#bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="14" width="120" height="12" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="34" width="86" height="12" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="30" y="54" width="56" height="12" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="28" y="8" width="2" height="64" fill="var(--rule-strong)"/></svg><strong>Horizontal bars</strong><span>Ranked comparison with room for long labels.</span></a>
 <a class="gallery-item" href="#radar"><svg viewBox="0 0 180 80" aria-hidden="true"><polygon points="90.0,6.0 119.4,23.0 119.4,57.0 90.0,74.0 60.6,57.0 60.6,23.0" fill="none" stroke="var(--rule-strong)" stroke-width="1"/><polygon points="90.0,23.0 104.7,31.5 104.7,48.5 90.0,57.0 75.3,48.5 75.3,31.5" fill="none" stroke="var(--rule-strong)" stroke-width="1"/><polygon points="90.0,16.2 110.6,28.1 112.1,52.7 90.0,60.4 69.4,51.9 78.2,33.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><polygon points="90.0,9.4 116.5,24.7 104.7,48.5 90.0,45.1 87.6,41.4 86.5,38.0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="5 4" stroke-linejoin="round"/><polygon points="90.0,12.8 101.8,33.2 107.7,50.2 90.0,67.2 63.5,55.3 63.5,24.7" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="1.5 4" stroke-linecap="round" stroke-linejoin="round"/></svg><strong>Radar chart</strong><span>Profiles across several measures.</span></a>
+<a class="gallery-item" href="#radial"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90.0 30.0 L90.0 24.0 A16 16 0 1 1 74.0 40.0 L80.0 40.0 A10 10 0 1 0 90.0 30.0Z" fill="var(--track)"/><path d="M90.0 30.0 L90.0 24.0 A16 16 0 1 1 75.1 45.9 L80.7 43.7 A10 10 0 1 0 90.0 30.0Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="0.8"/><path d="M90.0 22.0 L90.0 16.0 A24 24 0 1 1 66.0 40.0 L72.0 40.0 A18 18 0 1 0 90.0 22.0Z" fill="var(--track)"/><path d="M90.0 22.0 L90.0 16.0 A24 24 0 1 1 77.8 60.7 L80.8 55.5 A18 18 0 1 0 90.0 22.0Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="0.8"/><path d="M90.0 14.0 L90.0 8.0 A32 32 0 1 1 58.0 40.0 L64.0 40.0 A26 26 0 1 0 90.0 14.0Z" fill="var(--track)"/><path d="M90.0 14.0 L90.0 8.0 A32 32 0 0 1 94.0 71.7 L93.3 65.8 A26 26 0 0 0 90.0 14.0Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="0.8"/><path d="M90.0 6.0 L90.0 0.0 A40 40 0 1 1 50.0 40.0 L56.0 40.0 A34 34 0 1 0 90.0 6.0Z" fill="var(--track)"/><path d="M90.0 6.0 L90.0 0.0 A40 40 0 0 1 118.3 68.3 L114.0 64.0 A34 34 0 0 0 90.0 6.0Z" fill="url(#mono-horizontal)" stroke="currentColor" stroke-width="0.8"/></svg><strong>Radial bar chart</strong><span>A few values against one goal.</span></a>
 <a class="gallery-item" href="#vertical-bars"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="44" y="20" width="22" height="52" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="80" y="8" width="22" height="64" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="116" y="34" width="22" height="38" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="36" y="72" width="110" height="2" fill="var(--rule-strong)"/></svg><strong>Vertical bars</strong><span>Column comparison for dashboards.</span></a>
 <a class="gallery-item" href="#donut"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90.79 10.01 A30 30 0 0 1 108.26 63.80 L100.35 53.49 A17 17 0 0 0 90.45 23.01Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M106.99 64.72 A30 30 0 0 1 66.20 58.26 L76.51 50.35 A17 17 0 0 0 99.63 54.01Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="1"/><path d="M65.28 56.99 A30 30 0 0 1 65.28 23.01 L75.99 30.37 A17 17 0 0 0 75.99 49.63Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="1"/><path d="M66.20 21.74 A30 30 0 0 1 89.21 10.01 L89.55 23.01 A17 17 0 0 0 76.51 29.65Z" fill="url(#mono-solid)" stroke="currentColor" stroke-width="1"/></svg><strong>Donut</strong><span>Part-to-whole across a few categories.</span></a>
 <a class="gallery-item" href="#segmented-bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="18" width="60" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="92" y="18" width="66" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="46" width="42" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="74" y="46" width="54" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="28" y="10" width="2" height="58" fill="var(--rule-strong)"/></svg><strong>Segmented horizontal</strong><span>Stacked bars with long row labels.</span></a>
@@ -1389,6 +1404,98 @@ radarChart(document.querySelector(&quot;#starfighters&quot;), {
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="radar"></nav>
+</section><section class="panel" id="panel-radial" aria-labelledby="h-radial" hidden>
+  <p class="page-kicker">Comparison · Live</p>
+  <h1 class="page-title" id="h-radial" tabindex="-1">Radial bar chart</h1>
+  <p class="page-lede">Bars bent into rings, for a few values measured against the same goal. Outer rings look longer for the same value, so for precise comparisons use horizontal bars.</p>
+  <div class="preview"><figure aria-labelledby="radial-chart-title" aria-describedby="radial-chart-summary radial-visible-summary">
+            <h3 id="radial-chart-title" class="sr-only">Radial bar chart of sample training completion for five squadrons</h3>
+            <p id="radial-chart-summary" class="sr-only">Loading radial bar chart summary.</p>
+<div class="preview-stage">
+
+            <p class="key-hint" id="radial-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>↑</kbd> <kbd>↓</kbd> or <kbd>←</kbd> <kbd>→</kbd> between rings, <kbd>Home</kbd> <kbd>End</kbd> to the innermost and outermost.</p>
+
+            <div class="chart-scroll">
+              <svg class="radial-chart-svg" id="radialChart" viewBox="0 0 720 690" role="group" aria-roledescription="radial bar chart" aria-labelledby="radial-svg-title" aria-describedby="radial-svg-desc radial-keys">
+                <title id="radial-svg-title">Sample training completion by squadron, percent of goal</title>
+                <desc id="radial-svg-desc">Five rings, one per squadron, largest value innermost. Each bar starts at 12 o'clock and sweeps clockwise; a full three-quarter sweep means the goal is met.</desc>
+              </svg>
+            </div>
+
+            </div>
+<div class="hears" aria-hidden="true">
+  <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
+  <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
+</div>
+<div class="details">
+              <section aria-labelledby="radial-summary-heading" role="region">
+                <h2 id="radial-summary-heading">Summary</h2>
+                <p id="radial-visible-summary">Loading radial bar chart summary.</p>
+              </section>
+
+              <section aria-labelledby="radial-table-title">
+                <h2 id="radial-table-title">Data table</h2>
+                <table>
+                  <caption class="sr-only">Sample training completion by squadron, as a percent of goal</caption>
+                  <thead><tr><th scope="col">Squadron</th><th scope="col" class="numeric">Of goal</th><th scope="col" class="numeric">Rank</th></tr></thead>
+                  <tbody id="radialTableBody"></tbody>
+                </table>
+              </section>
+            </div>
+          </figure></div>
+
+  <section class="doc-section" aria-labelledby="usage-radial">
+    <h2 id="usage-radial">Usage</h2>
+    <p class="note">Proposed API. The package isn't on npm yet; this is the interface the extracted library will expose.</p>
+    <div class="code-block">
+  <div class="code-block-bar"><span>radial.js</span><button class="copy-button" type="button" data-copy-label="radial.js"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
+  <pre><code data-lang="js">import { radialBarChart } from &quot;accessible-charts&quot;;
+import &quot;accessible-charts/styles.css&quot;;
+
+const data = [
+  { label: &quot;Red Squadron&quot;, value: 92 },
+  { label: &quot;Gold Squadron&quot;, value: 78 },
+  { label: &quot;Rogue Squadron&quot;, value: 64 },
+  // …one object per ring, ideally no more than six
+];
+
+radialBarChart(document.querySelector(&quot;#training&quot;), {
+  title: &quot;Training completion by squadron&quot;,
+  unit: &quot;% of goal&quot;,
+  data,
+  max: 100,     // a full sweep means the goal is met
+  sweep: 270,   // degrees; leaves a quarter open for the labels
+});</code></pre>
+</div>
+  </section>
+
+  <section class="doc-section" aria-labelledby="options-radial">
+    <h2 id="options-radial">Options</h2>
+    <table class="options-table">
+  <caption class="sr-only">Options</caption>
+  <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+  <tbody><tr><td><code>title</code></td><td><code class="type">string</code></td><td>Required. Accessible name for the chart; also used as the SVG <code>&lt;title&gt;</code>.</td></tr>
+<tr><td><code>data</code></td><td><code class="type">Array</code></td><td>Required. One <code>{ label, value }</code> per ring. Works best with three to six rings.</td></tr>
+<tr><td><code>max</code></td><td><code class="type">number</code></td><td>The value a full sweep stands for, such as a goal. Defaults to <code>100</code>.</td></tr>
+<tr><td><code>sweep</code></td><td><code class="type">number</code></td><td>How far a full bar travels, in degrees. Defaults to <code>270</code>, leaving the top-left quarter for labels.</td></tr>
+<tr><td><code>sort</code></td><td><code class="type">&quot;descending&quot; | &quot;input&quot;</code></td><td>Ring order. <code>"descending"</code> puts the largest value on the innermost ring, which offsets the way outer rings look longer. Defaults to <code>"descending"</code>.</td></tr>
+<tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Read after each value, for example <code>"% of goal"</code>.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the leader and the laggard, the average, and the spread.</td></tr>
+<tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic data table. Defaults to <code>true</code>.</td></tr>
+<tr><td><code>patterns</code></td><td><code class="type">string[]</code></td><td>Override the pattern for each ring.</td></tr></tbody>
+</table>
+  </section>
+
+  <section class="doc-section" aria-labelledby="a11y-radial">
+    <h2 id="a11y-radial">Built-in accessibility</h2>
+    <ul class="a11y-list"><li>The whole chart is one Tab stop. Up and Down, or Left and Right, move between rings, and Home and End jump to the innermost and outermost ring.</li>
+<li>Each ring's name gives its value, its rank, and the gap to the ring ranked just above it, so nobody has to compare arc lengths by eye.</li>
+<li>Every value is printed in a chip at the end of its bar, and the squadron's name sits where its bar starts.</li>
+<li>The largest value sits on the innermost ring. Outer rings draw longer arcs for the same value, and this order works against that rather than exaggerating the leader.</li>
+<li>Each ring has its own pattern, so rings can be told apart without color; focusing one dims the others.</li></ul>
+  </section>
+
+  <nav class="pager" aria-label="More charts" data-current="radial"></nav>
 </section><section class="panel" id="panel-vertical-bars" aria-labelledby="h-vertical-bars" hidden>
   <p class="page-kicker">Comparison · Live</p>
   <h1 class="page-title" id="h-vertical-bars" tabindex="-1">Vertical bars</h1>
@@ -3569,6 +3676,121 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
       });
     }
 
+
+    /* ---------------- Radial bar chart ---------------- */
+    // Sample data: training completion for five squadrons, as a percent of each squadron's goal.
+    const RB_MAX = 100, RB_SWEEP = 270, RB_UNIT = "% of goal";
+    const radialRaw = [
+      { label: "Rogue Squadron", value: 64 },
+      { label: "Red Squadron", value: 92 },
+      { label: "Green Squadron", value: 37 },
+      { label: "Gold Squadron", value: 78 },
+      { label: "Blue Squadron", value: 51 }
+    ];
+    const RB_PATTERNS = ["diagonalForward", "dots", "vertical", "horizontal", "checker", "crosshatch"];
+    // Largest value on the innermost ring.
+    const radialData = [...radialRaw].sort((a, b) => b.value - a.value).map((d, i) => ({ ...d, rank: i + 1, pattern: RB_PATTERNS[i % RB_PATTERNS.length] }));
+    const radialChart = document.getElementById("radialChart");
+    const radialTableBody = document.getElementById("radialTableBody");
+    const radialVisibleSummary = document.getElementById("radial-visible-summary");
+    const radialHiddenSummary = document.getElementById("radial-chart-summary");
+
+    function generateRadialSummary() {
+      const top = radialData[0], bottom = radialData[radialData.length - 1];
+      const avg = Math.round(radialData.reduce((t, d) => t + d.value, 0) / radialData.length);
+      const pastThreeQuarters = radialData.filter(d => d.value >= RB_MAX * 0.75).length;
+      const met = radialData.filter(d => d.value >= RB_MAX).length;
+      const visibleText = `This radial bar chart compares training completion for ${radialData.length} sample squadrons, as a percent of each squadron's goal. ${top.label} is furthest along at ${top.value}%, and ${bottom.label} is furthest behind at ${bottom.value}%, a gap of ${top.value - bottom.value} points. The average is ${avg}%. ${met ? `${met} ${met === 1 ? "squadron has" : "squadrons have"} met the goal.` : "No squadron has met the goal yet."} ${pastThreeQuarters} of ${radialData.length} are past three quarters of the way.`;
+      radialVisibleSummary.textContent = visibleText;
+      radialHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move between rings, and every value is in the table that follows.`;
+    }
+
+    function renderRadialChart() {
+      const ns = "http://www.w3.org/2000/svg";
+      const cx = 360, cy = 345, inner = 78, thick = 30, gap = 12;
+      const full = RB_SWEEP / 360 * 2 * Math.PI;
+      const add = (tag, attrs, text, parent = radialChart) => {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+        if (text != null) el.textContent = text;
+        parent.appendChild(el);
+        return el;
+      };
+      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+      const band = (r0, r1, a0, a1) => {
+        const large = a1 - a0 > Math.PI ? 1 : 0;
+        const [x0, y0] = at(r0, a0), [x1, y1] = at(r1, a0), [x2, y2] = at(r1, a1), [x3, y3] = at(r0, a1);
+        return `M ${x0} ${y0} L ${x1} ${y1} A ${r1} ${r1} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${r0} ${r0} 0 ${large} 0 ${x0} ${y0} Z`;
+      };
+      const outer = inner + radialData.length * (thick + gap) - gap;
+
+      // Scale: spokes at 0, 25, 50, 75 and 100% of the sweep, labelled just outside the rings.
+      const deco = add("g", { "aria-hidden": "true" });
+      [0, 25, 50, 75, 100].forEach(t => {
+        const a = (t / RB_MAX) * full;
+        const [x1, y1] = at(inner - 6, a), [x2, y2] = at(outer + 6, a);
+        add("line", { x1, y1, x2, y2, class: "rb-scale-line" }, null, deco);
+        const [lx, ly] = at(outer + 24, a);
+        add("text", { x: lx, y: ly + 5, "text-anchor": Math.abs(Math.sin(a)) < 0.2 ? "middle" : Math.sin(a) > 0 ? "start" : "end", class: "rb-scale" }, `${t}%`, deco);
+      });
+
+      const bars = radialData.map((d, i) => {
+        const r0 = inner + i * (thick + gap), r1 = r0 + thick, rm = (r0 + r1) / 2;
+        add("path", { d: band(r0, r1, 0, full), class: "rb-track", "aria-hidden": "true" });
+        const a1 = Math.max(0.02, (d.value / RB_MAX) * full);
+        const bar = add("path", { d: band(r0, r1, 0, a1), class: "rb-bar", fill: `url(#mono-${d.pattern})`, role: "img", tabindex: i === 0 ? "0" : "-1" });
+        const above = radialData[i - 1];
+        bar.setAttribute("aria-label", `${d.label}: ${d.value}${RB_UNIT}. Rank ${d.rank} of ${radialData.length}.${above ? ` ${above.value - d.value} points behind ${above.label}.` : " Furthest along."} Ring ${i + 1} of ${radialData.length}, counting from the center.`);
+        // Name where the bar starts (left of 12 o'clock), value in a chip just past the end of the bar.
+        const name = add("text", { x: cx - 12, y: cy - rm + 5, "text-anchor": "end", class: "rb-name", "aria-hidden": "true" }, d.label);
+        const [vx, vy] = at(rm, a1 + 0.1);
+        makeChip(add("text", { x: vx, y: vy + 5, "text-anchor": "middle", class: "rb-value" }, `${d.value}%`), [6, 2.5]);
+        return { bar, name, d, i };
+      });
+
+      function highlight(b) {
+        bars.forEach(o => { o.bar.classList.toggle("is-active", o === b); o.bar.classList.toggle("is-dimmed", o !== b); o.name.classList.toggle("is-dimmed", o !== b); });
+        tooltip.innerHTML = `<strong>${b.d.label}</strong><span>${b.d.value}${RB_UNIT}</span><span>Rank ${b.d.rank} of ${radialData.length}</span>`;
+        tooltip.classList.add("is-visible");
+      }
+      function clear() {
+        bars.forEach(o => { o.bar.classList.remove("is-active", "is-dimmed"); o.name.classList.remove("is-dimmed"); });
+        hideTooltip();
+      }
+      function go(i) {
+        const n = Math.max(0, Math.min(bars.length - 1, i));
+        bars.forEach((o, j) => o.bar.setAttribute("tabindex", j === n ? "0" : "-1"));
+        bars[n].bar.focus();
+      }
+      bars.forEach(b => {
+        b.bar.addEventListener("focus", () => {
+          bars.forEach(o => o.bar.setAttribute("tabindex", o === b ? "0" : "-1"));
+          highlight(b);
+          const r = b.bar.getBoundingClientRect();
+          moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top });
+        });
+        b.bar.addEventListener("blur", clear);
+        b.bar.addEventListener("mouseenter", e => { highlight(b); moveTooltip(e); });
+        b.bar.addEventListener("mousemove", moveTooltip);
+        b.bar.addEventListener("mouseleave", () => { if (document.activeElement !== b.bar) clear(); });
+        b.bar.addEventListener("click", () => go(b.i));
+        b.bar.addEventListener("keydown", e => {
+          const moves = { ArrowDown: b.i + 1, ArrowRight: b.i + 1, ArrowUp: b.i - 1, ArrowLeft: b.i - 1, Home: 0, End: bars.length - 1 };
+          if (!(e.key in moves)) return;
+          e.preventDefault();
+          go(moves[e.key]);
+        });
+      });
+    }
+
+    function renderRadialTable() {
+      radialData.forEach(d => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<th scope="row">${d.label}</th><td class="numeric">${d.value}%</td><td class="numeric">${d.rank}</td>`;
+        radialTableBody.appendChild(tr);
+      });
+    }
+
     /* ---------------- Radar chart ---------------- */
     // Sample data: starfighters scored 0-10 on six measures (not canon figures).
     const RADAR_AXES = ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"];
@@ -4551,6 +4773,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     generateLineSummary();
     generateSunburstSummary();
     generateRadarSummary();
+    generateRadialSummary();
     generateSpiralSummary();
     generateArcSummary();
     generateScatterSummary();
@@ -4579,6 +4802,8 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     renderRadarLegend();
     renderRadarChart();
     renderRadarTable();
+    renderRadialChart();
+    renderRadialTable();
     renderSpiralChart();
     renderSpiralTable();
     renderArcLegend();
