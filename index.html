@@ -609,6 +609,17 @@
     /* Long type unions wrap on narrow screens instead of pushing the page sideways. */
     @media (max-width: 700px) { .options-table code.type { white-space: normal; overflow-wrap: anywhere; } }
     .tooltip.is-below { transform: translate(-50%, 14px); }
+    .sunburst-chart-svg { width: 100%; max-width: 560px; min-width: 420px; height: auto; display: block; margin: 0 auto; overflow: visible; }
+    .sb-legend { margin: 0; }
+    .sb-wedge { stroke: var(--ink); stroke-width: 1.2; stroke-linejoin: round; cursor: pointer; transition: opacity .15s ease; }
+    .sb-wedge:focus { outline: none; }
+    .sb-wedge:focus-visible, .sb-wedge.is-active { stroke: var(--focus); stroke-width: 3.5; }
+    .sb-wedge.is-dimmed, .sb-label.is-dimmed { opacity: .2; }
+    .sb-label { fill: var(--ink); font-size: 13.5px; font-weight: 600; font-family: var(--font); paint-order: stroke; stroke: var(--bg); stroke-width: 4.5px; stroke-linejoin: round; pointer-events: none; }
+    .sb-label.is-ring1 { font-size: 15px; }
+    .sb-center-label { fill: var(--ink-faint); font-size: 14px; font-weight: 500; font-family: var(--font); }
+    .sb-center-total { fill: var(--ink); font-size: 44px; font-weight: 600; letter-spacing: -.04em; font-family: var(--font); }
+    .sb-legend-ring { margin: 10px 0 20px; font-size: 13px; color: var(--ink-soft); }
     .radar-chart-svg { width: 100%; max-width: 700px; min-width: 460px; height: auto; display: block; margin: 0 auto; }
     .radar-ring { fill: none; stroke: var(--rule); stroke-width: 1; }
     .radar-ring.is-outer { stroke: var(--rule-strong); }
@@ -843,6 +854,8 @@
       .spiral-bar:focus-visible, .spiral-bar.is-active { stroke: Highlight; }
       .spiral-track { stroke: CanvasText; }
       .radar-shape { forced-color-adjust: none; stroke: CanvasText; }
+      .sb-wedge { forced-color-adjust: none; stroke: CanvasText; }
+      .sb-wedge:focus-visible, .sb-wedge.is-active { stroke: Highlight; }
       .radar-point:focus-visible, .radar-point.is-active { stroke: Highlight; }
       .bar-fill, .seg-fill { forced-color-adjust: none; border: 1px solid CanvasText; }
       .swatch { border: 2px solid CanvasText; }
@@ -991,6 +1004,7 @@
           <li><a class="nav-link" href="#donut">Donut</a></li>
           <li><a class="nav-link" href="#segmented-bar">Segmented horizontal</a></li>
           <li><a class="nav-link" href="#segmented-vertical">Segmented vertical</a></li>
+          <li><a class="nav-link" href="#sunburst">Sunburst chart</a></li>
         </ul>
       </div>
       <div class="nav-group">
@@ -1038,6 +1052,7 @@
 <a class="gallery-item" href="#donut"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90.79 10.01 A30 30 0 0 1 108.26 63.80 L100.35 53.49 A17 17 0 0 0 90.45 23.01Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M106.99 64.72 A30 30 0 0 1 66.20 58.26 L76.51 50.35 A17 17 0 0 0 99.63 54.01Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="1"/><path d="M65.28 56.99 A30 30 0 0 1 65.28 23.01 L75.99 30.37 A17 17 0 0 0 75.99 49.63Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="1"/><path d="M66.20 21.74 A30 30 0 0 1 89.21 10.01 L89.55 23.01 A17 17 0 0 0 76.51 29.65Z" fill="url(#mono-solid)" stroke="currentColor" stroke-width="1"/></svg><strong>Donut</strong><span>Part-to-whole across a few categories.</span></a>
 <a class="gallery-item" href="#segmented-bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="18" width="60" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="92" y="18" width="66" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="46" width="42" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="74" y="46" width="54" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="28" y="10" width="2" height="58" fill="var(--rule-strong)"/></svg><strong>Segmented horizontal</strong><span>Stacked bars with long row labels.</span></a>
 <a class="gallery-item" href="#segmented-vertical"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="56" y="38" width="26" height="34" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="56" y="14" width="26" height="22" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="98" y="32" width="26" height="40" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="98" y="16" width="26" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="46" y="72" width="88" height="2" fill="var(--rule-strong)"/></svg><strong>Segmented vertical</strong><span>Stacked columns: totals and composition.</span></a>
+<a class="gallery-item" href="#sunburst"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90.3 30.0 L90.6 19.0 A21 21 0 0 1 98.3 59.3 L94.0 49.2 A10 10 0 0 0 90.3 30.0Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M93.4 49.4 L97.1 59.7 A21 21 0 0 1 69.0 40.6 L80.0 40.3 A10 10 0 0 0 93.4 49.4Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="1"/><path d="M80.0 39.7 L69.0 39.4 A21 21 0 0 1 81.7 20.7 L86.0 30.8 A10 10 0 0 0 80.0 39.7Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="1"/><path d="M86.6 30.6 L82.9 20.3 A21 21 0 0 1 89.4 19.0 L89.7 30.0 A10 10 0 0 0 86.6 30.6Z" fill="url(#mono-crosshatch)" stroke="currentColor" stroke-width="1"/><path d="M90.7 17.0 L91.0 7.0 A33 33 0 0 1 117.3 21.5 L109.0 27.1 A23 23 0 0 0 90.7 17.0Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M109.8 28.3 L118.4 23.2 A33 33 0 0 1 103.1 70.3 L99.1 61.1 A23 23 0 0 0 109.8 28.3Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M97.8 61.6 L101.2 71.0 A33 33 0 0 1 78.8 71.0 L82.2 61.6 A23 23 0 0 0 97.8 61.6Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="1"/><path d="M80.9 61.1 L76.9 70.3 A33 33 0 0 1 57.0 41.0 L67.0 40.7 A23 23 0 0 0 80.9 61.1Z" fill="url(#mono-dots)" stroke="currentColor" stroke-width="1"/><path d="M67.0 39.3 L57.0 39.0 A33 33 0 0 1 61.6 23.2 L70.2 28.3 A23 23 0 0 0 67.0 39.3Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="1"/><path d="M71.0 27.1 L62.7 21.5 A33 33 0 0 1 76.9 9.7 L80.9 18.9 A23 23 0 0 0 71.0 27.1Z" fill="url(#mono-vertical)" stroke="currentColor" stroke-width="1"/><path d="M120.1 22.1 L122.7 20.6 A38 38 0 0 1 127.5 46.0 L124.6 45.5 A35 35 0 0 0 120.1 22.1Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M124.2 47.6 L127.1 48.2 A38 38 0 0 1 118.5 65.2 L116.2 63.2 A35 35 0 0 0 124.2 47.6Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/><path d="M114.8 64.7 L116.9 66.8 A38 38 0 0 1 105.0 74.9 L103.9 72.1 A35 35 0 0 0 114.8 64.7Z" fill="url(#mono-diagonalForward)" stroke="currentColor" stroke-width="1"/></svg><strong>Sunburst chart</strong><span>Nested parts of a whole.</span></a>
 <a class="gallery-item" href="#line"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M20 64 L52 50 L84 54 L116 30 L160 22" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M20 40 L52 36 L84 26 L116 42 L160 48" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="7 6"/><path d="M20 70 L52 64 L84 54 L116 46 L160 32" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="2 6"/></svg><strong>Multi-line</strong><span>Trends and timing across series.</span></a>
 <a class="gallery-item" href="#spiral"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90 40 m0 -6 a6 6 0 0 1 6 6 a12 12 0 0 1 -12 12 a18 18 0 0 1 -18 -18 a24 24 0 0 1 24 -24 a30 30 0 0 1 30 30 a33 33 0 0 1 -6 18" fill="none" stroke="var(--rule-strong)" stroke-width="1.2"/><rect x="-2.5" y="0" width="5" height="4" fill="currentColor" transform="translate(90 40) rotate(0) translate(0 -11)"/><rect x="-2.5" y="0" width="5" height="5" fill="currentColor" transform="translate(90 40) rotate(60) translate(0 -14)"/><rect x="-2.5" y="0" width="5" height="8" fill="currentColor" transform="translate(90 40) rotate(120) translate(0 -19)"/><rect x="-2.5" y="0" width="5" height="9" fill="currentColor" transform="translate(90 40) rotate(180) translate(0 -22)"/><rect x="-2.5" y="0" width="5" height="6" fill="currentColor" transform="translate(90 40) rotate(240) translate(0 -21)"/><rect x="-2.5" y="0" width="5" height="5" fill="currentColor" transform="translate(90 40) rotate(300) translate(0 -22)"/><rect x="-2.5" y="0" width="5" height="6" fill="currentColor" transform="translate(90 40) rotate(0) translate(0 -25)"/><rect x="-2.5" y="0" width="5" height="8" fill="currentColor" transform="translate(90 40) rotate(60) translate(0 -29)"/><rect x="-2.5" y="0" width="5" height="11" fill="currentColor" transform="translate(90 40) rotate(120) translate(0 -34)"/><rect x="-2.5" y="0" width="5" height="12" fill="currentColor" transform="translate(90 40) rotate(180) translate(0 -37)"/><rect x="-2.5" y="0" width="5" height="8" fill="currentColor" transform="translate(90 40) rotate(240) translate(0 -35)"/><rect x="-2.5" y="0" width="5" height="6" fill="currentColor" transform="translate(90 40) rotate(300) translate(0 -35)"/></svg><strong>Spiral graph</strong><span>Seasonal patterns across years.</span></a>
 <a class="gallery-item" href="#arc"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M30 64 A 22 22 0 0 1 74 64" fill="none" stroke="currentColor" stroke-width="3"/><path d="M52 64 A 22 18 0 0 1 96 64" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M30 64 A 66 48 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M96 64 A 33 30 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 4"/><path d="M118 64 A 22 16 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 64 H170" stroke="var(--rule-strong)" stroke-width="1"/><circle cx="30" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="52" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="74" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><path d="M96 58.5 L101 67.5 L91 67.5 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><rect x="114" y="60" width="8" height="8" rx="1" fill="currentColor"/><rect x="158" y="60" width="8" height="8" rx="1" fill="currentColor"/></svg><strong>Arc diagram</strong><span>Who connects to whom, and how strongly.</span></a>
@@ -1563,6 +1578,120 @@ stackedBarChart(document.querySelector(&quot;#factions&quot;), {
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="segmented-vertical"></nav>
+</section>
+<section class="panel" id="panel-sunburst" aria-labelledby="h-sunburst" hidden>
+  <p class="page-kicker">Part to whole · Live</p>
+  <h1 class="page-title" id="h-sunburst" tabindex="-1">Sunburst chart</h1>
+  <p class="page-lede">Break a whole into nested parts, one ring per level, from the center out. Best for two or three levels; deeper trees are easier to read as an indented list.</p>
+  <div class="preview"><figure aria-labelledby="sunburst-chart-title" aria-describedby="sunburst-chart-summary sunburst-visible-summary">
+            <h3 id="sunburst-chart-title" class="sr-only">Sunburst chart of 32 sample Star Wars characters by faction, Force use, and role</h3>
+            <p id="sunburst-chart-summary" class="sr-only">Loading sunburst chart summary.</p>
+<div class="preview-stage">
+
+            <p class="key-hint" id="sunburst-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>←</kbd> <kbd>→</kbd> around a ring, <kbd>↑</kbd> in to the parent, <kbd>↓</kbd> out to subgroups, <kbd>Home</kbd> <kbd>End</kbd> to the ends of the ring.</p>
+
+            <div class="seg-legend sb-legend" id="sunburstLegend" aria-label="Sunburst legend"></div>
+            <p class="sb-legend-ring">Inner ring: faction. Middle: Force use or type. Outer: role. Subgroups keep their faction's pattern.</p>
+
+            <div class="chart-scroll">
+                <svg class="sunburst-chart-svg" id="sunburstChart" viewBox="0 0 600 600" role="group" aria-roledescription="sunburst chart" aria-labelledby="sunburst-svg-title" aria-describedby="sunburst-svg-desc sunburst-keys">
+                  <title id="sunburst-svg-title">Sample characters by faction, Force use, and role</title>
+                  <desc id="sunburst-svg-desc">Three rings around a center total. The inner ring is factions, the middle ring splits each faction by Force use or type, and the outer ring splits groups by role.</desc>
+                </svg>
+            </div>
+
+            </div>
+<div class="hears" aria-hidden="true">
+  <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
+  <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
+</div>
+<div class="details">
+              <section aria-labelledby="sunburst-summary-heading" role="region">
+                <h2 id="sunburst-summary-heading">Summary</h2>
+                <p id="sunburst-visible-summary">Loading sunburst chart summary.</p>
+              </section>
+
+              <section aria-labelledby="sunburst-table-title">
+                <h2 id="sunburst-table-title">Data table</h2>
+                <div class="table-scroll">
+                <table>
+                  <caption class="sr-only">Every group in the sunburst, in tree order, with its size and shares. Sample data.</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Group</th>
+                      <th scope="col" class="numeric">Characters</th>
+                      <th scope="col" class="numeric">Of parent</th>
+                      <th scope="col" class="numeric">Of all</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sunburstTableBody"></tbody>
+                </table>
+                </div>
+              </section>
+            </div>
+          </figure></div>
+
+  <section class="doc-section" aria-labelledby="usage-sunburst">
+    <h2 id="usage-sunburst">Usage</h2>
+    <p class="note">Proposed API. The package isn't on npm yet; this is the interface the extracted library will expose.</p>
+    <div class="code-block">
+  <div class="code-block-bar"><span>sunburst.js</span><button class="copy-button" type="button" data-copy-label="sunburst.js"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
+  <pre><code data-lang="js">import { sunburstChart } from &quot;accessible-charts&quot;;
+import &quot;accessible-charts/styles.css&quot;;
+
+// A tree: each node has a label, and either a value or children.
+const data = {
+  label: &quot;All characters&quot;,
+  children: [
+    {
+      label: &quot;Rebel Alliance&quot;,
+      children: [
+        { label: &quot;Force users&quot;, value: 5 },
+        { label: &quot;Non-Force&quot;, children: [
+          { label: &quot;Pilots&quot;, value: 4 },
+          { label: &quot;Leaders&quot;, value: 3 },
+          { label: &quot;Soldiers&quot;, value: 2 },
+        ] },
+      ],
+    },
+    // …one object per faction
+  ],
+};
+
+sunburstChart(document.querySelector(&quot;#factions&quot;), {
+  title: &quot;Characters by faction and role&quot;,
+  unit: &quot;characters&quot;,
+  data,
+});</code></pre>
+</div>
+  </section>
+
+  <section class="doc-section" aria-labelledby="options-sunburst">
+    <h2 id="options-sunburst">Options</h2>
+    <table class="options-table">
+  <caption class="sr-only">Options</caption>
+  <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+  <tbody><tr><td><code>title</code></td><td><code class="type">string</code></td><td>Required. Accessible name for the chart; also used as the SVG <code>&lt;title&gt;</code>.</td></tr>
+<tr><td><code>data</code></td><td><code class="type">Node</code></td><td>Required. A tree of <code>{ label, short, value }</code> or <code>{ label, short, children }</code>. Parent totals are summed from their children.</td></tr>
+<tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Noun used in labels and summaries, for example <code>"characters"</code>.</td></tr>
+<tr><td><code>centerLabel</code></td><td><code class="type">string | false</code></td><td>Text above the total in the center. <code>false</code> hides it.</td></tr>
+<tr><td><code>maxDepth</code></td><td><code class="type">number</code></td><td>How many rings to draw. Deeper levels are still in the table and reachable by keyboard.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the largest group at each level.</td></tr>
+<tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table, one row per group with its path, size, and shares. Defaults to <code>true</code>.</td></tr>
+<tr><td><code>patterns</code></td><td><code class="type">string[]</code></td><td>Override the pattern for each top-level group. Subgroups inherit their parent's pattern.</td></tr></tbody>
+</table>
+  </section>
+
+  <section class="doc-section" aria-labelledby="a11y-sunburst">
+    <h2 id="a11y-sunburst">Built-in accessibility</h2>
+    <ul class="a11y-list"><li>The whole chart is one Tab stop. Left and Right arrows move around the current ring, Up moves in to the parent group, Down moves out to the first subgroup, and Home and End jump to the ends of the ring.</li>
+<li>Each segment's name gives its size, its share of its parent and of the whole, its full path (for example Rebel Alliance, then Non-Force, then Pilots), and how many subgroups it has.</li>
+<li>Top-level groups are told apart by pattern, and subgroups keep their parent's pattern, so lineage is visible without color. Every ring is labelled where the segment is wide enough.</li>
+<li>Focusing a segment keeps its parents and subgroups at full strength and dims everything else, so one branch of the tree can be followed from the center out.</li>
+<li>The table lists every group in tree order with its path, size, share of its parent, and share of the whole.</li></ul>
+  </section>
+
+  <nav class="pager" aria-label="More charts" data-current="sunburst"></nav>
 </section><section class="panel" id="panel-segmented-bar" aria-labelledby="h-segmented-bar" hidden>
   <p class="page-kicker">Part to whole · Live</p>
   <h1 class="page-title" id="h-segmented-bar" tabindex="-1">Segmented horizontal</h1>
@@ -3206,6 +3335,177 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 
 
 
+
+    /* ---------------- Sunburst chart ---------------- */
+    // Sample data: the same 32 characters as the donut and segmented charts, split by faction, then Force use or type, then role.
+    const sunburstData = {
+      label: "All characters", children: [
+        { label: "Rebel Alliance", short: "Rebels", pattern: "diagonalForward", children: [
+          { label: "Force users", value: 5 },
+          { label: "Non-Force", children: [
+            { label: "Pilots", value: 4 }, { label: "Leaders", value: 3 }, { label: "Soldiers", value: 2 }
+          ] }
+        ] },
+        { label: "Galactic Empire", short: "Empire", pattern: "dots", children: [
+          { label: "Force users", short: "Sith", value: 4 },
+          { label: "Non-Force", children: [
+            { label: "Officers", value: 4 }, { label: "Troopers", value: 2 }
+          ] }
+        ] },
+        { label: "Independent", pattern: "vertical", children: [
+          { label: "Scoundrels", children: [
+            { label: "Smugglers", value: 2 }, { label: "Bounty hunters", short: "Hunters", value: 1 }
+          ] },
+          { label: "Droids", value: 3 }
+        ] },
+        { label: "Other / unknown", short: "Other", pattern: "crosshatch", value: 2 }
+      ]
+    };
+    const sunburstChart = document.getElementById("sunburstChart");
+    const sunburstLegend = document.getElementById("sunburstLegend");
+    const sunburstTableBody = document.getElementById("sunburstTableBody");
+    const sunburstVisibleSummary = document.getElementById("sunburst-visible-summary");
+    const sunburstHiddenSummary = document.getElementById("sunburst-chart-summary");
+    const SB_UNIT = "characters";
+
+    // One pass over the tree: sizes summed bottom-up, then depth, path, inherited pattern, and angles
+    // (12 o'clock, clockwise), collected in depth-first order.
+    const sbNodes = [];
+    (function size(n) { if (n.children) n.value = n.children.reduce((t, c) => t + size(c), 0); return n.value; })(sunburstData);
+    (function place(n, a0, a1, parent, depth) {
+      Object.assign(n, { a0, a1, parent, depth, short: n.short || n.label, pattern: n.pattern || (parent && parent.pattern) || "solid" });
+      if (parent) { n.path = [...(parent.path || []), n.label]; sbNodes.push(n); }
+      let a = a0;
+      (n.children || []).forEach(c => { const span = (c.value / n.value) * (a1 - a0); place(c, a, a + span, n, depth + 1); a += span; });
+    })(sunburstData, 0, 2 * Math.PI, null, 0);
+    const SB_TOTAL = sunburstData.value;
+    const sbDepth = Math.max(...sbNodes.map(n => n.depth));
+    const sbRing = d => sbNodes.filter(n => n.depth === d).sort((a, b) => a.a0 - b.a0);
+    const pct = (a, b) => `${Math.round(a / b * 100)}%`;
+
+    function generateSunburstSummary() {
+      const factions = sunburstData.children;
+      const biggest = factions.reduce((m, f) => f.value > m.value ? f : m, factions[0]);
+      const biggestChild = biggest.children ? biggest.children.reduce((m, c) => c.value > m.value ? c : m, biggest.children[0]) : null;
+      const leaves = sbNodes.filter(n => !n.children && n.depth === sbDepth);
+      const topLeaf = Math.max(...leaves.map(n => n.value));
+      const topLeaves = leaves.filter(n => n.value === topLeaf).map(n => `${n.label} (${n.path[0]})`);
+      const visibleText = `This sunburst breaks ${SB_TOTAL} sample characters into ${factions.length} factions, then into ${sbDepth - 1 === 1 ? "one more level" : `${sbDepth - 1} more levels`}. The ${biggest.label} is the largest faction, with ${biggest.value} characters (${pct(biggest.value, SB_TOTAL)} of all)${biggestChild ? `; its largest group is ${biggestChild.label} (${biggestChild.value})` : ""}. Factions by size: ${factions.map(f => `${f.short} ${f.value}`).join(", ")}. In the outer ring, the largest roles are ${joinNames(topLeaves)}, with ${topLeaf} each.`;
+      sunburstVisibleSummary.textContent = visibleText;
+      sunburstHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move around a ring and in and out between levels, and every group is in the table that follows.`;
+    }
+
+    function renderSunburstLegend() {
+      sunburstLegend.innerHTML = sunburstData.children.map(f => `
+        <div class="legend-item">
+          <span class="swatch" data-pattern="${f.pattern}" aria-hidden="true"></span>
+          <span>${f.label} <span class="legend-count">${f.value}</span></span>
+        </div>`).join("");
+    }
+
+    function renderSunburstChart() {
+      const ns = "http://www.w3.org/2000/svg";
+      const cx = 300, cy = 300;
+      const RINGS = [[86, 166], [170, 232], [236, 286]];   // inner, middle, outer
+      const add = (tag, attrs, text, parent = sunburstChart) => {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+        if (text != null) el.textContent = text;
+        parent.appendChild(el);
+        return el;
+      };
+      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+      const PAD = 0.012;
+      const wedgePath = (r0, r1, a0, a1) => {
+        a0 += PAD; a1 -= PAD;
+        const large = a1 - a0 > Math.PI ? 1 : 0;
+        const [x0, y0] = at(r0, a0), [x1, y1] = at(r1, a0), [x2, y2] = at(r1, a1), [x3, y3] = at(r0, a1);
+        return `M ${x0} ${y0} L ${x1} ${y1} A ${r1} ${r1} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${r0} ${r0} 0 ${large} 0 ${x0} ${y0} Z`;
+      };
+
+      add("text", { x: cx, y: cy - 14, "text-anchor": "middle", class: "sb-center-label", "aria-hidden": "true" }, "All characters");
+      add("text", { x: cx, y: cy + 30, "text-anchor": "middle", class: "sb-center-total", "aria-hidden": "true" }, SB_TOTAL);
+
+      // Tree order (depth first) is the reading order for anything that walks the chart without arrow keys.
+      sbNodes.forEach(n => {
+        const [r0, r1] = RINGS[n.depth - 1];
+        n.el = add("path", { d: wedgePath(r0, r1, n.a0, n.a1), class: "sb-wedge", fill: `url(#mono-${n.pattern})`, role: "img", tabindex: "-1" });
+        const kids = n.children ? n.children.length : 0;
+        const ofParent = n.depth > 1 ? ` ${pct(n.value, n.parent.value)} of ${n.parent.label}${n.parent.depth > 1 ? ` in ${n.parent.parent.label}` : ""},` : "";
+        n.el.setAttribute("aria-label", `${n.label}: ${n.value} ${SB_UNIT}.${ofParent} ${pct(n.value, SB_TOTAL)} of all ${SB_TOTAL}. Path: ${n.path.join(", then ")}. ${kids ? `${kids} subgroups.` : "No subgroups."} Ring ${n.depth} of ${sbDepth}.`);
+        // Label where the segment is wide enough to hold it.
+        const mid = (n.a0 + n.a1) / 2, rm = (r0 + r1) / 2, arcLen = (n.a1 - n.a0) * rm;
+        const need = n.short.length * (n.depth === 1 ? 8.6 : 7.8) + 10;
+        if (arcLen > need && (r1 - r0) > 30) {
+          const [lx, ly] = at(rm, mid);
+          n.label_el = add("text", { x: lx, y: ly + 5, "text-anchor": "middle", class: `sb-label${n.depth === 1 ? " is-ring1" : ""}`, "aria-hidden": "true" }, n.short);
+        }
+      });
+      sbNodes[0].el.setAttribute("tabindex", "0");
+
+      const lineage = n => { const set = new Set([n]); let p = n.parent; while (p && p !== sunburstData) { set.add(p); p = p.parent; }
+        (function down(m) { (m.children || []).forEach(c => { set.add(c); down(c); }); })(n); return set; };
+      function highlight(n) {
+        const keep = lineage(n);
+        sbNodes.forEach(m => {
+          m.el.classList.toggle("is-active", m === n);
+          m.el.classList.toggle("is-dimmed", !keep.has(m));
+          if (m.label_el) m.label_el.classList.toggle("is-dimmed", !keep.has(m));
+        });
+        tooltip.innerHTML = `<strong>${n.label}</strong><span>${n.path.slice(0, -1).join(" › ") || "Faction"}</span><span>${n.value} ${SB_UNIT}, ${pct(n.value, SB_TOTAL)} of all</span>`;
+        tooltip.classList.add("is-visible");
+      }
+      function clear() {
+        sbNodes.forEach(m => { m.el.classList.remove("is-active", "is-dimmed"); if (m.label_el) m.label_el.classList.remove("is-dimmed"); });
+        hideTooltip();
+      }
+      function go(n) {
+        if (!n) return;
+        sbNodes.forEach(m => m.el.setAttribute("tabindex", m === n ? "0" : "-1"));
+        n.el.focus();
+      }
+      sbNodes.forEach(n => {
+        n.el.addEventListener("focus", () => {
+          sbNodes.forEach(m => m.el.setAttribute("tabindex", m === n ? "0" : "-1"));
+          highlight(n);
+          const [tx, ty] = at(RINGS[n.depth - 1][1], (n.a0 + n.a1) / 2);
+          const box = sunburstChart.getBoundingClientRect(), k = box.width / 600;
+          moveTooltip({ clientX: box.left + tx * k, clientY: box.top + ty * k });
+        });
+        n.el.addEventListener("blur", clear);
+        n.el.addEventListener("mouseenter", e => { highlight(n); moveTooltip(e); });
+        n.el.addEventListener("mousemove", moveTooltip);
+        n.el.addEventListener("mouseleave", () => { if (document.activeElement !== n.el) clear(); });
+        n.el.addEventListener("click", () => go(n));
+        n.el.addEventListener("keydown", e => {
+          const ring = sbRing(n.depth), i = ring.indexOf(n);
+          const moves = {
+            ArrowRight: () => ring[(i + 1) % ring.length],
+            ArrowLeft: () => ring[(i - 1 + ring.length) % ring.length],
+            ArrowUp: () => n.parent !== sunburstData ? n.parent : null,
+            ArrowDown: () => n.children ? n.children[0] : null,
+            Home: () => ring[0], End: () => ring[ring.length - 1]
+          };
+          if (!(e.key in moves)) return;
+          e.preventDefault();
+          go(moves[e.key]());
+        });
+      });
+    }
+
+    function renderSunburstTable() {
+      sbNodes.forEach(n => {
+        const tr = document.createElement("tr");
+        const trail = n.path.slice(0, -1);
+        tr.innerHTML = `
+          <th scope="row" style="padding-left:${(n.depth - 1) * 20}px">${trail.length ? `<span class="sr-only">${trail.join(", ")}, </span>` : ""}${n.depth > 1 ? '<span aria-hidden="true">└ </span>' : ""}${n.label}</th>
+          <td class="numeric">${n.value}</td>
+          <td class="numeric">${n.depth > 1 ? pct(n.value, n.parent.value) : "—"}</td>
+          <td class="numeric">${pct(n.value, SB_TOTAL)}</td>`;
+        sunburstTableBody.appendChild(tr);
+      });
+    }
+
     /* ---------------- Radar chart ---------------- */
     // Sample data: starfighters scored 0-10 on six measures (not canon figures).
     const RADAR_AXES = ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"];
@@ -4185,6 +4485,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     generateSegmentedSummary();
     generateSegmentedVerticalSummary();
     generateLineSummary();
+    generateSunburstSummary();
     generateRadarSummary();
     generateSpiralSummary();
     generateArcSummary();
@@ -4208,6 +4509,9 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     renderLineLegend();
     renderLineChart();
     renderLineTable();
+    renderSunburstLegend();
+    renderSunburstChart();
+    renderSunburstTable();
     renderRadarLegend();
     renderRadarChart();
     renderRadarTable();
