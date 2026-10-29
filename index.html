@@ -609,6 +609,22 @@
     /* Long type unions wrap on narrow screens instead of pushing the page sideways. */
     @media (max-width: 700px) { .options-table code.type { white-space: normal; overflow-wrap: anywhere; } }
     .tooltip.is-below { transform: translate(-50%, 14px); }
+    .spiral-chart-svg { width: 100%; max-width: 640px; min-width: 460px; height: auto; display: block; margin: 0 auto; }
+    .spiral-track { fill: none; stroke: var(--rule-strong); stroke-width: 1.5; }
+    .spiral-spoke { stroke: var(--rule); stroke-width: 1; }
+    .spiral-bar { fill: var(--ink); stroke: var(--bg); stroke-width: 1; cursor: pointer; transition: opacity .15s ease; }
+    .spiral-bar:focus { outline: none; }
+    .spiral-bar:focus-visible, .spiral-bar.is-active { stroke: var(--focus); stroke-width: 3; }
+    .spiral-bar.is-dimmed { opacity: .22; }
+    .spiral-month { fill: var(--chart-text); font-size: 14.5px; font-family: var(--font); }
+    .spiral-year { fill: var(--ink); font-size: 13.5px; font-weight: 600; font-family: var(--font); paint-order: stroke; stroke: var(--bg); stroke-width: 5px; stroke-linejoin: round; }
+    .key-hint { margin: 0 0 18px; font-size: 13px; color: var(--ink-soft); }
+    .key-hint > span:first-child { font-weight: 500; color: var(--ink); margin-right: 6px; }
+    kbd {
+      display: inline-block; min-width: 22px; padding: 0 6px;
+      font-family: var(--mono); font-size: 12px; line-height: 20px; text-align: center; color: var(--ink);
+      background: var(--bg-subtle); border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 5px;
+    }
     .axis-title { fill: var(--axis-text); font-size: 14.5px; font-weight: 500; font-family: var(--font); }
     .trend-line { fill: none; stroke: var(--ink-soft); stroke-width: 2; stroke-linecap: round; opacity: .55; }
     .trend-label { fill: var(--ink-soft); font-size: 13.5px; font-family: var(--font); }
@@ -813,6 +829,9 @@
       .trend-line { stroke: CanvasText; opacity: 1; }
       .arc-link { forced-color-adjust: none; stroke: CanvasText; }
       .arc-link.is-active { stroke: Highlight; }
+      .spiral-bar { forced-color-adjust: none; fill: CanvasText; stroke: Canvas; }
+      .spiral-bar:focus-visible, .spiral-bar.is-active { stroke: Highlight; }
+      .spiral-track { stroke: CanvasText; }
       .bar-fill, .seg-fill { forced-color-adjust: none; border: 1px solid CanvasText; }
       .swatch { border: 2px solid CanvasText; }
       .slice:focus-visible, .vertical-bar:focus-visible, .seg-vertical-segment:focus-visible, .line-point:focus-visible { stroke: Highlight; }
@@ -965,6 +984,7 @@
         <h2 class="nav-heading" id="nav-time"><button class="nav-toggle" type="button" aria-expanded="true" aria-controls="nav-time-list"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M4 16l5-6 4 3 7-8"/></svg><span>Change over time</span><svg class="nav-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l4-4 4 4"/></svg></button></h2>
         <ul class="nav-list" id="nav-time-list" aria-labelledby="nav-time">
           <li><a class="nav-link" href="#line">Multi-line</a></li>
+          <li><a class="nav-link" href="#spiral">Spiral graph</a></li>
         </ul>
       </div>
       <div class="nav-group">
@@ -1005,6 +1025,7 @@
 <a class="gallery-item" href="#segmented-bar"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="30" y="18" width="60" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="92" y="18" width="66" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="30" y="46" width="42" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="74" y="46" width="54" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="28" y="10" width="2" height="58" fill="var(--rule-strong)"/></svg><strong>Segmented horizontal</strong><span>Stacked bars with long row labels.</span></a>
 <a class="gallery-item" href="#segmented-vertical"><svg viewBox="0 0 180 80" aria-hidden="true"><rect x="56" y="38" width="26" height="34" stroke="currentColor" stroke-width="1" fill="url(#mono-diagonalForward)"/><rect x="56" y="14" width="26" height="22" stroke="currentColor" stroke-width="1" fill="url(#mono-vertical)"/><rect x="98" y="32" width="26" height="40" stroke="currentColor" stroke-width="1" fill="url(#mono-dots)"/><rect x="98" y="16" width="26" height="14" stroke="currentColor" stroke-width="1" fill="url(#mono-horizontal)"/><rect x="46" y="72" width="88" height="2" fill="var(--rule-strong)"/></svg><strong>Segmented vertical</strong><span>Stacked columns: totals and composition.</span></a>
 <a class="gallery-item" href="#line"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M20 64 L52 50 L84 54 L116 30 L160 22" fill="none" stroke="currentColor" stroke-width="3.5"/><path d="M20 40 L52 36 L84 26 L116 42 L160 48" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="7 6"/><path d="M20 70 L52 64 L84 54 L116 46 L160 32" fill="none" stroke="currentColor" stroke-width="3.5" stroke-dasharray="2 6"/></svg><strong>Multi-line</strong><span>Trends and timing across series.</span></a>
+<a class="gallery-item" href="#spiral"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M90 40 m0 -6 a6 6 0 0 1 6 6 a12 12 0 0 1 -12 12 a18 18 0 0 1 -18 -18 a24 24 0 0 1 24 -24 a30 30 0 0 1 30 30 a33 33 0 0 1 -6 18" fill="none" stroke="var(--rule-strong)" stroke-width="1.2"/><rect x="-2.5" y="0" width="5" height="4" fill="currentColor" transform="translate(90 40) rotate(0) translate(0 -11)"/><rect x="-2.5" y="0" width="5" height="5" fill="currentColor" transform="translate(90 40) rotate(60) translate(0 -14)"/><rect x="-2.5" y="0" width="5" height="8" fill="currentColor" transform="translate(90 40) rotate(120) translate(0 -19)"/><rect x="-2.5" y="0" width="5" height="9" fill="currentColor" transform="translate(90 40) rotate(180) translate(0 -22)"/><rect x="-2.5" y="0" width="5" height="6" fill="currentColor" transform="translate(90 40) rotate(240) translate(0 -21)"/><rect x="-2.5" y="0" width="5" height="5" fill="currentColor" transform="translate(90 40) rotate(300) translate(0 -22)"/><rect x="-2.5" y="0" width="5" height="6" fill="currentColor" transform="translate(90 40) rotate(0) translate(0 -25)"/><rect x="-2.5" y="0" width="5" height="8" fill="currentColor" transform="translate(90 40) rotate(60) translate(0 -29)"/><rect x="-2.5" y="0" width="5" height="11" fill="currentColor" transform="translate(90 40) rotate(120) translate(0 -34)"/><rect x="-2.5" y="0" width="5" height="12" fill="currentColor" transform="translate(90 40) rotate(180) translate(0 -37)"/><rect x="-2.5" y="0" width="5" height="8" fill="currentColor" transform="translate(90 40) rotate(240) translate(0 -35)"/><rect x="-2.5" y="0" width="5" height="6" fill="currentColor" transform="translate(90 40) rotate(300) translate(0 -35)"/></svg><strong>Spiral graph</strong><span>Seasonal patterns across years.</span></a>
 <a class="gallery-item" href="#arc"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M30 64 A 22 22 0 0 1 74 64" fill="none" stroke="currentColor" stroke-width="3"/><path d="M52 64 A 22 18 0 0 1 96 64" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M30 64 A 66 48 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 4"/><path d="M96 64 A 33 30 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="4 4"/><path d="M118 64 A 22 16 0 0 1 162 64" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 64 H170" stroke="var(--rule-strong)" stroke-width="1"/><circle cx="30" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="52" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="74" cy="64" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><path d="M96 58.5 L101 67.5 L91 67.5 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><rect x="114" y="60" width="8" height="8" rx="1" fill="currentColor"/><rect x="158" y="60" width="8" height="8" rx="1" fill="currentColor"/></svg><strong>Arc diagram</strong><span>Who connects to whom, and how strongly.</span></a>
 <a class="gallery-item" href="#scatter"><svg viewBox="0 0 180 80" aria-hidden="true"><path d="M22 66 L160 18" fill="none" stroke="currentColor" stroke-width="1.5" opacity=".45"/><circle cx="40" cy="58" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="82" cy="44" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><circle cx="128" cy="28" r="4.5" style="fill:var(--bg)" stroke="currentColor" stroke-width="2"/><rect x="54" y="56" width="8" height="8" rx="1" fill="currentColor"/><rect x="100" y="40" width="8" height="8" rx="1" fill="currentColor"/><rect x="146" y="22" width="8" height="8" rx="1" fill="currentColor"/><path d="M30 14 L35 23 L25 23 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M70 48 L75 57 L65 57 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M116 30 L121 39 L111 39 Z" style="fill:var(--bg)" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M20 72 H164 M20 72 V8" fill="none" stroke="var(--rule-strong)" stroke-width="1"/></svg><strong>Scatter plot</strong><span>How two measures move together.</span></a></nav>
   </section>
@@ -1629,6 +1650,101 @@ lineChart(document.querySelector(&quot;#activity&quot;), {
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="line"></nav>
+</section>
+<section class="panel" id="panel-spiral" aria-labelledby="h-spiral" hidden>
+  <p class="page-kicker">Change over time · Live</p>
+  <h1 class="page-title" id="h-spiral" tabindex="-1">Spiral graph</h1>
+  <p class="page-lede">Wrap a timeline into a spiral, one turn per year, so the same month lines up across years and seasonal patterns show.</p>
+  <div class="preview"><figure aria-labelledby="spiral-chart-title" aria-describedby="spiral-chart-summary spiral-visible-summary">
+            <h3 id="spiral-chart-title" class="sr-only">Spiral graph of sample monthly cantina visits over four years</h3>
+            <p id="spiral-chart-summary" class="sr-only">Loading spiral graph summary.</p>
+<div class="preview-stage">
+
+            <p class="key-hint" id="spiral-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>←</kbd> <kbd>→</kbd> by month, <kbd>↑</kbd> <kbd>↓</kbd> by year, <kbd>Home</kbd> <kbd>End</kbd> to the ends.</p>
+
+            <div class="chart-scroll">
+              <svg class="spiral-chart-svg" id="spiralChart" viewBox="0 0 900 704" role="group" aria-roledescription="spiral graph" aria-labelledby="spiral-svg-title" aria-describedby="spiral-svg-desc spiral-keys">
+                <title id="spiral-svg-title">Sample monthly cantina visits, four years</title>
+                <desc id="spiral-svg-desc">A spiral with one turn per year, starting at the center. Each month is a bar along the spiral; longer bars mean more visits.</desc>
+              </svg>
+            </div>
+
+            </div>
+<div class="hears" aria-hidden="true">
+  <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
+  <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
+</div>
+<div class="details">
+              <section aria-labelledby="spiral-summary-heading" role="region">
+                <h2 id="spiral-summary-heading">Summary</h2>
+                <p id="spiral-visible-summary">Loading spiral graph summary.</p>
+              </section>
+
+              <section aria-labelledby="spiral-table-title">
+                <h2 id="spiral-table-title">Data table</h2>
+                <div class="table-scroll">
+                <table>
+                  <caption class="sr-only">Sample monthly cantina visits, in thousands. Months in rows, years in columns.</caption>
+                  <thead><tr id="spiralTableHead"><th scope="col">Month</th></tr></thead>
+                  <tbody id="spiralTableBody"></tbody>
+                  <tfoot id="spiralTableFoot"></tfoot>
+                </table>
+                </div>
+              </section>
+            </div>
+          </figure></div>
+
+  <section class="doc-section" aria-labelledby="usage-spiral">
+    <h2 id="usage-spiral">Usage</h2>
+    <p class="note">Proposed API. The package isn't on npm yet; this is the interface the extracted library will expose.</p>
+    <div class="code-block">
+  <div class="code-block-bar"><span>spiral.js</span><button class="copy-button" type="button" data-copy-label="spiral.js"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg><span>Copy</span></button></div>
+  <pre><code data-lang="js">import { spiralGraph } from &quot;accessible-charts&quot;;
+import &quot;accessible-charts/styles.css&quot;;
+
+// One value per month, oldest first. Each turn of the spiral is one year.
+const data = [
+  { period: &quot;2023-01&quot;, value: 13 },
+  { period: &quot;2023-02&quot;, value: 13 },
+  // …one object per month
+];
+
+spiralGraph(document.querySelector(&quot;#visits&quot;), {
+  title: &quot;Monthly cantina visits&quot;,
+  unit: &quot;thousand visits&quot;,
+  data,
+  cycle: 12,             // points per turn
+  cycleLabel: &quot;Year&quot;,    // read as &quot;July, Year 3&quot;
+});</code></pre>
+</div>
+  </section>
+
+  <section class="doc-section" aria-labelledby="options-spiral">
+    <h2 id="options-spiral">Options</h2>
+    <table class="options-table">
+  <caption class="sr-only">Options</caption>
+  <thead><tr><th scope="col">Option</th><th scope="col">Type</th><th scope="col">Description</th></tr></thead>
+  <tbody><tr><td><code>title</code></td><td><code class="type">string</code></td><td>Required. Accessible name for the chart; also used as the SVG <code>&lt;title&gt;</code>.</td></tr>
+<tr><td><code>data</code></td><td><code class="type">Array</code></td><td>Required. One <code>{ period, value }</code> per point, oldest first.</td></tr>
+<tr><td><code>cycle</code></td><td><code class="type">number</code></td><td>Points per turn of the spiral. Defaults to <code>12</code> (months in a year); use <code>7</code> for days of the week or <code>24</code> for hours of the day.</td></tr>
+<tr><td><code>cycleLabel</code></td><td><code class="type">string</code></td><td>What one turn is called in labels, for example <code>"Year"</code> or <code>"Week"</code>.</td></tr>
+<tr><td><code>labels</code></td><td><code class="type">string[]</code></td><td>Names for the positions around the spiral. Defaults to month names when <code>cycle</code> is 12.</td></tr>
+<tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Noun used in labels and summaries, for example <code>"thousand visits"</code>.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> describes growth across turns, where each turn peaks and dips, and the biggest break in the pattern.</td></tr>
+<tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table, with positions in rows and turns in columns. Defaults to <code>true</code>.</td></tr></tbody>
+</table>
+  </section>
+
+  <section class="doc-section" aria-labelledby="a11y-spiral">
+    <h2 id="a11y-spiral">Built-in accessibility</h2>
+    <ul class="a11y-list"><li>The whole chart is one Tab stop. Left and Right arrows move by month, Up and Down move to the same month in the previous or next year, and Home and End jump to the first and last month.</li>
+<li>Each bar's name gives the month, the year, the value, and the change from the same month a year earlier, so seasonal patterns and growth can both be followed by ear.</li>
+<li>Focusing a bar highlights the same month in every year, so a month can be compared across turns of the spiral at a glance.</li>
+<li>Without the arrow keys, for example in a screen reader's reading mode, every bar can still be read one after another in time order.</li>
+<li>The table matches how the spiral is read: months in rows, years in columns, and a total for each year.</li></ul>
+  </section>
+
+  <nav class="pager" aria-label="More charts" data-current="spiral"></nav>
 </section>
 <section class="panel" id="panel-arc" aria-labelledby="h-arc" hidden>
   <p class="page-kicker">Relationship · Live</p>
@@ -2978,6 +3094,167 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 
 
 
+
+    /* ---------------- Spiral graph ---------------- */
+    // Sample data: monthly cantina visits (thousands) over four years. One turn of the spiral per year.
+    const SPIRAL_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const SPIRAL_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const spiralYears = [
+      [13, 13, 16, 20, 24, 28, 31, 31, 28, 24, 21, 17],
+      [17, 17, 19, 23, 28, 32, 34, 34, 32, 28, 25, 21],
+      [20, 20, 23, 27, 31, 35, 38, 38, 24, 31, 28, 24],
+      [24, 24, 26, 30, 35, 39, 41, 41, 39, 35, 32, 28]
+    ];
+    const SPIRAL_UNIT = "thousand visits";
+    const spiralChart = document.getElementById("spiralChart");
+    const spiralTableHead = document.getElementById("spiralTableHead");
+    const spiralTableBody = document.getElementById("spiralTableBody");
+    const spiralTableFoot = document.getElementById("spiralTableFoot");
+    const spiralVisibleSummary = document.getElementById("spiral-visible-summary");
+    const spiralHiddenSummary = document.getElementById("spiral-chart-summary");
+    const spiralPoints = spiralYears.flatMap((row, y) => row.map((value, m) => ({
+      y, m, value, index: y * 12 + m,
+      yoy: y > 0 ? value - spiralYears[y - 1][m] : null
+    })));
+    const yearName = y => `Year ${y + 1}`;
+    const signed = v => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v)}`;
+
+    function monthsWith(row, target) {
+      const names = row.map((v, m) => v === target ? SPIRAL_MONTHS[m] : null).filter(Boolean);
+      return joinNames(names);
+    }
+
+    function generateSpiralSummary() {
+      const totals = spiralYears.map(r => r.reduce((a, b) => a + b, 0));
+      const growth = Math.round((totals[totals.length - 1] / totals[0] - 1) * 100);
+      const everyYearUp = totals.every((t, i) => i === 0 || t > totals[i - 1]);
+      const peaks = new Set(spiralYears.map(r => monthsWith(r, Math.max(...r))));
+      const lows = new Set(spiralYears.map(r => monthsWith(r, Math.min(...r))));
+      const peakText = peaks.size === 1 ? `Every year peaks in ${[...peaks][0]}` : "The peak month changes from year to year";
+      const lowText = lows.size === 1 ? ` and is lowest in ${[...lows][0]}` : "";
+      const withYoy = spiralPoints.filter(p => p.yoy !== null);
+      const drop = withYoy.reduce((m, p) => p.yoy < m.yoy ? p : m, withYoy[0]);
+      const breakText = drop.yoy < 0
+        ? ` The ${withYoy.filter(p => p.yoy < 0).length === 1 ? "one" : "biggest"} break in the pattern is ${SPIRAL_MONTHS[drop.m]} of ${yearName(drop.y)}, ${Math.abs(drop.yoy)} thousand below the same month a year earlier${withYoy.every(p => p === drop || p.yoy > 0) ? ", while every other month grew" : ""}.`
+        : "";
+      const visibleText = `This spiral graph shows monthly cantina visits over ${spiralYears.length} sample years, one turn per year from the center out. Yearly totals ${everyYearUp ? "rise every year" : "change from year to year"}, from ${totals[0]} thousand in ${yearName(0)} to ${totals[totals.length - 1]} thousand in ${yearName(spiralYears.length - 1)}, up ${growth}%. ${peakText}${lowText}.${breakText}`;
+      spiralVisibleSummary.textContent = visibleText;
+      spiralHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move by month and by year, and every value is in the table that follows.`;
+    }
+
+    function renderSpiralChart() {
+      const ns = "http://www.w3.org/2000/svg";
+      const cx = 450, cy = 352, r0 = 66, ring = 54, maxLen = 34;
+      const turns = spiralYears.length;
+      const maxValue = Math.max(...spiralPoints.map(p => p.value));
+      const add = (tag, attrs, text, parent = spiralChart) => {
+        const el = document.createElementNS(ns, tag);
+        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
+        if (text != null) el.textContent = text;
+        parent.appendChild(el);
+        return el;
+      };
+      // t counts turns from the center; angle 0 is 12 o'clock, clockwise.
+      const radius = t => r0 + ring * t;
+      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
+
+      const deco = add("g", { "aria-hidden": "true" });
+      SPIRAL_SHORT.forEach((name, m) => {
+        const a = (m + 0.5) / 12 * 2 * Math.PI;
+        const [x1, y1] = at(r0 - 18, a), [x2, y2] = at(radius(turns) + maxLen, a);
+        add("line", { x1, y1, x2, y2, class: "spiral-spoke" }, null, deco);
+        const [lx, ly] = at(radius(turns) + maxLen + 24, a);
+        add("text", { x: lx, y: ly + 5, "text-anchor": "middle", class: "spiral-month" }, name, deco);
+      });
+      let d = "";
+      for (let i = 0; i <= turns * 120; i++) {
+        const t = i / 120, [x, y] = at(radius(t), t * 2 * Math.PI);
+        d += `${i ? "L" : "M"} ${x.toFixed(1)} ${y.toFixed(1)} `;
+      }
+      add("path", { d, class: "spiral-track" }, null, deco);
+
+      const bars = [];
+      spiralPoints.forEach(p => {
+        const t = p.y + (p.m + 0.5) / 12;
+        const a = (p.m + 0.5) / 12 * 2 * Math.PI, half = (2 * Math.PI / 12) * 0.25;
+        const ri = radius(t) + 2, ro = ri + Math.max(3, (p.value / maxValue) * maxLen);
+        const [ax, ay] = at(ri, a - half), [bx, by] = at(ro, a - half), [qx, qy] = at(ro, a + half), [ex, ey] = at(ri, a + half);
+        const bar = add("path", {
+          d: `M ${ax} ${ay} L ${bx} ${by} A ${ro} ${ro} 0 0 1 ${qx} ${qy} L ${ex} ${ey} A ${ri} ${ri} 0 0 0 ${ax} ${ay} Z`,
+          class: "spiral-bar", role: "img", tabindex: p.index === 0 ? "0" : "-1", "data-index": p.index
+        });
+        const change = p.yoy === null ? "First year, no earlier month to compare." : `${signed(p.yoy)} from ${SPIRAL_MONTHS[p.m]} of ${yearName(p.y - 1)}.`;
+        bar.setAttribute("aria-label", `${SPIRAL_MONTHS[p.m]}, ${yearName(p.y)}: ${p.value} ${SPIRAL_UNIT}. ${change} ${p.index + 1} of ${spiralPoints.length}.`);
+        bars.push(bar);
+      });
+      // Year labels where each turn starts, at 12 o'clock between December and January, with a halo so bars never hide them.
+      spiralYears.forEach((_, y) => {
+        const [x, yy] = at(radius(y) + maxLen * 0.55, 0);
+        add("text", { x, y: yy + 5, "text-anchor": "middle", class: "spiral-year", "aria-hidden": "true" }, yearName(y));
+      });
+
+      function highlight(p) {
+        bars.forEach((b, i) => {
+          const q = spiralPoints[i];
+          b.classList.toggle("is-active", q === p);
+          b.classList.toggle("is-dimmed", q.m !== p.m);
+        });
+        tooltip.innerHTML = `<strong>${SPIRAL_MONTHS[p.m]} · ${yearName(p.y)}</strong><span>${p.value} ${SPIRAL_UNIT}</span><span>${p.yoy === null ? "First year" : `${signed(p.yoy)} vs ${SPIRAL_SHORT[p.m]}, ${yearName(p.y - 1)}`}</span>`;
+        tooltip.classList.add("is-visible");
+      }
+      function clear() {
+        bars.forEach(b => b.classList.remove("is-active", "is-dimmed"));
+        hideTooltip();
+      }
+      function placeTip(bar) {
+        const r = bar.getBoundingClientRect();
+        moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top });
+      }
+      // One Tab stop: the last focused bar keeps tabindex 0 (roving tabindex).
+      function focusBar(i) {
+        const n = Math.max(0, Math.min(bars.length - 1, i));
+        bars.forEach((b, j) => b.setAttribute("tabindex", j === n ? "0" : "-1"));
+        bars[n].focus();
+      }
+      bars.forEach((bar, i) => {
+        const p = spiralPoints[i];
+        bar.addEventListener("focus", () => {
+          // Whichever bar has focus is the chart's Tab stop, however it got focus.
+          bars.forEach(b => b.setAttribute("tabindex", b === bar ? "0" : "-1"));
+          highlight(p); placeTip(bar);
+        });
+        bar.addEventListener("blur", clear);
+        bar.addEventListener("mouseenter", e => { highlight(p); moveTooltip(e); });
+        bar.addEventListener("mousemove", moveTooltip);
+        bar.addEventListener("mouseleave", () => { if (document.activeElement !== bar) clear(); });
+        bar.addEventListener("click", () => focusBar(i));
+        bar.addEventListener("keydown", e => {
+          const moves = { ArrowRight: i + 1, ArrowLeft: i - 1, ArrowDown: i + 12, ArrowUp: i - 12, Home: 0, End: bars.length - 1 };
+          if (!(e.key in moves)) return;
+          e.preventDefault();
+          const target = moves[e.key];
+          if (target < 0 || target >= bars.length) return;   // stay put at the edges
+          focusBar(target);
+        });
+      });
+    }
+
+    function renderSpiralTable() {
+      spiralYears.forEach((_, y) => {
+        const th = document.createElement("th");
+        th.scope = "col"; th.className = "numeric"; th.textContent = yearName(y);
+        spiralTableHead.appendChild(th);
+      });
+      SPIRAL_MONTHS.forEach((name, m) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<th scope="row">${name}</th>` + spiralYears.map(r => `<td class="numeric">${r[m]}</td>`).join("");
+        spiralTableBody.appendChild(tr);
+      });
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<th scope="row">Total</th>` + spiralYears.map(r => `<td class="numeric">${r.reduce((a, b) => a + b, 0)}</td>`).join("");
+      spiralTableFoot.appendChild(tr);
+    }
+
     /* ---------------- Arc diagram ---------------- */
     // Sample data: scenes each pair of characters shares. Nodes are ordered by faction along the line.
     const arcGroups = [
@@ -3633,6 +3910,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     generateSegmentedSummary();
     generateSegmentedVerticalSummary();
     generateLineSummary();
+    generateSpiralSummary();
     generateArcSummary();
     generateScatterSummary();
     renderPatterns();
@@ -3654,6 +3932,8 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     renderLineLegend();
     renderLineChart();
     renderLineTable();
+    renderSpiralChart();
+    renderSpiralTable();
     renderArcLegend();
     renderArcChart();
     renderArcTable();

@@ -8,7 +8,7 @@ The docs site is a single page, `index.html`. Open it in a browser; no build ste
 
 - **Comparison:** horizontal bars, vertical bars
 - **Part to whole:** donut, segmented horizontal, segmented vertical
-- **Change over time:** multi-line
+- **Change over time:** multi-line, spiral graph
 - **Relationship:** arc diagram, scatter plot
 
 Every chart page has a live example with a "Screen reader hears" strip, a summary and data table, usage code, options, and notes on its built-in accessibility.
@@ -21,4 +21,4 @@ Every chart page has a live example with a "Screen reader hears" strip, a summar
 
 ## Status
 
-v0.2 preview. The package (`accessible-charts`) isn't published yet, and the usage code on each page shows the proposed API. Next up: one Tab stop per chart with arrow keys between marks, and the summary placed before each chart.
+v0.2 preview. The package (`accessible-charts`) isn't published yet, and the usage code on each page shows the proposed API. The spiral graph is the first chart with one Tab stop and arrow keys between marks; next up is bringing that to every chart, and placing the summary before each chart.
