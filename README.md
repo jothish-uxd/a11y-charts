@@ -6,7 +6,7 @@ The docs site is a single page, `index.html`. Open it in a browser; no build ste
 
 ## What's inside
 
-- **Comparison:** horizontal bars, radar chart, vertical bars
+- **Comparison:** horizontal bars, radar chart, radial bar chart, vertical bars
 - **Part to whole:** donut, segmented horizontal, segmented vertical, sunburst chart
 - **Change over time:** multi-line, spiral graph
 - **Relationship:** arc diagram, scatter plot
@@ -21,4 +21,4 @@ Every chart page has a live example with a "Screen reader hears" strip, a summar
 
 ## Status
 
-v0.2 preview. The package (`accessible-charts`) isn't published yet, and the usage code on each page shows the proposed API. The spiral graph, radar chart, and sunburst chart use one Tab stop with arrow keys between marks; next up is bringing that to every chart, and placing the summary before each chart.
+v0.2 preview. The package (`accessible-charts`) isn't published yet, and the usage code on each page shows the proposed API. The spiral graph, radar chart, radial bar chart, and sunburst chart use one Tab stop with arrow keys between marks; next up is bringing that to every chart, and placing the summary before each chart.
