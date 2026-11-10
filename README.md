@@ -2,7 +2,9 @@
 
 Chart components that work beyond sight. Every chart ships with a plain-language summary, keyboard access, its own texture for every category, and a real data table.
 
-The docs site is a single page, `index.html`. Open it in a browser; no build step. The package lives in `lib/`.
+**Docs and live examples: [jothish-uxd.github.io/a11y-charts](https://jothish-uxd.github.io/a11y-charts/)**
+
+The docs site is a single page, `index.html`. Open it in a browser; no build step.
 
 ## What's inside
 
@@ -11,7 +13,7 @@ The docs site is a single page, `index.html`. Open it in a browser; no build ste
 - **Change over time:** multi-line, spiral graph
 - **Relationship:** arc diagram, scatter plot
 
-Every chart page has a live example with a "Screen reader hears" strip, a summary and data table, usage code, options, and notes on its built-in accessibility.
+Every chart page has a live example rendered by the package, with a "Screen reader hears" strip, a summary and data table, usage code, options, and notes on its built-in accessibility.
 
 ## Design rules
 
@@ -40,19 +42,42 @@ barChart(document.querySelector("#chart"), {
 });
 ```
 
-No dependencies and no build step: the package is one ES module (`lib/index.js`), one stylesheet (`lib/styles.css`), and TypeScript types. Without a bundler, import the two files directly:
+No dependencies. The package is one ES module (`lib/index.js`), one stylesheet (`lib/styles.css`), and TypeScript types.
+
+Without a bundler, use the plain script build. It works from a file on disk, with no server:
 
 ```html
 <link rel="stylesheet" href="node_modules/accessible-charts/lib/styles.css" />
-<script type="module">
-  import { donutChart } from "./node_modules/accessible-charts/lib/index.js";
+<script src="node_modules/accessible-charts/lib/accessible-charts.global.js"></script>
+<script>
+  AccessibleCharts.donutChart("#chart", { title: "Tickets by channel", data: [{ label: "Email", value: 412 }, { label: "Chat", value: 286 }] });
 </script>
 ```
 
-Ten functions cover the twelve charts: `barChart` and `stackedBarChart` (each horizontal or vertical), `donutChart`, `lineChart`, `radarChart`, `radialBarChart`, `sunburstChart`, `spiralGraph`, `arcDiagram`, `scatterPlot`. Every call returns `{ element, update(options), destroy() }`. `examples/index.html` renders all of them from the package.
+## API
 
-Every chart is one Tab stop with arrow keys between marks, and fires an `ac:announce` event with the focused mark's spoken label.
+Ten functions cover the twelve charts: `barChart` and `stackedBarChart` (each horizontal or vertical), `donutChart`, `lineChart`, `radarChart`, `radialBarChart`, `sunburstChart`, `spiralGraph`, `arcDiagram`, `scatterPlot`.
+
+Each takes a target (an element or a selector) and an options object, and returns `{ element, update(options), destroy() }`. Options are documented per chart on the docs site and typed in `lib/index.d.ts`. These work on every chart:
+
+| Option | What it does |
+| --- | --- |
+| `title` | Names the chart for everyone, including assistive technology. |
+| `unit` | What the numbers count; read out with every value. |
+| `summary` | `"auto"` (default) writes one from the data. Pass your own text, or `false` to hide the visible copy. |
+| `table` | `false` hides the data table. |
+| `patterns` / `shapes` | Pin a texture or marker to a category so it stays the same across charts. |
+
+Every chart is one Tab stop with arrow keys between marks. As focus moves, the chart fires an `ac:announce` event whose `detail.label` is what a screen reader says for that mark.
+
+Colors follow light and dark automatically; override the `--ac-*` custom properties in `lib/styles.css` to match your product.
+
+## In this repo
+
+- `index.html`: the docs site. Its live examples are rendered by the package.
+- `lib/`: the package. `accessible-charts.global.js` is generated from `index.js` by `node scripts/build-global.mjs`.
+- `examples/index.html`: every chart on one page, imported as an ES module (needs a local server, e.g. `npx serve`).
 
 ## Status
 
-v0.2.0. The docs site's own live examples are still hand-built in `index.html`; the package in `lib/` implements the same designs and the API shown on each page. Next up: rendering the docs from the package, and placing the summary before each chart.
+v0.2.0. Not on the npm registry yet, so install from GitHub as shown above. Not yet tested with every screen reader and browser pairing; issues and reports are welcome.

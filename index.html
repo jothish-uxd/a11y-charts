@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lib/styles.css" />
   <style>
     :root {
       color-scheme: light;
@@ -976,6 +977,19 @@
       .swatch, .bar-fill, .seg-fill { forced-color-adjust: none; }
     }
 
+
+    /* ---------- Live examples: the package's charts, wearing this site's tokens ---------- */
+    .preview .ac-chart {
+      --ac-ink: var(--ink); --ac-ink-soft: var(--ink-soft); --ac-bg: var(--bg);
+      --ac-rule: var(--rule); --ac-rule-strong: var(--rule-strong); --ac-track: var(--track); --ac-focus: var(--focus);
+      --pad: clamp(24px, 4.5vw, 48px);
+      padding: var(--pad) var(--pad) 0;
+    }
+    .preview .ac-title { font-size: 15px; font-weight: 500; }
+    .preview .ac-plot { padding: 12px 0 var(--pad); }
+    .preview .ac-chart > .hears { margin: 0 calc(var(--pad) * -1); grid-column: 1 / -1; }
+    .preview .ac-details { margin: 0 calc(var(--pad) * -1); padding: clamp(24px, 4vw, 40px) var(--pad); gap: 48px; grid-column: 1 / -1; }
+    .preview .ac-details h3 { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -989,7 +1003,6 @@
   <pattern id="mono-crosshatch" patternUnits="userSpaceOnUse" width="6" height="6"><rect width="6" height="6" style="fill:var(--bg)"/><path d="M-1 1 L1 -1 M0 6 L6 0 M5 7 L7 5 M-1 5 L1 7 M0 0 L6 6 M5 -1 L7 1" stroke="currentColor" stroke-width="1.2"/></pattern>
 </defs></svg>
   <a class="skip-link" href="#main">Skip to content</a>
-  <div id="tooltip" class="tooltip" aria-hidden="true"></div>
   <div id="copy-status" class="sr-only" role="status"></div>
 
   <header class="site-header">
@@ -1117,58 +1130,12 @@ barChart(document.querySelector(&quot;#chart&quot;), {
   <p class="page-kicker">Part to whole · Live</p>
   <h1 class="page-title" id="h-donut" tabindex="-1">Donut</h1>
   <p class="page-lede">Part-to-whole composition. When readers need to compare similar values precisely, a bar chart is easier to read.</p>
-  <div class="preview"><figure aria-labelledby="chart-title" aria-describedby="chart-summary visible-summary">
-            <h3 id="chart-title" class="sr-only">Donut chart showing Star Wars character groups</h3>
-            <p id="chart-summary" class="sr-only">
-              Loading chart summary.
-            </p>
-<div class="preview-stage">
-
-            <div class="viz-layout">
-              <div class="chart-wrap">
-                <svg id="chart" viewBox="0 0 420 420" role="img" aria-labelledby="svg-title svg-desc">
-                  <title id="svg-title">Donut chart showing Star Wars character groups</title>
-                  <desc id="svg-desc">Seven categories show 32 characters by broad allegiance or role. Each slice has a keyboard-focusable label and corresponding table row.</desc>
-                  <defs id="patterns"></defs>
-                </svg>
-                <div class="center-label" aria-hidden="true">
-                  <strong>Total characters</strong>
-                  <span id="totalLabel">32</span>
-                </div>
-              </div>
-
-              <div class="legend" id="legend">
-                <h3>Character groups</h3>
-              </div>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-donut"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="summary-heading" role="region">
-                <h2 id="summary-heading">Summary</h2>
-                <p id="visible-summary">Loading chart summary.</p>
-              </section>
-
-              <section aria-labelledby="table-title">
-                <h2 id="table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Star Wars character group data used in the accessible donut chart</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Category</th>
-                      <th scope="col" class="numeric">Count</th>
-                      <th scope="col" class="numeric">Share</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-donut">
     <h2 id="usage-donut">Usage</h2>
@@ -1223,41 +1190,12 @@ donutChart(document.querySelector(&quot;#groups&quot;), {
   <p class="page-kicker">Comparison · Live</p>
   <h1 class="page-title" id="h-bar" tabindex="-1">Horizontal bars</h1>
   <p class="page-lede">Ranked comparison across categories. Labels get their own space, so long category names are never truncated.</p>
-  <div class="preview"><figure aria-labelledby="bar-chart-title" aria-describedby="bar-chart-summary bar-visible-summary">
-            <h3 id="bar-chart-title" class="sr-only">Horizontal bar chart showing Star Wars character groups</h3>
-            <p id="bar-chart-summary" class="sr-only">Loading bar chart summary.</p>
-<div class="preview-stage">
-
-            <div class="bar-chart-wrap" id="barChart" role="list" aria-label="Star Wars character groups ranked by count"></div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-bar"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="bar-summary-heading" role="region">
-                <h2 id="bar-summary-heading">Summary</h2>
-                <p id="bar-visible-summary">Loading bar chart summary.</p>
-              </section>
-
-              <section aria-labelledby="bar-table-title">
-                <h2 id="bar-table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Star Wars character group data used in the accessible horizontal bar chart</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Category</th>
-                      <th scope="col" class="numeric">Count</th>
-                      <th scope="col" class="numeric">Share</th>
-                      <th scope="col" class="numeric">Rank</th>
-                    </tr>
-                  </thead>
-                  <tbody id="barTableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-bar">
     <h2 id="usage-bar">Usage</h2>
@@ -1312,45 +1250,12 @@ barChart(document.querySelector(&quot;#ranking&quot;), {
   <p class="page-kicker">Comparison · Live</p>
   <h1 class="page-title" id="h-radar" tabindex="-1">Radar chart</h1>
   <p class="page-lede">Compare the profile of a few items across several measures on one shared scale. When readers need exact differences, grouped bars are easier to read.</p>
-  <div class="preview"><figure aria-labelledby="radar-chart-title" aria-describedby="radar-chart-summary radar-visible-summary">
-            <h3 id="radar-chart-title" class="sr-only">Radar chart comparing three sample starfighters on six measures</h3>
-            <p id="radar-chart-summary" class="sr-only">Loading radar chart summary.</p>
-<div class="preview-stage">
-
-            <p class="key-hint" id="radar-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>←</kbd> <kbd>→</kbd> around the measures, <kbd>↑</kbd> <kbd>↓</kbd> between craft, <kbd>Home</kbd> <kbd>End</kbd> to the first and last measure.</p>
-
-            <div class="line-legend" id="radarLegend" aria-label="Radar chart legend"></div>
-
-            <div class="chart-scroll">
-              <svg class="radar-chart-svg" id="radarChart" viewBox="0 0 900 600" role="group" aria-roledescription="radar chart" aria-labelledby="radar-svg-title" aria-describedby="radar-svg-desc radar-keys">
-                <title id="radar-svg-title">Sample starfighters compared on six measures</title>
-                <desc id="radar-svg-desc">Six spokes, one per measure, scored from 0 at the center to 10 at the edge. Each craft is an outline joining its six scores.</desc>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-radar"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="radar-summary-heading" role="region">
-                <h2 id="radar-summary-heading">Summary</h2>
-                <p id="radar-visible-summary">Loading radar chart summary.</p>
-              </section>
-
-              <section aria-labelledby="radar-table-title">
-                <h2 id="radar-table-title">Data table</h2>
-                <div class="table-scroll">
-                <table>
-                  <caption class="sr-only">Sample starfighter scores out of 10. Measures in rows, craft in columns.</caption>
-                  <thead><tr id="radarTableHead"><th scope="col">Measure</th></tr></thead>
-                  <tbody id="radarTableBody"></tbody>
-                </table>
-                </div>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-radar">
     <h2 id="usage-radar">Usage</h2>
@@ -1388,7 +1293,7 @@ radarChart(document.querySelector(&quot;#starfighters&quot;), {
 <tr><td><code>series</code></td><td><code class="type">Array</code></td><td>Required. One <code>{ label, values }</code> per item, with one value per axis.</td></tr>
 <tr><td><code>max</code></td><td><code class="type">number</code></td><td>Top of the shared scale. Radar charts only read honestly when every axis uses the same scale.</td></tr>
 <tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Read after each value, for example <code>"out of 10"</code>.</td></tr>
-<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names each item's strongest and weakest measure, who leads where, and the most balanced item.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> gives each item's average with its strongest and weakest measure.</td></tr>
 <tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table, with measures in rows and items in columns. Defaults to <code>true</code>.</td></tr>
 <tr><td><code>shapes</code></td><td><code class="type">string[]</code></td><td>Override the marker and dash order for series. Defaults to solid with hollow circles, dashed with filled squares, dotted with hollow triangles.</td></tr></tbody>
 </table>
@@ -1400,7 +1305,7 @@ radarChart(document.querySelector(&quot;#starfighters&quot;), {
 <li>Each point's name gives the craft, the measure, the score, and where it ranks against the other craft on that measure, with their scores, so a comparison never depends on judging distances by eye.</li>
 <li>Craft are told apart by line style and marker shape, the same encoding as the multi-line chart, and outlines have no fill so no shape hides another.</li>
 <li>Focusing a point dims the other craft, so one profile can be traced around the chart.</li>
-<li>The summary names each craft's strongest and weakest measure, who leads on what, and the most balanced craft; the table lists every score.</li></ul>
+<li>The summary gives each craft's average with its strongest and weakest measure; the table lists every score.</li></ul>
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="radar"></nav>
@@ -1408,41 +1313,12 @@ radarChart(document.querySelector(&quot;#starfighters&quot;), {
   <p class="page-kicker">Comparison · Live</p>
   <h1 class="page-title" id="h-radial" tabindex="-1">Radial bar chart</h1>
   <p class="page-lede">Bars bent into rings, for a few values measured against the same goal. Outer rings look longer for the same value, so for precise comparisons use horizontal bars.</p>
-  <div class="preview"><figure aria-labelledby="radial-chart-title" aria-describedby="radial-chart-summary radial-visible-summary">
-            <h3 id="radial-chart-title" class="sr-only">Radial bar chart of sample training completion for five squadrons</h3>
-            <p id="radial-chart-summary" class="sr-only">Loading radial bar chart summary.</p>
-<div class="preview-stage">
-
-            <p class="key-hint" id="radial-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>↑</kbd> <kbd>↓</kbd> or <kbd>←</kbd> <kbd>→</kbd> between rings, <kbd>Home</kbd> <kbd>End</kbd> to the innermost and outermost.</p>
-
-            <div class="chart-scroll">
-              <svg class="radial-chart-svg" id="radialChart" viewBox="0 0 720 690" role="group" aria-roledescription="radial bar chart" aria-labelledby="radial-svg-title" aria-describedby="radial-svg-desc radial-keys">
-                <title id="radial-svg-title">Sample training completion by squadron, percent of goal</title>
-                <desc id="radial-svg-desc">Five rings, one per squadron, largest value innermost. Each bar starts at 12 o'clock and sweeps clockwise; a full three-quarter sweep means the goal is met.</desc>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-radial"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="radial-summary-heading" role="region">
-                <h2 id="radial-summary-heading">Summary</h2>
-                <p id="radial-visible-summary">Loading radial bar chart summary.</p>
-              </section>
-
-              <section aria-labelledby="radial-table-title">
-                <h2 id="radial-table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Sample training completion by squadron, as a percent of goal</caption>
-                  <thead><tr><th scope="col">Squadron</th><th scope="col" class="numeric">Of goal</th><th scope="col" class="numeric">Rank</th></tr></thead>
-                  <tbody id="radialTableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-radial">
     <h2 id="usage-radial">Usage</h2>
@@ -1480,7 +1356,7 @@ radialBarChart(document.querySelector(&quot;#training&quot;), {
 <tr><td><code>sweep</code></td><td><code class="type">number</code></td><td>How far a full bar travels, in degrees. Defaults to <code>270</code>, leaving the top-left quarter for labels.</td></tr>
 <tr><td><code>sort</code></td><td><code class="type">&quot;descending&quot; | &quot;input&quot;</code></td><td>Ring order. <code>"descending"</code> puts the largest value on the innermost ring, which offsets the way outer rings look longer. Defaults to <code>"descending"</code>.</td></tr>
 <tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Read after each value, for example <code>"% of goal"</code>.</td></tr>
-<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the leader and the laggard, the average, and the spread.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the leader, the lowest, and the average.</td></tr>
 <tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic data table. Defaults to <code>true</code>.</td></tr>
 <tr><td><code>patterns</code></td><td><code class="type">string[]</code></td><td>Override the pattern for each ring.</td></tr></tbody>
 </table>
@@ -1490,7 +1366,7 @@ radialBarChart(document.querySelector(&quot;#training&quot;), {
     <h2 id="a11y-radial">Built-in accessibility</h2>
     <ul class="a11y-list"><li>The whole chart is one Tab stop. Up and Down, or Left and Right, move between rings, and Home and End jump to the innermost and outermost ring.</li>
 <li>Each ring's name gives its value, its rank, and the gap to the ring ranked just above it, so nobody has to compare arc lengths by eye.</li>
-<li>Every value is printed in a chip at the end of its bar, and the squadron's name sits where its bar starts.</li>
+<li>Every value is printed beside the squadron's name, where its bar starts, so no one has to judge an arc's length.</li>
 <li>The largest value sits on the innermost ring. Outer rings draw longer arcs for the same value, and this order works against that rather than exaggerating the leader.</li>
 <li>Each ring has its own pattern, so rings can be told apart without color; focusing one dims the others.</li></ul>
   </section>
@@ -1500,47 +1376,12 @@ radialBarChart(document.querySelector(&quot;#training&quot;), {
   <p class="page-kicker">Comparison · Live</p>
   <h1 class="page-title" id="h-vertical-bars" tabindex="-1">Vertical bars</h1>
   <p class="page-lede">The familiar column chart for dashboards. Category names wrap under each column instead of being shortened.</p>
-  <div class="preview"><figure aria-labelledby="vertical-chart-title" aria-describedby="vertical-chart-summary vertical-visible-summary">
-            <h3 id="vertical-chart-title" class="sr-only">Vertical bar chart showing Star Wars character groups</h3>
-            <p id="vertical-chart-summary" class="sr-only">Loading vertical bar chart summary.</p>
-<div class="preview-stage">
-
-            <div class="chart-scroll">
-              <svg class="vertical-chart-svg" id="verticalChart" viewBox="0 0 900 420" role="img" aria-labelledby="vertical-svg-title vertical-svg-desc">
-                <title id="vertical-svg-title">Star Wars character groups as vertical bars</title>
-                <desc id="vertical-svg-desc">A vertical bar chart comparing seven character groups. Each bar can be focused by keyboard.</desc>
-                <defs id="verticalPatterns"></defs>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-vertical-bars"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="vertical-summary-heading" role="region">
-                <h2 id="vertical-summary-heading">Summary</h2>
-                <p id="vertical-visible-summary">Loading vertical bar chart summary.</p>
-              </section>
-
-              <section aria-labelledby="vertical-table-title">
-                <h2 id="vertical-table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Star Wars character group data used in the accessible vertical bar chart</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Category</th>
-                      <th scope="col" class="numeric">Count</th>
-                      <th scope="col" class="numeric">Share</th>
-                      <th scope="col" class="numeric">Rank</th>
-                    </tr>
-                  </thead>
-                  <tbody id="verticalTableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-vertical-bars">
     <h2 id="usage-vertical-bars">Usage</h2>
@@ -1585,7 +1426,7 @@ barChart(document.querySelector(&quot;#columns&quot;), {
     <h2 id="a11y-vertical-bars">Built-in accessibility</h2>
     <ul class="a11y-list"><li>Value labels sit above every column, so readers don't need to estimate against gridlines.</li>
 <li>Full category names wrap onto multiple lines rather than being truncated.</li>
-<li>On narrow screens the chart scrolls horizontally instead of squeezing columns below a readable width.</li></ul>
+<li>The chart scales with its container, and the table carries every value when columns get narrow.</li></ul>
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="vertical-bars"></nav>
@@ -1593,50 +1434,12 @@ barChart(document.querySelector(&quot;#columns&quot;), {
   <p class="page-kicker">Part to whole · Live</p>
   <h1 class="page-title" id="h-segmented-vertical" tabindex="-1">Segmented vertical</h1>
   <p class="page-lede">Stacked columns for when both the total and what it's made of matter.</p>
-  <div class="preview"><figure aria-labelledby="seg-vertical-chart-title" aria-describedby="seg-vertical-chart-summary seg-vertical-visible-summary">
-            <h3 id="seg-vertical-chart-title" class="sr-only">Segmented vertical bar chart showing Star Wars factions by character type</h3>
-            <p id="seg-vertical-chart-summary" class="sr-only">Loading segmented vertical bar chart summary.</p>
-<div class="preview-stage">
-
-            <div class="chart-scroll">
-              <svg class="seg-vertical-chart-svg" id="segVerticalChart" viewBox="0 0 900 420" role="img" aria-labelledby="seg-vertical-svg-title seg-vertical-svg-desc">
-                <title id="seg-vertical-svg-title">Star Wars factions as segmented vertical bars</title>
-                <desc id="seg-vertical-svg-desc">A segmented vertical bar chart comparing faction totals and composition. Each segment can be focused by keyboard.</desc>
-                <defs id="segVerticalPatterns"></defs>
-              </svg>
-            </div>
-
-            <div class="seg-legend" id="segVerticalLegend" aria-label="Segment legend"></div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-segmented-vertical"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="seg-vertical-summary-heading" role="region">
-                <h2 id="seg-vertical-summary-heading">Summary</h2>
-                <p id="seg-vertical-visible-summary">Loading segmented vertical bar chart summary.</p>
-              </section>
-
-              <section aria-labelledby="seg-vertical-table-title">
-                <h2 id="seg-vertical-table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Star Wars faction data used in the accessible segmented vertical bar chart</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Faction</th>
-                      <th scope="col" class="numeric">Force users</th>
-                      <th scope="col" class="numeric">Non-Force users</th>
-                      <th scope="col" class="numeric">Droids / other</th>
-                      <th scope="col" class="numeric">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody id="segVerticalTableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-segmented-vertical">
     <h2 id="usage-segmented-vertical">Usage</h2>
@@ -1695,53 +1498,12 @@ stackedBarChart(document.querySelector(&quot;#factions&quot;), {
   <p class="page-kicker">Part to whole · Live</p>
   <h1 class="page-title" id="h-sunburst" tabindex="-1">Sunburst chart</h1>
   <p class="page-lede">Break a whole into nested parts, one ring per level, from the center out. Best for two or three levels; deeper trees are easier to read as an indented list.</p>
-  <div class="preview"><figure aria-labelledby="sunburst-chart-title" aria-describedby="sunburst-chart-summary sunburst-visible-summary">
-            <h3 id="sunburst-chart-title" class="sr-only">Sunburst chart of 32 sample Star Wars characters by faction, Force use, and role</h3>
-            <p id="sunburst-chart-summary" class="sr-only">Loading sunburst chart summary.</p>
-<div class="preview-stage">
-
-            <p class="key-hint" id="sunburst-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>←</kbd> <kbd>→</kbd> around a ring, <kbd>↑</kbd> in to the parent, <kbd>↓</kbd> out to subgroups, <kbd>Home</kbd> <kbd>End</kbd> to the ends of the ring.</p>
-
-            <div class="seg-legend sb-legend" id="sunburstLegend" aria-label="Sunburst legend"></div>
-            <p class="sb-legend-ring">Inner ring: faction. Middle: Force use or type. Outer: role. Subgroups keep their faction's pattern.</p>
-
-            <div class="chart-scroll">
-                <svg class="sunburst-chart-svg" id="sunburstChart" viewBox="0 0 600 600" role="group" aria-roledescription="sunburst chart" aria-labelledby="sunburst-svg-title" aria-describedby="sunburst-svg-desc sunburst-keys">
-                  <title id="sunburst-svg-title">Sample characters by faction, Force use, and role</title>
-                  <desc id="sunburst-svg-desc">Three rings around a center total. The inner ring is factions, the middle ring splits each faction by Force use or type, and the outer ring splits groups by role.</desc>
-                </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-sunburst"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="sunburst-summary-heading" role="region">
-                <h2 id="sunburst-summary-heading">Summary</h2>
-                <p id="sunburst-visible-summary">Loading sunburst chart summary.</p>
-              </section>
-
-              <section aria-labelledby="sunburst-table-title">
-                <h2 id="sunburst-table-title">Data table</h2>
-                <div class="table-scroll">
-                <table>
-                  <caption class="sr-only">Every group in the sunburst, in tree order, with its size and shares. Sample data.</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Group</th>
-                      <th scope="col" class="numeric">Characters</th>
-                      <th scope="col" class="numeric">Of parent</th>
-                      <th scope="col" class="numeric">Of all</th>
-                    </tr>
-                  </thead>
-                  <tbody id="sunburstTableBody"></tbody>
-                </table>
-                </div>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-sunburst">
     <h2 id="usage-sunburst">Usage</h2>
@@ -1788,7 +1550,7 @@ sunburstChart(document.querySelector(&quot;#factions&quot;), {
 <tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Noun used in labels and summaries, for example <code>"characters"</code>.</td></tr>
 <tr><td><code>centerLabel</code></td><td><code class="type">string | false</code></td><td>Text above the total in the center. <code>false</code> hides it.</td></tr>
 <tr><td><code>maxDepth</code></td><td><code class="type">number</code></td><td>How many rings to draw. Deeper levels stay in the data table.</td></tr>
-<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the largest group at each level.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> names the largest group and the largest part within it.</td></tr>
 <tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table, one row per group with its path, size, and shares. Defaults to <code>true</code>.</td></tr>
 <tr><td><code>patterns</code></td><td><code class="type">string[]</code></td><td>Override the pattern for each top-level group. Subgroups inherit their parent's pattern.</td></tr></tbody>
 </table>
@@ -1808,43 +1570,12 @@ sunburstChart(document.querySelector(&quot;#factions&quot;), {
   <p class="page-kicker">Part to whole · Live</p>
   <h1 class="page-title" id="h-segmented-bar" tabindex="-1">Segmented horizontal</h1>
   <p class="page-lede">Stacked bars that compare totals while showing their composition. Works well with long row labels.</p>
-  <div class="preview"><figure aria-labelledby="seg-chart-title" aria-describedby="seg-chart-summary seg-visible-summary">
-            <h3 id="seg-chart-title" class="sr-only">Segmented horizontal bar chart showing Star Wars factions by character type</h3>
-            <p id="seg-chart-summary" class="sr-only">Loading segmented bar chart summary.</p>
-<div class="preview-stage">
-
-            <div class="segmented-chart-wrap" id="segmentedChart" role="list" aria-label="Star Wars factions with segmented character types"></div>
-            <div class="seg-legend" id="segmentedLegend" aria-label="Segment legend"></div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-segmented-bar"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="seg-summary-heading" role="region">
-                <h2 id="seg-summary-heading">Summary</h2>
-                <p id="seg-visible-summary">Loading segmented bar chart summary.</p>
-              </section>
-
-              <section aria-labelledby="seg-table-title">
-                <h2 id="seg-table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Star Wars faction data used in the accessible segmented horizontal bar chart</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Faction</th>
-                      <th scope="col" class="numeric">Force users</th>
-                      <th scope="col" class="numeric">Non-Force users</th>
-                      <th scope="col" class="numeric">Droids / other</th>
-                      <th scope="col" class="numeric">Total</th>
-                    </tr>
-                  </thead>
-                  <tbody id="segTableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-segmented-bar">
     <h2 id="usage-segmented-bar">Usage</h2>
@@ -1903,54 +1634,12 @@ stackedBarChart(document.querySelector(&quot;#factions&quot;), {
   <p class="page-kicker">Change over time · Live</p>
   <h1 class="page-title" id="h-line" tabindex="-1">Multi-line</h1>
   <p class="page-lede">Compare trends, peaks, and timing across series over time.</p>
-  <div class="preview"><figure aria-labelledby="line-chart-title" aria-describedby="line-chart-summary line-visible-summary">
-            <h3 id="line-chart-title" class="sr-only">Accessible line chart showing sample Rebel activity over time</h3>
-            <p id="line-chart-summary" class="sr-only">Loading line chart summary.</p>
-<div class="preview-stage">
-
-            <ul class="line-toolbar" aria-label="Applied filters">
-              <li class="filter-pill"><strong>Period</strong> · Saga periods</li>
-              <li class="filter-pill"><strong>Faction</strong> · All</li>
-              <li class="filter-pill"><strong>Metric</strong> · Activity score</li>
-            </ul>
-
-            <div class="line-legend" id="lineLegend" aria-label="Multi-line legend"></div>
-
-            <div class="chart-scroll">
-              <svg class="line-chart-svg" id="lineChart" viewBox="0 0 900 420" role="img" aria-labelledby="line-svg-title line-svg-desc">
-                <title id="line-svg-title">Sample faction activity trends</title>
-                <desc id="line-svg-desc">A multi-line chart showing sample activity trends for Rebels, Empire, and Independent groups across seven saga periods. Each point can be focused by keyboard.</desc>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-line"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="line-summary-heading" role="region">
-                <h2 id="line-summary-heading">Summary</h2>
-                <p id="line-visible-summary">Loading line chart summary.</p>
-              </section>
-
-              <section aria-labelledby="line-table-title">
-                <h2 id="line-table-title">Data table</h2>
-                <table>
-                  <caption class="sr-only">Sample Rebel activity data used in the accessible line chart</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Saga period</th>
-                      <th scope="col" class="numeric">Rebels</th>
-                      <th scope="col" class="numeric">Empire</th>
-                      <th scope="col" class="numeric">Independent</th>
-                    </tr>
-                  </thead>
-                  <tbody id="lineTableBody"></tbody>
-                </table>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-line">
     <h2 id="usage-line">Usage</h2>
@@ -2006,44 +1695,12 @@ lineChart(document.querySelector(&quot;#activity&quot;), {
   <p class="page-kicker">Change over time · Live</p>
   <h1 class="page-title" id="h-spiral" tabindex="-1">Spiral graph</h1>
   <p class="page-lede">Wrap a timeline into a spiral, one turn per year, so the same month lines up across years and seasonal patterns show.</p>
-  <div class="preview"><figure aria-labelledby="spiral-chart-title" aria-describedby="spiral-chart-summary spiral-visible-summary">
-            <h3 id="spiral-chart-title" class="sr-only">Spiral graph of sample monthly cantina visits over four years</h3>
-            <p id="spiral-chart-summary" class="sr-only">Loading spiral graph summary.</p>
-<div class="preview-stage">
-
-            <p class="key-hint" id="spiral-keys"><span>Keyboard</span> <kbd>Tab</kbd> into the chart, then <kbd>←</kbd> <kbd>→</kbd> by month, <kbd>↑</kbd> <kbd>↓</kbd> by year, <kbd>Home</kbd> <kbd>End</kbd> to the ends.</p>
-
-            <div class="chart-scroll">
-              <svg class="spiral-chart-svg" id="spiralChart" viewBox="0 0 900 704" role="group" aria-roledescription="spiral graph" aria-labelledby="spiral-svg-title" aria-describedby="spiral-svg-desc spiral-keys">
-                <title id="spiral-svg-title">Sample monthly cantina visits, four years</title>
-                <desc id="spiral-svg-desc">A spiral with one turn per year, starting at the center. Each month is a bar along the spiral; longer bars mean more visits.</desc>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-spiral"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="spiral-summary-heading" role="region">
-                <h2 id="spiral-summary-heading">Summary</h2>
-                <p id="spiral-visible-summary">Loading spiral graph summary.</p>
-              </section>
-
-              <section aria-labelledby="spiral-table-title">
-                <h2 id="spiral-table-title">Data table</h2>
-                <div class="table-scroll">
-                <table>
-                  <caption class="sr-only">Sample monthly cantina visits, in thousands. Months in rows, years in columns.</caption>
-                  <thead><tr id="spiralTableHead"><th scope="col">Month</th></tr></thead>
-                  <tbody id="spiralTableBody"></tbody>
-                  <tfoot id="spiralTableFoot"></tfoot>
-                </table>
-                </div>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-spiral">
     <h2 id="usage-spiral">Usage</h2>
@@ -2081,7 +1738,7 @@ spiralGraph(document.querySelector(&quot;#visits&quot;), {
 <tr><td><code>cycleLabel</code></td><td><code class="type">string</code></td><td>What one turn is called in labels, for example <code>"Year"</code> or <code>"Week"</code>.</td></tr>
 <tr><td><code>labels</code></td><td><code class="type">string[]</code></td><td>Names for the positions around the spiral. Defaults to month names when <code>cycle</code> is 12.</td></tr>
 <tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Noun used in labels and summaries, for example <code>"thousand visits"</code>.</td></tr>
-<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> describes growth across turns, where each turn peaks and dips, and the biggest break in the pattern.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> gives the range, the highest and lowest points, and how the average moves from the first turn to the last.</td></tr>
 <tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic table, with positions in rows and turns in columns. Defaults to <code>true</code>.</td></tr></tbody>
 </table>
   </section>
@@ -2101,50 +1758,12 @@ spiralGraph(document.querySelector(&quot;#visits&quot;), {
   <p class="page-kicker">Relationship · Live</p>
   <h1 class="page-title" id="h-arc" tabindex="-1">Arc diagram</h1>
   <p class="page-lede">Show who connects to whom along a single line, and how strong each connection is.</p>
-  <div class="preview"><figure aria-labelledby="arc-chart-title" aria-describedby="arc-chart-summary arc-visible-summary">
-            <h3 id="arc-chart-title" class="sr-only">Arc diagram of sample shared scenes between ten Star Wars characters</h3>
-            <p id="arc-chart-summary" class="sr-only">Loading arc diagram summary.</p>
-<div class="preview-stage">
-
-            <div class="line-legend" id="arcLegend" aria-label="Arc diagram legend"></div>
-
-            <div class="chart-scroll">
-              <svg class="arc-chart-svg" id="arcChart" viewBox="0 0 900 470" role="img" aria-labelledby="arc-svg-title arc-svg-desc">
-                <title id="arc-svg-title">Sample shared scenes between Star Wars characters</title>
-                <desc id="arc-svg-desc">An arc diagram with ten characters along a line, grouped by faction, and an arc for each pair who share scenes. Thicker arcs mean more shared scenes; dashed arcs cross factions. Each character can be focused by keyboard.</desc>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-arc"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="arc-summary-heading" role="region">
-                <h2 id="arc-summary-heading">Summary</h2>
-                <p id="arc-visible-summary">Loading arc diagram summary.</p>
-              </section>
-
-              <section aria-labelledby="arc-table-title">
-                <h2 id="arc-table-title">Connections</h2>
-                <div class="table-scroll">
-                <table>
-                  <caption class="sr-only">Every connection in the arc diagram, strongest first. Sample data.</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Character</th>
-                      <th scope="col">Connected to</th>
-                      <th scope="col" class="numeric">Shared scenes</th>
-                      <th scope="col">Factions</th>
-                    </tr>
-                  </thead>
-                  <tbody id="arcTableBody"></tbody>
-                </table>
-                </div>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-arc">
     <h2 id="usage-arc">Usage</h2>
@@ -2197,7 +1816,7 @@ arcDiagram(document.querySelector(&quot;#scenes&quot;), {
 <li>Focusing a character dims every arc that isn't theirs, so its connections stand out from the rest.</li>
 <li>Arc thickness shows the number of shared scenes, and solid versus dashed shows whether a connection stays inside a faction or crosses factions. Both are also in the names and the table.</li>
 <li>Factions are told apart by marker shape and fill, and labelled under the line.</li>
-<li>The table lists every connection, strongest first, and the summary names the most connected character, the strongest pair, and who bridges factions.</li></ul>
+<li>The table lists every connection, strongest first, and the summary names the most connected character, the strongest pair, and how many connections cross factions.</li></ul>
   </section>
 
   <nav class="pager" aria-label="More charts" data-current="arc"></nav>
@@ -2206,51 +1825,12 @@ arcDiagram(document.querySelector(&quot;#scenes&quot;), {
   <p class="page-kicker">Relationship · Live</p>
   <h1 class="page-title" id="h-scatter" tabindex="-1">Scatter plot</h1>
   <p class="page-lede">Show how two measures move together, and which points break the pattern.</p>
-  <div class="preview"><figure aria-labelledby="scatter-chart-title" aria-describedby="scatter-chart-summary scatter-visible-summary">
-            <h3 id="scatter-chart-title" class="sr-only">Scatter plot of sample pilots: training hours and mission success</h3>
-            <p id="scatter-chart-summary" class="sr-only">Loading scatter plot summary.</p>
-<div class="preview-stage">
-
-            <div class="line-legend" id="scatterLegend" aria-label="Scatter plot legend"></div>
-
-            <div class="chart-scroll">
-              <svg class="scatter-chart-svg" id="scatterChart" viewBox="0 0 900 460" role="img" aria-labelledby="scatter-svg-title scatter-svg-desc">
-                <title id="scatter-svg-title">Sample pilots: training hours and mission success</title>
-                <desc id="scatter-svg-desc">A scatter plot of 24 sample pilots in three factions, with training hours across and mission success up, and a trend line. Each point can be focused by keyboard.</desc>
-              </svg>
-            </div>
-
-            </div>
+  <div class="preview"><div class="demo" id="demo-scatter"></div>
 <div class="hears" aria-hidden="true">
   <span class="hears-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>Screen reader hears</span>
   <span class="hears-text is-empty">Tab into the chart or hover a mark to see its announcement.</span>
 </div>
-<div class="details">
-              <section aria-labelledby="scatter-summary-heading" role="region">
-                <h2 id="scatter-summary-heading">Summary</h2>
-                <p id="scatter-visible-summary">Loading scatter plot summary.</p>
-              </section>
-
-              <section aria-labelledby="scatter-table-title">
-                <h2 id="scatter-table-title">Data table</h2>
-                <div class="table-scroll">
-                <table>
-                  <caption class="sr-only">Sample pilot data used in the scatter plot. Versus trend is in percentage points above or below the trend line.</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">Pilot</th>
-                      <th scope="col">Faction</th>
-                      <th scope="col" class="numeric">Training hours</th>
-                      <th scope="col" class="numeric">Success</th>
-                      <th scope="col" class="numeric">Versus trend <span class="legend-count">(pts)</span></th>
-                    </tr>
-                  </thead>
-                  <tbody id="scatterTableBody"></tbody>
-                </table>
-                </div>
-              </section>
-            </div>
-          </figure></div>
+</div>
 
   <section class="doc-section" aria-labelledby="usage-scatter">
     <h2 id="usage-scatter">Usage</h2>
@@ -2289,7 +1869,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 <tr><td><code>y</code></td><td><code class="type">{ label, unit }</code></td><td>Required. Names the vertical measure, read the same way.</td></tr>
 <tr><td><code>trendLine</code></td><td><code class="type">boolean</code></td><td>Draw a line of best fit and say how far each point sits above or below it. Defaults to <code>true</code>.</td></tr>
 <tr><td><code>unit</code></td><td><code class="type">string</code></td><td>Noun for the points in labels and summaries, for example <code>"pilots"</code>. Defaults to <code>"points"</code>.</td></tr>
-<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> states the direction and strength of the relationship and names the biggest exception.</td></tr>
+<tr><td><code>summary</code></td><td><code class="type">&quot;auto&quot; | string | false</code></td><td>Plain-language summary placed before the table. <code>"auto"</code> states the direction and strength of the relationship and names the highest point.</td></tr>
 <tr><td><code>table</code></td><td><code class="type">boolean</code></td><td>Render the semantic data table. Defaults to <code>true</code>. Turn off only if the same data is shown elsewhere on the page.</td></tr>
 <tr><td><code>shapes</code></td><td><code class="type">string[]</code></td><td>Override the marker order for groups. Defaults to hollow circle, filled square, hollow triangle, then further shape and fill combinations.</td></tr></tbody>
 </table>
@@ -2309,2194 +1889,160 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     </main>
   </div>
 
+  <script src="lib/accessible-charts.global.js"></script>
   <script>
 
-    const data = [
-      { category: "Rebel / Resistance, non-Jedi", count: 9, color: "#3f7eed", pattern: "diagonalForward" },
-      { category: "Imperial officer / trooper", count: 6, color: "#16a1b5", pattern: "dots" },
-      { category: "Rebel / Resistance Jedi", count: 5, color: "#e52b91", pattern: "vertical" },
-      { category: "Sith / dark side", count: 4, color: "#f77913", pattern: "horizontal" },
-      { category: "Scoundrel / independent", count: 3, color: "#8c35e8", pattern: "solid" },
-      { category: "Droid ally", count: 3, color: "#5a9c05", pattern: "checker" },
-      { category: "Other / unknown", count: 2, color: "#3e5562", pattern: "crosshatch" }
+    /* The live examples on this site are rendered by the package itself (lib/). */
+    const { barChart, stackedBarChart, donutChart, lineChart, radarChart, radialBarChart, sunburstChart, spiralGraph, arcDiagram, scatterPlot } = AccessibleCharts;
+
+    const groups = [
+      { label: "Rebel / Resistance, non-Jedi", value: 9 },
+      { label: "Imperial officer / trooper", value: 6 },
+      { label: "Rebel / Resistance Jedi", value: 5 },
+      { label: "Sith / dark side", value: 4 },
+      { label: "Scoundrel / independent", value: 3 },
+      { label: "Droid ally", value: 3 },
+      { label: "Other / unknown", value: 2 }
+    ];
+    const factions = [
+      { label: "Rebel Alliance", segments: [{ label: "Force users", value: 5 }, { label: "Non-Force users", value: 9 }] },
+      { label: "Galactic Empire", segments: [{ label: "Force users", value: 4 }, { label: "Non-Force users", value: 6 }] },
+      { label: "Independent / Scoundrels", segments: [{ label: "Non-Force users", value: 3 }, { label: "Droids / other", value: 3 }] },
+      { label: "Other / unknown", segments: [{ label: "Droids / other", value: 2 }] }
     ];
 
-    const segmentedData = [
-      {
-        faction: "Rebel Alliance",
-        segments: [
-          { key: "forceUsers", label: "Force users", count: 5, color: "#e52b91", pattern: "vertical" },
-          { key: "nonForceUsers", label: "Non-Force users", count: 9, color: "#3f7eed", pattern: "diagonalForward" }
-        ]
-      },
-      {
-        faction: "Galactic Empire",
-        segments: [
-          { key: "forceUsers", label: "Force users", count: 4, color: "#f77913", pattern: "horizontal" },
-          { key: "nonForceUsers", label: "Non-Force users", count: 6, color: "#16a1b5", pattern: "dots" }
-        ]
-      },
-      {
-        faction: "Independent / Scoundrels",
-        segments: [
-          { key: "nonForceUsers", label: "Non-Force users", count: 3, color: "#8c35e8", pattern: "solid" },
-          { key: "droidsOther", label: "Droids / other", count: 3, color: "#5a9c05", pattern: "checker" }
-        ]
-      },
-      {
-        faction: "Other / unknown",
-        segments: [
-          { key: "droidsOther", label: "Droids / other", count: 2, color: "#3e5562", pattern: "crosshatch" }
-        ]
-      }
-    ];
-
-    const total = data.reduce((sum, d) => sum + d.count, 0);
-    const segmentedTotal = segmentedData.reduce((sum, row) => sum + row.segments.reduce((rowSum, segment) => rowSum + segment.count, 0), 0);
-
-    const lineData = [
-      { period: "Episode I", rebels: 18, empire: 34, independent: 12 },
-      { period: "Episode II", rebels: 24, empire: 38, independent: 18 },
-      { period: "Episode III", rebels: 31, empire: 52, independent: 24 },
-      { period: "Episode IV", rebels: 52, empire: 46, independent: 32 },
-      { period: "Episode V", rebels: 68, empire: 58, independent: 40 },
-      { period: "Episode VI", rebels: 74, empire: 49, independent: 47 },
-      { period: "Episode VII", rebels: 61, empire: 43, independent: 55 }
-    ];
-
-    const lineSeries = [
-      { key: "rebels", label: "Rebels", color: "currentColor", shape: "circle", dash: "", filled: false },
-      { key: "empire", label: "Empire", color: "currentColor", shape: "square", dash: "9 6", filled: true },
-      { key: "independent", label: "Independent", color: "currentColor", shape: "triangle", dash: "1.5 6", filled: false }
-    ];
-    const svg = document.getElementById("chart");
-    const defs = document.getElementById("patterns");
-    const tableBody = document.getElementById("tableBody");
-    const legend = document.getElementById("legend");
-    const tooltip = document.getElementById("tooltip");
-    const visibleSummary = document.getElementById("visible-summary");
-    const hiddenSummary = document.getElementById("chart-summary");
-    const barChart = document.getElementById("barChart");
-    const barTableBody = document.getElementById("barTableBody");
-    const barVisibleSummary = document.getElementById("bar-visible-summary");
-    const barHiddenSummary = document.getElementById("bar-chart-summary");
-    const verticalChart = document.getElementById("verticalChart");
-    const verticalPatterns = document.getElementById("verticalPatterns");
-    const verticalTableBody = document.getElementById("verticalTableBody");
-    const verticalVisibleSummary = document.getElementById("vertical-visible-summary");
-    const verticalHiddenSummary = document.getElementById("vertical-chart-summary");
-    const segVerticalChart = document.getElementById("segVerticalChart");
-    const segVerticalPatterns = document.getElementById("segVerticalPatterns");
-    const segVerticalLegend = document.getElementById("segVerticalLegend");
-    const segVerticalTableBody = document.getElementById("segVerticalTableBody");
-    const segVerticalVisibleSummary = document.getElementById("seg-vertical-visible-summary");
-    const segVerticalHiddenSummary = document.getElementById("seg-vertical-chart-summary");
-    const segmentedChart = document.getElementById("segmentedChart");
-    const segmentedLegend = document.getElementById("segmentedLegend");
-    const segTableBody = document.getElementById("segTableBody");
-    const segVisibleSummary = document.getElementById("seg-visible-summary");
-    const segHiddenSummary = document.getElementById("seg-chart-summary");
-    const lineChart = document.getElementById("lineChart");
-    const lineLegend = document.getElementById("lineLegend");
-    const lineTableBody = document.getElementById("lineTableBody");
-    const lineVisibleSummary = document.getElementById("line-visible-summary");
-    const lineHiddenSummary = document.getElementById("line-chart-summary");
-
-    const cx = 210;
-    const cy = 210;
-    const outerRadius = 145;
-    const innerRadius = 96;
-    const gap = 0.022;
-
-    function polarToCartesian(cx, cy, radius, angle) {
-      const radians = (angle - 90) * Math.PI / 180;
-      return {
-        x: cx + radius * Math.cos(radians),
-        y: cy + radius * Math.sin(radians)
-      };
-    }
-
-    function donutSlicePath(startAngle, endAngle) {
-      const largeArc = endAngle - startAngle > 180 ? 1 : 0;
-      const outerStart = polarToCartesian(cx, cy, outerRadius, endAngle);
-      const outerEnd = polarToCartesian(cx, cy, outerRadius, startAngle);
-      const innerStart = polarToCartesian(cx, cy, innerRadius, startAngle);
-      const innerEnd = polarToCartesian(cx, cy, innerRadius, endAngle);
-
-      return [
-        `M ${outerStart.x} ${outerStart.y}`,
-        `A ${outerRadius} ${outerRadius} 0 ${largeArc} 0 ${outerEnd.x} ${outerEnd.y}`,
-        `L ${innerStart.x} ${innerStart.y}`,
-        `A ${innerRadius} ${innerRadius} 0 ${largeArc} 1 ${innerEnd.x} ${innerEnd.y}`,
-        "Z"
-      ].join(" ");
-    }
-
-    function appendWrappedLabel(svgEl, text, x, y, maxChars) {
-      const ns = "http://www.w3.org/2000/svg";
-      const words = text.split(" ");
-      const lines = [];
-      let line = "";
-      words.forEach(word => {
-        const next = line ? `${line} ${word}` : word;
-        if (next.length > maxChars && line) {
-          lines.push(line);
-          line = word;
-        } else {
-          line = next;
-        }
-      });
-      if (line) lines.push(line);
-
-      const label = document.createElementNS(ns, "text");
-      label.setAttribute("x", x);
-      label.setAttribute("y", y);
-      label.setAttribute("text-anchor", "middle");
-      label.setAttribute("class", "axis-label");
-      label.setAttribute("aria-hidden", "true");
-      lines.forEach((content, i) => {
-        const tspan = document.createElementNS(ns, "tspan");
-        tspan.setAttribute("x", x);
-        tspan.setAttribute("dy", i === 0 ? 0 : "1.25em");
-        tspan.textContent = content;
-        label.appendChild(tspan);
-      });
-      svgEl.appendChild(label);
-    }
-
-    function formatPercent(value) {
-      return `${value.toFixed(1)}%`;
-    }
-
-    function generateChartSummary() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-      const largest = sorted[0];
-      const second = sorted[1];
-      const smallest = sorted[sorted.length - 1];
-      const topThreeCount = sorted.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
-      const largestPercent = (largest.count / total) * 100;
-      const secondPercent = (second.count / total) * 100;
-      const smallestPercent = (smallest.count / total) * 100;
-      const topThreePercent = (topThreeCount / total) * 100;
-
-      const visibleText = `This chart shows the distribution of ${total} Star Wars characters across ${data.length} character groups. ${largest.category} is the largest segment with ${largest.count} characters (${formatPercent(largestPercent)}), followed by ${second.category} with ${second.count} characters (${formatPercent(secondPercent)}). Together, the three largest groups account for ${topThreeCount} characters, or ${formatPercent(topThreePercent)} of the total. The smallest segment is ${smallest.category} with ${smallest.count} characters (${formatPercent(smallestPercent)}).`;
-
-      const screenReaderText = `Chart summary. ${visibleText} The chart can also be explored by keyboard, and the full values are available in the data table that follows.`;
-
-      visibleSummary.textContent = visibleText;
-      hiddenSummary.textContent = screenReaderText;
-    }
-
-    function patternMarkup() { return ""; }
-    function legacyPatternMarkup(id, color, pattern) {
-      if (pattern === "solid") return "";
-      const common = `patternUnits="userSpaceOnUse" width="16" height="16"`;
-      const base = `<rect width="16" height="16" fill="${color}"></rect>`;
-
-      const patterns = {
-        diagonalForward: `${base}<path d="M-4 16 L16 -4 M4 20 L20 4" stroke="white" stroke-width="3"></path>`,
-        diagonalBack: `${base}<path d="M0 -4 L20 16 M-4 4 L12 20" stroke="white" stroke-width="3"></path>`,
-        crosshatch: `${base}<path d="M-4 16 L16 -4 M4 20 L20 4 M0 -4 L20 16 M-4 4 L12 20" stroke="white" stroke-width="2.2"></path>`,
-        thickThin: `${base}<path d="M-4 16 L16 -4 M6 20 L20 6" stroke="white" stroke-width="4.5"></path><path d="M2 18 L18 2" stroke="white" stroke-width="1.4"></path>`,
-        dots: `${base}<circle cx="4" cy="4" r="2.2" fill="white"></circle><circle cx="12" cy="12" r="2.2" fill="white"></circle>`,
-        vertical: `${base}<rect x="3" y="0" width="2.5" height="16" fill="white"></rect><rect x="10" y="0" width="2.5" height="16" fill="white"></rect>`,
-        triangle: `${base}<path d="M8 2 L14 13 H2 Z" fill="white"></path>`
-      };
-
-      return `<pattern id="${id}" ${common}>${patterns[pattern]}</pattern>`;
-    }
-
-    function renderPatterns() {
-      defs.innerHTML = data
-        .map((d, i) => patternMarkup(`pattern-${i}`, d.color, d.pattern))
-        .join("");
-    }
-
-    function showTooltip(event, d, percent) {
-      tooltip.innerHTML = `
-        <strong>${d.category}</strong>
-        <span>${d.count} of ${total} characters</span>
-        <span>${percent}% of total</span>
-      `;
-      tooltip.classList.add("is-visible");
-      moveTooltip(event);
-    }
-
-    function moveTooltip(event) {
-      const x = event.clientX || window.innerWidth / 2;
-      const y = event.clientY || window.innerHeight / 2;
-      tooltip.style.left = `${x}px`;
-      tooltip.style.top = `${y}px`;
-    }
-
-    function hideTooltip() {
-      tooltip.classList.remove("is-visible", "is-below");
-    }
-
-    function setActiveSlice(activePath) {
-      document.querySelectorAll(".slice").forEach(slice => {
-        slice.classList.toggle("is-active", slice === activePath);
-        slice.classList.toggle("is-dimmed", slice !== activePath);
-      });
-    }
-
-    function clearActiveSlice() {
-      document.querySelectorAll(".slice").forEach(slice => {
-        slice.classList.remove("is-active", "is-dimmed");
-      });
-      hideTooltip();
-    }
-
-    function renderChart() {
-      let currentAngle = 0;
-
-      data.forEach((d, i) => {
-        const sliceAngle = (d.count / total) * 360;
-        const startAngle = currentAngle + gap * 180 / Math.PI;
-        const endAngle = currentAngle + sliceAngle - gap * 180 / Math.PI;
-        const percent = ((d.count / total) * 100).toFixed(1);
-
-        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        path.setAttribute("d", donutSlicePath(startAngle, endAngle));
-        path.setAttribute("fill", `url(#mono-${d.pattern})`);
-        path.setAttribute("stroke-width", "5");
-        path.setAttribute("class", "slice");
-        path.setAttribute("tabindex", "0");
-        path.setAttribute("role", "listitem");
-        path.setAttribute("aria-label", `${d.category}: ${d.count} of ${total} characters, ${percent} percent.`);
-        path.dataset.category = d.category;
-
-        path.addEventListener("mouseenter", (event) => {
-          setActiveSlice(path);
-          showTooltip(event, d, percent);
-        });
-
-        path.addEventListener("mousemove", moveTooltip);
-        path.addEventListener("mouseleave", clearActiveSlice);
-
-        path.addEventListener("focus", () => {
-          setActiveSlice(path);
-          const rect = path.getBoundingClientRect();
-          showTooltip(
-            { clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 },
-            d,
-            percent
-          );
-        });
-
-        path.addEventListener("blur", clearActiveSlice);
-
-        svg.appendChild(path);
-        currentAngle += sliceAngle;
-      });
-    }
-
-    function renderLegend() {
-      data.forEach((d) => {
-        const percent = ((d.count / total) * 100).toFixed(1);
-        const item = document.createElement("div");
-        item.className = "legend-item";
-        item.innerHTML = `
-          <span class="swatch" style="--swatch:${d.color}" data-pattern="${d.pattern}" aria-hidden="true"></span>
-          <div>
-            <strong>${d.category}</strong>
-            <span class="value">${d.count} (${percent}%)</span>
-          </div>
-        `;
-
-        legend.appendChild(item);
-      });
-    }
-
-    function renderTable() {
-      data.forEach(d => {
-        const percent = ((d.count / total) * 100).toFixed(1);
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <th scope="row">${d.category}</th>
-          <td class="numeric">${d.count}</td>
-          <td class="numeric">${percent}%</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    }
-
-
-    function generateBarChartSummary() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-      const largest = sorted[0];
-      const second = sorted[1];
-      const smallest = sorted[sorted.length - 1];
-      const range = largest.count - smallest.count;
-      const topThreeCount = sorted.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
-      const topThreePercent = (topThreeCount / total) * 100;
-
-      const visibleText = `This bar chart ranks ${total} Star Wars characters across ${data.length} character groups. ${largest.category} ranks first with ${largest.count} characters, followed by ${second.category} with ${second.count}. The top three groups account for ${topThreeCount} characters, or ${formatPercent(topThreePercent)} of the total. The range between the largest and smallest groups is ${range} characters.`;
-
-      const screenReaderText = `Chart summary. ${visibleText} Each bar can be focused by keyboard and the full values are available in the data table that follows.`;
-
-      barVisibleSummary.textContent = visibleText;
-      barHiddenSummary.textContent = screenReaderText;
-    }
-
-    function setActiveBar(activeBar) {
-      document.querySelectorAll(".bar-fill").forEach(bar => {
-        bar.classList.toggle("is-active", bar === activeBar);
-        bar.classList.toggle("is-dimmed", bar !== activeBar);
-      });
-    }
-
-    function clearActiveBar() {
-      document.querySelectorAll(".bar-fill").forEach(bar => {
-        bar.classList.remove("is-active", "is-dimmed");
-      });
-      hideTooltip();
-    }
-
-    function renderBarChart() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-      const axisMax = 20;
-
-      sorted.forEach((d, index) => {
-        const rank = index + 1;
-        const percent = ((d.count / total) * 100).toFixed(1);
-        const width = (d.count / axisMax) * 100;
-
-        const row = document.createElement("div");
-        row.className = "bar-row";
-
-        const label = document.createElement("div");
-        label.className = "bar-label";
-        label.textContent = d.category;
-
-        const track = document.createElement("div");
-        track.className = "bar-track";
-
-        const fill = document.createElement("div");
-        fill.className = "bar-fill";
-        fill.style.setProperty("--bar-width", `${width}%`);
-        fill.style.setProperty("--bar-color", d.color);
-        fill.dataset.pattern = d.pattern;
-        fill.setAttribute("tabindex", "0");
-        fill.setAttribute("role", "listitem");
-        fill.setAttribute("aria-label", `${d.category}: ${d.count} of ${total} characters, ${percent} percent. Rank ${rank} of ${sorted.length}.`);
-
-        fill.addEventListener("mouseenter", (event) => {
-          setActiveBar(fill);
-          showTooltip(event, d, percent);
-        });
-
-        fill.addEventListener("mousemove", moveTooltip);
-        fill.addEventListener("mouseleave", clearActiveBar);
-
-        fill.addEventListener("focus", () => {
-          setActiveBar(fill);
-          const rect = fill.getBoundingClientRect();
-          showTooltip(
-            { clientX: rect.right, clientY: rect.top + rect.height / 2 },
-            d,
-            percent
-          );
-        });
-
-        fill.addEventListener("blur", clearActiveBar);
-
-        const value = document.createElement("div");
-        value.className = "bar-value";
-        value.setAttribute("aria-hidden", "true");
-        value.textContent = d.count;
-
-        track.appendChild(fill);
-        const axis = document.createElement("div");
-        axis.className = "axis-column";
-        axis.setAttribute("aria-hidden", "true");
-
-        row.appendChild(label);
-        row.appendChild(axis);
-        row.appendChild(track);
-        row.appendChild(value);
-        barChart.appendChild(row);
-      });
-
-      const axisRow = document.createElement("div");
-      axisRow.className = "bar-x-axis";
-      axisRow.setAttribute("aria-hidden", "true");
-      axisRow.innerHTML = `
-        <div></div>
-        <div></div>
-        <div>
-          <div class="bar-x-axis-line"></div>
-          <div class="bar-x-axis-label"><span>0</span><span>${axisMax}</span></div>
-        </div>
-        <div></div>
-      `;
-      barChart.appendChild(axisRow);
-    }
-
-    function renderBarTable() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-
-      sorted.forEach((d, index) => {
-        const percent = ((d.count / total) * 100).toFixed(1);
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <th scope="row">${d.category}</th>
-          <td class="numeric">${d.count}</td>
-          <td class="numeric">${percent}%</td>
-          <td class="numeric">${index + 1}</td>
-        `;
-        barTableBody.appendChild(row);
-      });
-    }
-
-
-
-    function generateVerticalSummary() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-      const largest = sorted[0];
-      const second = sorted[1];
-      const smallest = sorted[sorted.length - 1];
-      const topThreeCount = sorted.slice(0, 3).reduce((sum, d) => sum + d.count, 0);
-      const topThreePercent = (topThreeCount / total) * 100;
-      const visibleText = `This vertical bar chart compares ${total} Star Wars characters across ${data.length} character groups. ${largest.category} is the tallest bar with ${largest.count} characters, followed by ${second.category} with ${second.count}. The three largest groups account for ${topThreeCount} characters, or ${formatPercent(topThreePercent)} of the total. The smallest group is ${smallest.category} with ${smallest.count} characters.`;
-      verticalVisibleSummary.textContent = visibleText;
-      verticalHiddenSummary.textContent = `Chart summary. ${visibleText} Each bar can be focused by keyboard and the full values are available in the data table that follows.`;
-    }
-
-    function renderVerticalPatterns() {
-      verticalPatterns.innerHTML = data
-        .map((d, i) => patternMarkup(`vertical-pattern-${i}`, d.color, d.pattern))
-        .join("");
-    }
-
-    function setActiveVerticalBar(activeBar) {
-      document.querySelectorAll(".vertical-bar").forEach(bar => {
-        bar.classList.toggle("is-active", bar === activeBar);
-        bar.classList.toggle("is-dimmed", bar !== activeBar);
-      });
-    }
-
-    function clearActiveVerticalBar() {
-      document.querySelectorAll(".vertical-bar").forEach(bar => {
-        bar.classList.remove("is-active", "is-dimmed");
-      });
-      hideTooltip();
-    }
-
-    function renderVerticalChart() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-      const width = 900;
-      const height = 420;
-      const margin = { top: 36, right: 36, bottom: 100, left: 58 };
-      const chartWidth = width - margin.left - margin.right;
-      const chartHeight = height - margin.top - margin.bottom;
-      const maxValue = Math.max(...sorted.map(d => d.count));
-      const yMax = Math.ceil(maxValue / 2) * 2;
-      const barGap = 22;
-      const barWidth = (chartWidth - barGap * (sorted.length - 1)) / sorted.length;
-      const ns = "http://www.w3.org/2000/svg";
-
-      function x(index) { return margin.left + index * (barWidth + barGap); }
-      function y(value) { return margin.top + chartHeight - (value / yMax) * chartHeight; }
-
-      [0, 2, 4, 6, 8, 10].forEach(tick => {
-        if (tick > yMax) return;
-        const gy = y(tick);
-        const line = document.createElementNS(ns, "line");
-        line.setAttribute("x1", margin.left);
-        line.setAttribute("x2", width - margin.right);
-        line.setAttribute("y1", gy);
-        line.setAttribute("y2", gy);
-        line.setAttribute("class", tick === 0 ? "axis-line" : "grid-line");
-        verticalChart.appendChild(line);
-
-        const label = document.createElementNS(ns, "text");
-        label.setAttribute("x", margin.left - 14);
-        label.setAttribute("y", gy + 4);
-        label.setAttribute("text-anchor", "end");
-        label.setAttribute("class", "axis-label");
-        label.textContent = tick;
-        verticalChart.appendChild(label);
-      });
-
-      sorted.forEach((d, index) => {
-        const barHeight = chartHeight - (y(d.count) - margin.top);
-        const percent = ((d.count / total) * 100).toFixed(1);
-        const bx = x(index);
-        const by = y(d.count);
-        const originalIndex = data.findIndex(item => item.category === d.category);
-
-        const rect = document.createElementNS(ns, "rect");
-        rect.setAttribute("x", bx);
-        rect.setAttribute("y", by);
-        rect.setAttribute("width", barWidth);
-        rect.setAttribute("height", barHeight);
-        rect.setAttribute("class", "vertical-bar");
-        rect.setAttribute("fill", `url(#mono-${d.pattern})`);
-        rect.setAttribute("tabindex", "0");
-        rect.setAttribute("role", "listitem");
-        rect.setAttribute("aria-label", `${d.category}: ${d.count} of ${total} characters, ${percent} percent. Rank ${index + 1} of ${sorted.length}.`);
-        rect.addEventListener("mouseenter", (event) => { setActiveVerticalBar(rect); showTooltip(event, d, percent); });
-        rect.addEventListener("mousemove", moveTooltip);
-        rect.addEventListener("mouseleave", clearActiveVerticalBar);
-        rect.addEventListener("focus", () => {
-          setActiveVerticalBar(rect);
-          const box = rect.getBoundingClientRect();
-          showTooltip({ clientX: box.left + box.width / 2, clientY: box.top }, d, percent);
-        });
-        rect.addEventListener("blur", clearActiveVerticalBar);
-        verticalChart.appendChild(rect);
-
-        const valueLabel = document.createElementNS(ns, "text");
-        valueLabel.setAttribute("x", bx + barWidth / 2);
-        valueLabel.setAttribute("y", by - 10);
-        valueLabel.setAttribute("text-anchor", "middle");
-        valueLabel.setAttribute("class", "vertical-value-label");
-        valueLabel.textContent = d.count;
-        verticalChart.appendChild(valueLabel);
-
-        appendWrappedLabel(verticalChart, d.category, bx + barWidth / 2, margin.top + chartHeight + 24, 12);
-      });
-    }
-
-    function renderVerticalTable() {
-      const sorted = [...data].sort((a, b) => b.count - a.count);
-      sorted.forEach((d, index) => {
-        const percent = ((d.count / total) * 100).toFixed(1);
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <th scope="row">${d.category}</th>
-          <td class="numeric">${d.count}</td>
-          <td class="numeric">${percent}%</td>
-          <td class="numeric">${index + 1}</td>
-        `;
-        verticalTableBody.appendChild(row);
-      });
-    }
-
-    function rowTotal(row) {
-      return row.segments.reduce((sum, segment) => sum + segment.count, 0);
-    }
-
-    function generateSegmentedSummary() {
-      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
-      const largest = sortedRows[0];
-      const second = sortedRows[1];
-      const largestTotal = rowTotal(largest);
-      const secondTotal = rowTotal(second);
-      const largestSegment = largest.segments.reduce((max, segment) => segment.count > max.count ? segment : max, largest.segments[0]);
-      const largestSegmentShare = (largestSegment.count / largestTotal) * 100;
-
-      const visibleText = `This segmented bar chart compares ${segmentedTotal} Star Wars characters across ${segmentedData.length} factions. ${largest.faction} is the largest faction with ${largestTotal} characters, followed by ${second.faction} with ${secondTotal}. Within ${largest.faction}, ${largestSegment.label.toLowerCase()} make up the largest segment with ${largestSegment.count} characters, or ${formatPercent(largestSegmentShare)} of that faction.`;
-
-      const screenReaderText = `Chart summary. ${visibleText} Each segment can be focused by keyboard and the full values are available in the data table that follows.`;
-
-      segVisibleSummary.textContent = visibleText;
-      segHiddenSummary.textContent = screenReaderText;
-    }
-
-    function setActiveSegment(activeSegment) {
-      document.querySelectorAll(".seg-fill").forEach(segment => {
-        segment.classList.toggle("is-active", segment === activeSegment);
-        segment.classList.toggle("is-dimmed", segment !== activeSegment);
-      });
-    }
-
-    function clearActiveSegment() {
-      document.querySelectorAll(".seg-fill").forEach(segment => {
-        segment.classList.remove("is-active", "is-dimmed");
-      });
-      hideTooltip();
-    }
-
-
-    function generateSegmentedVerticalSummary() {
-      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
-      const largest = sortedRows[0];
-      const second = sortedRows[1];
-      const largestTotal = rowTotal(largest);
-      const secondTotal = rowTotal(second);
-      const largestSegment = largest.segments.reduce((max, segment) => segment.count > max.count ? segment : max, largest.segments[0]);
-      const largestSegmentShare = (largestSegment.count / largestTotal) * 100;
-
-      const visibleText = `This segmented vertical bar chart compares ${segmentedTotal} Star Wars characters across ${segmentedData.length} factions. ${largest.faction} is the tallest column with ${largestTotal} characters, followed by ${second.faction} with ${secondTotal}. Within ${largest.faction}, ${largestSegment.label.toLowerCase()} make up the largest segment with ${largestSegment.count} characters, or ${formatPercent(largestSegmentShare)} of that faction.`;
-
-      segVerticalVisibleSummary.textContent = visibleText;
-      segVerticalHiddenSummary.textContent = `Chart summary. ${visibleText} Each column segment can be focused by keyboard and the full values are available in the data table that follows.`;
-    }
-
-    function renderSegmentedVerticalPatterns() {
-      const segments = segmentedData.flatMap(row => row.segments);
-      segVerticalPatterns.innerHTML = segments
-        .map((segment, i) => patternMarkup(`seg-vertical-pattern-${i}`, segment.color, segment.pattern))
-        .join("");
-    }
-
-    function setActiveVerticalSegment(activeSegment) {
-      document.querySelectorAll(".seg-vertical-segment").forEach(segment => {
-        segment.classList.toggle("is-active", segment === activeSegment);
-        segment.classList.toggle("is-dimmed", segment !== activeSegment);
-      });
-    }
-
-    function clearActiveVerticalSegment() {
-      document.querySelectorAll(".seg-vertical-segment").forEach(segment => {
-        segment.classList.remove("is-active", "is-dimmed");
-      });
-      hideTooltip();
-    }
-
-    function renderSegmentedVerticalChart() {
-      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
-      const allSegments = segmentedData.flatMap(row => row.segments);
-      const width = 900;
-      const height = 420;
-      const margin = { top: 36, right: 36, bottom: 100, left: 58 };
-      const chartWidth = width - margin.left - margin.right;
-      const chartHeight = height - margin.top - margin.bottom;
-      const maxValue = Math.max(...sortedRows.map(rowTotal));
-      const yMax = Math.ceil(maxValue / 2) * 2;
-      const barGap = 58;
-      const barWidth = (chartWidth - barGap * (sortedRows.length - 1)) / sortedRows.length;
-      const ns = "http://www.w3.org/2000/svg";
-
-      function x(index) { return margin.left + index * (barWidth + barGap); }
-      function y(value) { return margin.top + chartHeight - (value / yMax) * chartHeight; }
-
-      [0, 4, 8, 12, 16].forEach(tick => {
-        if (tick > yMax) return;
-        const gy = y(tick);
-        const line = document.createElementNS(ns, "line");
-        line.setAttribute("x1", margin.left);
-        line.setAttribute("x2", width - margin.right);
-        line.setAttribute("y1", gy);
-        line.setAttribute("y2", gy);
-        line.setAttribute("class", tick === 0 ? "axis-line" : "grid-line");
-        segVerticalChart.appendChild(line);
-
-        const label = document.createElementNS(ns, "text");
-        label.setAttribute("x", margin.left - 14);
-        label.setAttribute("y", gy + 4);
-        label.setAttribute("text-anchor", "end");
-        label.setAttribute("class", "axis-label");
-        label.textContent = tick;
-        segVerticalChart.appendChild(label);
-      });
-
-      sortedRows.forEach((row, rowIndex) => {
-        const totalForRow = rowTotal(row);
-        let cumulative = 0;
-        const bx = x(rowIndex);
-
-        row.segments.forEach(segment => {
-          const previous = cumulative;
-          cumulative += segment.count;
-          const segY = y(cumulative);
-          const segHeight = y(previous) - y(cumulative);
-          const segmentShare = (segment.count / totalForRow) * 100;
-          const datasetShare = (segment.count / segmentedTotal) * 100;
-          const patternIndex = allSegments.findIndex(s => s === segment);
-
-          const rect = document.createElementNS(ns, "rect");
-          rect.setAttribute("x", bx);
-          rect.setAttribute("y", segY);
-          rect.setAttribute("width", barWidth);
-          rect.setAttribute("height", segHeight);
-          rect.setAttribute("class", "seg-vertical-segment");
-          rect.setAttribute("fill", `url(#mono-${segment.pattern})`);
-          rect.setAttribute("tabindex", "0");
-          rect.setAttribute("role", "listitem");
-          rect.setAttribute("aria-label", `${row.faction}, ${segment.label}: ${segment.count} characters, ${formatPercent(segmentShare)} of faction, ${formatPercent(datasetShare)} of all characters. Faction total ${totalForRow}.`);
-
-          rect.addEventListener("mouseenter", (event) => {
-            setActiveVerticalSegment(rect);
-            tooltip.innerHTML = `
-              <strong>${row.faction}: ${segment.label}</strong>
-              <span>${segment.count} characters</span>
-              <span>${formatPercent(segmentShare)} of faction</span>
-              <span>${formatPercent(datasetShare)} of all characters</span>
-            `;
-            tooltip.classList.add("is-visible");
-            moveTooltip(event);
-          });
-
-          rect.addEventListener("mousemove", moveTooltip);
-          rect.addEventListener("mouseleave", clearActiveVerticalSegment);
-
-          rect.addEventListener("focus", () => {
-            setActiveVerticalSegment(rect);
-            const box = rect.getBoundingClientRect();
-            tooltip.innerHTML = `
-              <strong>${row.faction}: ${segment.label}</strong>
-              <span>${segment.count} characters</span>
-              <span>${formatPercent(segmentShare)} of faction</span>
-              <span>${formatPercent(datasetShare)} of all characters</span>
-            `;
-            tooltip.classList.add("is-visible");
-            moveTooltip({ clientX: box.left + box.width / 2, clientY: box.top });
-          });
-
-          rect.addEventListener("blur", clearActiveVerticalSegment);
-          segVerticalChart.appendChild(rect);
-
-        });
-
-        const totalLabel = document.createElementNS(ns, "text");
-        totalLabel.setAttribute("x", bx + barWidth / 2);
-        totalLabel.setAttribute("y", y(totalForRow) - 10);
-        totalLabel.setAttribute("text-anchor", "middle");
-        totalLabel.setAttribute("class", "seg-vertical-total-label");
-        totalLabel.textContent = totalForRow;
-        segVerticalChart.appendChild(totalLabel);
-
-        appendWrappedLabel(segVerticalChart, row.faction, bx + barWidth / 2, margin.top + chartHeight + 24, 18);
-      });
-    }
-
-    function renderSegmentedVerticalLegend() {
-      const legendItems = [
-        { label: "Rebel / Resistance non-Force", color: "#3f7eed", pattern: "diagonalForward" },
-        { label: "Imperial non-Force", color: "#16a1b5", pattern: "dots" },
-        { label: "Rebel / Resistance Force users", color: "#e52b91", pattern: "vertical" },
-        { label: "Dark side Force users", color: "#f77913", pattern: "horizontal" },
-        { label: "Independent non-Force", color: "#8c35e8", pattern: "solid" },
-        { label: "Droids / other", color: "#5a9c05", pattern: "checker" },
-        { label: "Unknown", color: "#3e5562", pattern: "crosshatch" }
-      ];
-
-      legendItems.forEach(item => {
-        const el = document.createElement("div");
-        el.className = "legend-item";
-        el.innerHTML = `
-          <span class="swatch" style="--swatch:${item.color}" data-pattern="${item.pattern}" aria-hidden="true"></span>
-          <div><strong>${item.label}</strong></div>
-        `;
-        segVerticalLegend.appendChild(el);
-      });
-    }
-
-    function renderSegmentedVerticalTable() {
-      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
-
-      sortedRows.forEach(row => {
-        const values = { forceUsers: 0, nonForceUsers: 0, droidsOther: 0 };
-        row.segments.forEach(segment => { values[segment.key] += segment.count; });
-        const totalForRow = rowTotal(row);
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <th scope="row">${row.faction}</th>
-          <td class="numeric">${values.forceUsers}</td>
-          <td class="numeric">${values.nonForceUsers}</td>
-          <td class="numeric">${values.droidsOther}</td>
-          <td class="numeric">${totalForRow}</td>
-        `;
-        segVerticalTableBody.appendChild(tr);
-      });
-    }
-
-    function renderSegmentedChart() {
-      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
-      const axisMax = 20;
-
-      sortedRows.forEach((row, rowIndex) => {
-        const totalForRow = rowTotal(row);
-        const barWidth = (totalForRow / axisMax) * 100;
-
-        const rowEl = document.createElement("div");
-        rowEl.className = "seg-row";
-
-        const label = document.createElement("div");
-        label.className = "seg-label";
-        label.textContent = row.faction;
-
-        const track = document.createElement("div");
-        track.className = "seg-track";
-        track.style.width = `${barWidth}%`;
-
-        row.segments.forEach((segment, segmentIndex) => {
-          const segmentShare = (segment.count / totalForRow) * 100;
-          const datasetShare = (segment.count / segmentedTotal) * 100;
-
-          const fill = document.createElement("div");
-          fill.className = "seg-fill";
-          fill.style.setProperty("--seg-width", `${segmentShare}%`);
-          fill.style.setProperty("--seg-color", segment.color);
-          fill.dataset.pattern = segment.pattern;
-          fill.setAttribute("tabindex", "0");
-          fill.setAttribute("role", "listitem");
-          fill.setAttribute("aria-label", `${row.faction}, ${segment.label}: ${segment.count} characters, ${formatPercent(segmentShare)} of faction, ${formatPercent(datasetShare)} of all characters. Faction total ${totalForRow}.`);
-
-          fill.addEventListener("mouseenter", (event) => {
-            setActiveSegment(fill);
-            tooltip.innerHTML = `
-              <strong>${row.faction}: ${segment.label}</strong>
-              <span>${segment.count} characters</span>
-              <span>${formatPercent(segmentShare)} of faction</span>
-              <span>${formatPercent(datasetShare)} of all characters</span>
-            `;
-            tooltip.classList.add("is-visible");
-            moveTooltip(event);
-          });
-
-          fill.addEventListener("mousemove", moveTooltip);
-          fill.addEventListener("mouseleave", clearActiveSegment);
-
-          fill.addEventListener("focus", () => {
-            setActiveSegment(fill);
-            const rect = fill.getBoundingClientRect();
-            tooltip.innerHTML = `
-              <strong>${row.faction}: ${segment.label}</strong>
-              <span>${segment.count} characters</span>
-              <span>${formatPercent(segmentShare)} of faction</span>
-              <span>${formatPercent(datasetShare)} of all characters</span>
-            `;
-            tooltip.classList.add("is-visible");
-            moveTooltip({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
-          });
-
-          fill.addEventListener("blur", clearActiveSegment);
-
-          track.appendChild(fill);
-        });
-
-        const totalEl = document.createElement("div");
-        totalEl.className = "seg-total";
-        totalEl.textContent = totalForRow;
-
-        const axis = document.createElement("div");
-        axis.className = "axis-column";
-        axis.setAttribute("aria-hidden", "true");
-
-        rowEl.appendChild(label);
-        rowEl.appendChild(axis);
-        rowEl.appendChild(track);
-        rowEl.appendChild(totalEl);
-        segmentedChart.appendChild(rowEl);
-      });
-
-      const axisRow = document.createElement("div");
-      axisRow.className = "seg-x-axis";
-      axisRow.setAttribute("aria-hidden", "true");
-      axisRow.innerHTML = `
-        <div></div>
-        <div></div>
-        <div>
-          <div class="seg-x-axis-line"></div>
-          <div class="seg-x-axis-label"><span>0</span><span>${axisMax}</span></div>
-        </div>
-        <div></div>
-      `;
-      segmentedChart.appendChild(axisRow);
-    }
-
-    function renderSegmentedLegend() {
-      const legendItems = [
-        { label: "Rebel / Resistance non-Force", color: "#3f7eed", pattern: "diagonalForward" },
-        { label: "Imperial non-Force", color: "#16a1b5", pattern: "dots" },
-        { label: "Rebel / Resistance Force users", color: "#e52b91", pattern: "vertical" },
-        { label: "Dark side Force users", color: "#f77913", pattern: "horizontal" },
-        { label: "Independent non-Force", color: "#8c35e8", pattern: "solid" },
-        { label: "Droids / other", color: "#5a9c05", pattern: "checker" },
-        { label: "Unknown", color: "#3e5562", pattern: "crosshatch" }
-      ];
-
-      legendItems.forEach(item => {
-        const el = document.createElement("div");
-        el.className = "legend-item";
-        el.innerHTML = `
-          <span class="swatch" style="--swatch:${item.color}" data-pattern="${item.pattern}" aria-hidden="true"></span>
-          <div><strong>${item.label}</strong></div>
-        `;
-        segmentedLegend.appendChild(el);
-      });
-    }
-
-    function renderSegmentedTable() {
-      const sortedRows = [...segmentedData].sort((a, b) => rowTotal(b) - rowTotal(a));
-
-      sortedRows.forEach(row => {
-        const values = {
-          forceUsers: 0,
-          nonForceUsers: 0,
-          droidsOther: 0
-        };
-
-        row.segments.forEach(segment => {
-          values[segment.key] += segment.count;
-        });
-
-        const totalForRow = rowTotal(row);
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <th scope="row">${row.faction}</th>
-          <td class="numeric">${values.forceUsers}</td>
-          <td class="numeric">${values.nonForceUsers}</td>
-          <td class="numeric">${values.droidsOther}</td>
-          <td class="numeric">${totalForRow}</td>
-        `;
-        segTableBody.appendChild(tr);
-      });
-    }
-
-
-    function generateLineSummary() {
-      const summaries = lineSeries.map(series => {
-        const first = lineData[0][series.key];
-        const last = lineData[lineData.length - 1][series.key];
-        const change = last - first;
-        const peak = lineData.reduce((max, point) => point[series.key] > max[series.key] ? point : max, lineData[0]);
-        return { ...series, first, last, change, peakPeriod: peak.period, peakValue: peak[series.key] };
-      });
-
-      const strongestGrowth = summaries.reduce((max, item) => item.change > max.change ? item : max, summaries[0]);
-      const finalLeader = summaries.reduce((max, item) => item.last > max.last ? item : max, summaries[0]);
-
-      const visibleText = `This multi-line chart compares activity trends for ${lineSeries.length} groups across ${lineData.length} saga periods. ${strongestGrowth.label} show the strongest growth, moving from ${strongestGrowth.first} to ${strongestGrowth.last}, a net change of +${strongestGrowth.change}. By the final period, ${finalLeader.label} have the highest activity score at ${finalLeader.last}. Peaks occur at different moments, which makes this chart useful for comparing both direction and timing.`;
-
-      const screenReaderText = `Chart summary. ${visibleText} Each point can be focused by keyboard and the full values are available in the data table that follows.`;
-
-      lineVisibleSummary.textContent = visibleText;
-      lineHiddenSummary.textContent = screenReaderText;
-    }
-
-    function renderLineLegend() {
-      lineSeries.forEach(series => {
-        const item = document.createElement("div");
-        item.className = "line-legend-item";
-        item.innerHTML = `
-          <svg class="legend-symbol" viewBox="0 0 40 20" aria-hidden="true">
-            <line x1="2" y1="10" x2="38" y2="10" stroke="${series.color}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${series.dash}"></line>
-            ${legendShapeMarkup(series, 20, 10)}
-          </svg>
-          <span>${series.label}</span>
-        `;
-        lineLegend.appendChild(item);
-      });
-    }
-
-    function legendShapeMarkup(series, x, y) {
-      if (series.shape === "circle") return `<circle cx="${x}" cy="${y}" r="5" class="legend-point${series.filled ? " is-filled" : ""}" stroke="${series.color}" stroke-width="3"></circle>`;
-      if (series.shape === "square") return `<rect x="${x - 5}" y="${y - 5}" width="10" height="10" class="legend-point${series.filled ? " is-filled" : ""}" stroke="${series.color}" stroke-width="3"></rect>`;
-      return `<path d="M ${x} ${y - 6} L ${x + 6} ${y + 6} L ${x - 6} ${y + 6} Z" class="legend-point${series.filled ? " is-filled" : ""}" stroke="${series.color}" stroke-width="3"></path>`;
-    }
-
-    function createPointShape(ns, series, xValue, yValue) {
-      let el;
-      if (series.shape === "circle") {
-        el = document.createElementNS(ns, "circle");
-        el.setAttribute("cx", xValue);
-        el.setAttribute("cy", yValue);
-        el.setAttribute("r", "8");
-      } else if (series.shape === "square") {
-        el = document.createElementNS(ns, "rect");
-        el.setAttribute("x", xValue - 8);
-        el.setAttribute("y", yValue - 8);
-        el.setAttribute("width", "16");
-        el.setAttribute("height", "16");
-        el.setAttribute("rx", "3");
-      } else {
-        el = document.createElementNS(ns, "path");
-        el.setAttribute("d", `M ${xValue} ${yValue - 10} L ${xValue + 10} ${yValue + 8} L ${xValue - 10} ${yValue + 8} Z`);
-      }
-      return el;
-    }
-
-    function setActivePoint(activePoint, activeSeriesKey) {
-      lineChart.querySelectorAll(".line-point").forEach(point => {
-        point.classList.toggle("is-active", point === activePoint);
-        point.classList.toggle("is-dimmed", point !== activePoint);
-      });
-
-      document.querySelectorAll(".line-path").forEach(path => {
-        path.classList.toggle("is-dimmed", path.dataset.series !== activeSeriesKey);
-      });
-    }
-
-    function clearActivePoint() {
-      lineChart.querySelectorAll(".line-point").forEach(point => {
-        point.classList.remove("is-active", "is-dimmed");
-      });
-      document.querySelectorAll(".line-path").forEach(path => {
-        path.classList.remove("is-dimmed");
-      });
-      hideTooltip();
-    }
-
-    function renderLineChart() {
-      const width = 900;
-      const height = 420;
-      const margin = { top: 36, right: 42, bottom: 70, left: 58 };
-      const chartWidth = width - margin.left - margin.right;
-      const chartHeight = height - margin.top - margin.bottom;
-      const allValues = lineData.flatMap(d => lineSeries.map(series => d[series.key]));
-      const maxScore = Math.max(...allValues);
-      const minScore = 0;
-      const yMax = Math.ceil(maxScore / 10) * 10;
-
-      function x(index) {
-        return margin.left + (index / (lineData.length - 1)) * chartWidth;
-      }
-
-      function y(value) {
-        return margin.top + chartHeight - ((value - minScore) / (yMax - minScore)) * chartHeight;
-      }
-
-      const ns = "http://www.w3.org/2000/svg";
-
-      [0, 20, 40, 60, 80].forEach(tick => {
-        const gy = y(tick);
-        const line = document.createElementNS(ns, "line");
-        line.setAttribute("x1", margin.left);
-        line.setAttribute("x2", width - margin.right);
-        line.setAttribute("y1", gy);
-        line.setAttribute("y2", gy);
-        line.setAttribute("class", tick === 0 ? "axis-line" : "grid-line");
-        lineChart.appendChild(line);
-
-        const label = document.createElementNS(ns, "text");
-        label.setAttribute("x", margin.left - 14);
-        label.setAttribute("y", gy + 4);
-        label.setAttribute("text-anchor", "end");
-        label.setAttribute("class", "axis-label");
-        label.textContent = tick;
-        lineChart.appendChild(label);
-      });
-
-      lineData.forEach((d, index) => {
-        const label = document.createElementNS(ns, "text");
-        label.setAttribute("x", x(index));
-        label.setAttribute("y", height - 34);
-        label.setAttribute("text-anchor", "middle");
-        label.setAttribute("class", "axis-label");
-        label.textContent = d.period.replace("Episode ", "Ep ");
-        lineChart.appendChild(label);
-      });
-
-      lineSeries.forEach(series => {
-        const pathData = lineData.map((d, index) => `${index === 0 ? "M" : "L"} ${x(index)} ${y(d[series.key])}`).join(" ");
-        const path = document.createElementNS(ns, "path");
-        path.setAttribute("d", pathData);
-        path.setAttribute("class", "line-path");
-        path.setAttribute("stroke", series.color);
-        path.setAttribute("stroke-dasharray", series.dash);
-        path.dataset.series = series.key;
-        lineChart.appendChild(path);
-      });
-
-      lineSeries.forEach(series => {
-        lineData.forEach((d, index) => {
-          const previous = index === 0 ? null : lineData[index - 1];
-          const change = previous ? d[series.key] - previous[series.key] : 0;
-          const px = x(index);
-          const py = y(d[series.key]);
-
-          const point = createPointShape(ns, series, px, py);
-          point.setAttribute("class", series.filled ? "line-point is-filled" : "line-point");
-          point.setAttribute("stroke", series.color);
-          point.setAttribute("tabindex", "0");
-          point.setAttribute("role", "listitem");
-          point.dataset.series = series.key;
-          point.setAttribute("aria-label", `${series.label}, ${d.period}: activity score ${d[series.key]}. ${index === 0 ? "Starting value." : `Change from previous period ${change > 0 ? "+" : ""}${change}.`}`);
-
-          point.addEventListener("mouseenter", (event) => {
-            setActivePoint(point, series.key);
-            tooltip.innerHTML = `
-              <strong>${series.label}: ${d.period}</strong>
-              <span>Activity score: ${d[series.key]}</span>
-              <span>${index === 0 ? "Starting value" : `Change: ${change > 0 ? "+" : ""}${change}`}</span>
-            `;
-            tooltip.classList.add("is-visible");
-            moveTooltip(event);
-          });
-
-          point.addEventListener("mousemove", moveTooltip);
-          point.addEventListener("mouseleave", clearActivePoint);
-
-          point.addEventListener("focus", () => {
-            setActivePoint(point, series.key);
-            const rect = point.getBoundingClientRect();
-            tooltip.innerHTML = `
-              <strong>${series.label}: ${d.period}</strong>
-              <span>Activity score: ${d[series.key]}</span>
-              <span>${index === 0 ? "Starting value" : `Change: ${change > 0 ? "+" : ""}${change}`}</span>
-            `;
-            tooltip.classList.add("is-visible");
-            moveTooltip({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
-          });
-
-          point.addEventListener("blur", clearActivePoint);
-          lineChart.appendChild(point);
-        });
-      });
-    }
-
-    function renderLineTable() {
-      lineData.forEach((d) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <th scope="row">${d.period}</th>
-          <td class="numeric">${d.rebels}</td>
-          <td class="numeric">${d.empire}</td>
-          <td class="numeric">${d.independent}</td>
-        `;
-        lineTableBody.appendChild(tr);
-      });
-    }
-
-
-
-
-
-
-    /* ---------------- Label chips ---------------- */
-    // Wrap an SVG <text> in a group with a background rectangle. The rectangle is sized from the
-    // text's real box once its page is visible (hidden panels can't be measured), see sizeChips().
-    function makeChip(textEl, pad = [7, 3]) {
-      const ns = "http://www.w3.org/2000/svg";
-      const g = document.createElementNS(ns, "g");
-      g.setAttribute("class", "svg-chip");
-      g.setAttribute("aria-hidden", "true");
-      g.dataset.padX = pad[0]; g.dataset.padY = pad[1];
-      const rect = document.createElementNS(ns, "rect");
-      rect.setAttribute("class", "chip-bg");
-      textEl.parentNode.insertBefore(g, textEl);
-      g.appendChild(rect);
-      g.appendChild(textEl);
-      return g;
-    }
-    function sizeChips(scope = document) {
-      const placed = new Map();                       // svg -> rectangles already placed in it
-      const chips = [...scope.querySelectorAll(".svg-chip")]
-        .sort((a, b) => (+a.dataset.priority || 0) - (+b.dataset.priority || 0));
-      chips.forEach(g => {
-        // Chips always sit on the chart's top layer, above every mark (their parents have no transforms).
-        if (g.ownerSVGElement && g.parentNode !== g.ownerSVGElement) g.ownerSVGElement.appendChild(g);
-        else if (g.ownerSVGElement && g !== g.ownerSVGElement.lastElementChild && !g.dataset.raised) g.ownerSVGElement.appendChild(g);
-        g.dataset.raised = "1";
-        const text = g.querySelector("text"), rect = g.querySelector("rect");
-        const box = text.getBBox();
-        if (!box.width) return;                       // still hidden; sized when its page opens
-        const px = +g.dataset.padX, py = +g.dataset.padY;
-        const r = { x: box.x - px, y: box.y - py, w: box.width + px * 2, h: box.height + py * 2 };
-        rect.setAttribute("x", r.x); rect.setAttribute("y", r.y);
-        rect.setAttribute("width", r.w); rect.setAttribute("height", r.h); rect.setAttribute("rx", 4);
-        if (!g._candidates) return;                   // fixed labels: always shown where they are
-        // Labels with alternatives take the first spot that overlaps nothing and stays inside the chart.
-        const svg = g.ownerSVGElement, vb = svg.viewBox.baseVal;
-        const taken = placed.get(svg) || []; placed.set(svg, taken);
-        const hits = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
-        const inside = a => a.x >= vb.x && a.y >= vb.y && a.x + a.w <= vb.x + vb.width && a.y + a.h <= vb.y + vb.height && (!g._fits || g._fits(a));
-        const spot = g._candidates.map(([dx, dy]) => ({ dx, dy, box: { x: r.x + dx, y: r.y + dy, w: r.w, h: r.h } }))
-          .find(c => inside(c.box) && !taken.some(t => hits(t, c.box)));
-        if (spot) {
-          g.setAttribute("transform", `translate(${spot.dx} ${spot.dy})`);
-          g.style.display = "";
-          taken.push(spot.box);
-        } else {
-          g.style.display = "none";                   // still in the table and reachable by keyboard
-        }
-      });
-    }
-
-    /* ---------------- Sunburst chart ---------------- */
-    // Sample data: the same 32 characters as the donut and segmented charts, split by faction, then Force use or type, then role.
-    const sunburstData = {
-      label: "All characters", children: [
-        { label: "Rebel Alliance", short: "Rebels", pattern: "diagonalForward", children: [
-          { label: "Force users", value: 5 },
-          { label: "Non-Force", children: [
-            { label: "Pilots", value: 4 }, { label: "Leaders", value: 3 }, { label: "Soldiers", value: 2 }
-          ] }
-        ] },
-        { label: "Galactic Empire", short: "Empire", pattern: "dots", children: [
-          { label: "Force users", short: "Sith", value: 4 },
-          { label: "Non-Force", children: [
-            { label: "Officers", value: 4 }, { label: "Troopers", value: 2 }
-          ] }
-        ] },
-        { label: "Independent", pattern: "vertical", children: [
-          { label: "Scoundrels", children: [
-            { label: "Smugglers", value: 2 }, { label: "Bounty hunters", short: "Hunters", value: 1 }
+    barChart("#demo-bar", { title: "Character groups by count", unit: "characters", data: groups, orientation: "horizontal", axisMax: 20 });
+    barChart("#demo-vertical-bars", { title: "Character groups by count", unit: "characters", data: groups, orientation: "vertical" });
+    donutChart("#demo-donut", { title: "Star Wars character groups", unit: "characters", data: groups, centerLabel: "Total characters" });
+    stackedBarChart("#demo-segmented-bar", { title: "Factions by character type", unit: "characters", data: factions, orientation: "horizontal", axisMax: 20 });
+    stackedBarChart("#demo-segmented-vertical", { title: "Factions by character type", unit: "characters", data: factions, orientation: "vertical" });
+
+    sunburstChart("#demo-sunburst", {
+      title: "Characters by faction and role",
+      unit: "characters",
+      data: {
+        label: "All characters",
+        children: [
+          { label: "Rebel Alliance", short: "Rebels", children: [
+            { label: "Force users", value: 5 },
+            { label: "Non-Force", children: [{ label: "Pilots", value: 4 }, { label: "Leaders", value: 3 }, { label: "Soldiers", value: 2 }] }
           ] },
-          { label: "Droids", value: 3 }
-        ] },
-        { label: "Other / unknown", short: "Other", pattern: "crosshatch", value: 2 }
+          { label: "Galactic Empire", short: "Empire", children: [
+            { label: "Force users", short: "Sith", value: 4 },
+            { label: "Non-Force", children: [{ label: "Officers", value: 4 }, { label: "Troopers", value: 2 }] }
+          ] },
+          { label: "Independent", children: [
+            { label: "Scoundrels", children: [{ label: "Smugglers", value: 2 }, { label: "Bounty hunters", short: "Hunters", value: 1 }] },
+            { label: "Droids", value: 3 }
+          ] },
+          { label: "Other / unknown", short: "Other", value: 2 }
+        ]
+      }
+    });
+
+    lineChart("#demo-line", {
+      title: "Faction activity by saga period",
+      unit: "activity score",
+      categories: ["Episode I", "Episode II", "Episode III", "Episode IV", "Episode V", "Episode VI", "Episode VII"],
+      series: [
+        { label: "Rebels", values: [18, 24, 31, 52, 68, 74, 61] },
+        { label: "Empire", values: [34, 38, 52, 46, 58, 49, 43] },
+        { label: "Independent", values: [12, 18, 24, 32, 40, 47, 55] }
       ]
-    };
-    const sunburstChart = document.getElementById("sunburstChart");
-    const sunburstLegend = document.getElementById("sunburstLegend");
-    const sunburstTableBody = document.getElementById("sunburstTableBody");
-    const sunburstVisibleSummary = document.getElementById("sunburst-visible-summary");
-    const sunburstHiddenSummary = document.getElementById("sunburst-chart-summary");
-    const SB_UNIT = "characters";
+    });
 
-    // One pass over the tree: sizes summed bottom-up, then depth, path, inherited pattern, and angles
-    // (12 o'clock, clockwise), collected in depth-first order.
-    const sbNodes = [];
-    (function size(n) { if (n.children) n.value = n.children.reduce((t, c) => t + size(c), 0); return n.value; })(sunburstData);
-    (function place(n, a0, a1, parent, depth) {
-      Object.assign(n, { a0, a1, parent, depth, short: n.short || n.label, pattern: n.pattern || (parent && parent.pattern) || "solid" });
-      if (parent) { n.path = [...(parent.path || []), n.label]; sbNodes.push(n); }
-      let a = a0;
-      (n.children || []).forEach(c => { const span = (c.value / n.value) * (a1 - a0); place(c, a, a + span, n, depth + 1); a += span; });
-    })(sunburstData, 0, 2 * Math.PI, null, 0);
-    const SB_TOTAL = sunburstData.value;
-    const sbDepth = Math.max(...sbNodes.map(n => n.depth));
-    const sbRing = d => sbNodes.filter(n => n.depth === d).sort((a, b) => a.a0 - b.a0);
-    const pct = (a, b) => `${Math.round(a / b * 100)}%`;
-
-    function generateSunburstSummary() {
-      const factions = sunburstData.children;
-      const biggest = factions.reduce((m, f) => f.value > m.value ? f : m, factions[0]);
-      const biggestChild = biggest.children ? biggest.children.reduce((m, c) => c.value > m.value ? c : m, biggest.children[0]) : null;
-      const leaves = sbNodes.filter(n => !n.children && n.depth === sbDepth);
-      const topLeaf = Math.max(...leaves.map(n => n.value));
-      const topLeaves = leaves.filter(n => n.value === topLeaf).map(n => `${n.label} (${n.path[0]})`);
-      const visibleText = `This sunburst breaks ${SB_TOTAL} sample characters into ${factions.length} factions, then into ${sbDepth - 1 === 1 ? "one more level" : `${sbDepth - 1} more levels`}. The ${biggest.label} is the largest faction, with ${biggest.value} characters (${pct(biggest.value, SB_TOTAL)} of all)${biggestChild ? `; its largest group is ${biggestChild.label} (${biggestChild.value})` : ""}. Factions by size: ${factions.map(f => `${f.short} ${f.value}`).join(", ")}. In the outer ring, the largest roles are ${joinNames(topLeaves)}, with ${topLeaf} each.`;
-      sunburstVisibleSummary.textContent = visibleText;
-      sunburstHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move around a ring and in and out between levels, and every group is in the table that follows.`;
-    }
-
-    function renderSunburstLegend() {
-      sunburstLegend.innerHTML = sunburstData.children.map(f => `
-        <div class="legend-item">
-          <span class="swatch" data-pattern="${f.pattern}" aria-hidden="true"></span>
-          <span>${f.label} <span class="legend-count">${f.value}</span></span>
-        </div>`).join("");
-    }
-
-    function renderSunburstChart() {
-      const ns = "http://www.w3.org/2000/svg";
-      const cx = 300, cy = 300;
-      const RINGS = [[86, 166], [170, 232], [236, 286]];   // inner, middle, outer
-      const add = (tag, attrs, text, parent = sunburstChart) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        if (text != null) el.textContent = text;
-        parent.appendChild(el);
-        return el;
-      };
-      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-      const PAD = 0.012;
-      const wedgePath = (r0, r1, a0, a1) => {
-        a0 += PAD; a1 -= PAD;
-        const large = a1 - a0 > Math.PI ? 1 : 0;
-        const [x0, y0] = at(r0, a0), [x1, y1] = at(r1, a0), [x2, y2] = at(r1, a1), [x3, y3] = at(r0, a1);
-        return `M ${x0} ${y0} L ${x1} ${y1} A ${r1} ${r1} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${r0} ${r0} 0 ${large} 0 ${x0} ${y0} Z`;
-      };
-
-      add("text", { x: cx, y: cy - 14, "text-anchor": "middle", class: "sb-center-label", "aria-hidden": "true" }, "All characters");
-      add("text", { x: cx, y: cy + 30, "text-anchor": "middle", class: "sb-center-total", "aria-hidden": "true" }, SB_TOTAL);
-
-      // Tree order (depth first) is the reading order for anything that walks the chart without arrow keys.
-      sbNodes.forEach(n => {
-        const [r0, r1] = RINGS[n.depth - 1];
-        n.el = add("path", { d: wedgePath(r0, r1, n.a0, n.a1), class: "sb-wedge", fill: `url(#mono-${n.pattern})`, role: "img", tabindex: "-1" });
-        const kids = n.children ? n.children.length : 0;
-        const ofParent = n.depth > 1 ? ` ${pct(n.value, n.parent.value)} of ${n.parent.label}${n.parent.depth > 1 ? ` in ${n.parent.parent.label}` : ""},` : "";
-        n.el.setAttribute("aria-label", `${n.label}: ${n.value} ${SB_UNIT}.${ofParent} ${pct(n.value, SB_TOTAL)} of all ${SB_TOTAL}. Path: ${n.path.join(", then ")}. ${kids ? `${kids} subgroups.` : "No subgroups."} Ring ${n.depth} of ${sbDepth}.`);
-        // Label where the segment is wide enough to hold it.
-        const mid = (n.a0 + n.a1) / 2, rm = (r0 + r1) / 2, arcLen = (n.a1 - n.a0) * rm;
-        const need = n.short.length * (n.depth === 1 ? 8.6 : 7.8) + 24;
-        if (arcLen > need && (r1 - r0) > 30) {
-          const [lx, ly] = at(rm, mid);
-          n.label_el = makeChip(add("text", { x: lx, y: ly + 5, "text-anchor": "middle", class: `sb-label${n.depth === 1 ? " is-ring1" : ""}` }, n.short));
-          n.label_el.dataset.priority = n.depth;
-          // Try the middle of the segment first, then nudge in and out, then along the arc.
-          const span = n.a1 - n.a0, thick = r1 - r0;
-          n.label_el._candidates = [[0, 0], [0, -0.25], [0, 0.25], [-0.25, 0], [0.25, 0], [-0.25, -0.25], [0.25, 0.25]]
-            .map(([da, dr]) => { const [x2, y2] = at(rm + dr * thick, mid + da * span); return [x2 - lx, y2 - ly]; });
-          // A label may cross into the next ring (its chip keeps it legible) but must stay over the chart.
-          n.label_el._fits = box => [[box.x, box.y], [box.x + box.w, box.y], [box.x, box.y + box.h], [box.x + box.w, box.y + box.h]]
-            .every(([x, y]) => Math.hypot(x - cx, y - cy) <= RINGS[RINGS.length - 1][1] + 4);
-        }
-      });
-      sbNodes[0].el.setAttribute("tabindex", "0");
-
-      const lineage = n => { const set = new Set([n]); let p = n.parent; while (p && p !== sunburstData) { set.add(p); p = p.parent; }
-        (function down(m) { (m.children || []).forEach(c => { set.add(c); down(c); }); })(n); return set; };
-      function highlight(n) {
-        const keep = lineage(n);
-        sbNodes.forEach(m => {
-          m.el.classList.toggle("is-active", m === n);
-          m.el.classList.toggle("is-dimmed", !keep.has(m));
-          if (m.label_el) m.label_el.classList.toggle("is-dimmed", !keep.has(m));
-        });
-        tooltip.innerHTML = `<strong>${n.label}</strong><span>${n.path.slice(0, -1).join(" › ") || "Faction"}</span><span>${n.value} ${SB_UNIT}, ${pct(n.value, SB_TOTAL)} of all</span>`;
-        tooltip.classList.add("is-visible");
-      }
-      function clear() {
-        sbNodes.forEach(m => { m.el.classList.remove("is-active", "is-dimmed"); if (m.label_el) m.label_el.classList.remove("is-dimmed"); });
-        hideTooltip();
-      }
-      function go(n) {
-        if (!n) return;
-        sbNodes.forEach(m => m.el.setAttribute("tabindex", m === n ? "0" : "-1"));
-        n.el.focus();
-      }
-      sbNodes.forEach(n => {
-        n.el.addEventListener("focus", () => {
-          sbNodes.forEach(m => m.el.setAttribute("tabindex", m === n ? "0" : "-1"));
-          highlight(n);
-          const [tx, ty] = at(RINGS[n.depth - 1][1], (n.a0 + n.a1) / 2);
-          const box = sunburstChart.getBoundingClientRect(), k = box.width / 600;
-          moveTooltip({ clientX: box.left + tx * k, clientY: box.top + ty * k });
-        });
-        n.el.addEventListener("blur", clear);
-        n.el.addEventListener("mouseenter", e => { highlight(n); moveTooltip(e); });
-        n.el.addEventListener("mousemove", moveTooltip);
-        n.el.addEventListener("mouseleave", () => { if (document.activeElement !== n.el) clear(); });
-        n.el.addEventListener("click", () => go(n));
-        n.el.addEventListener("keydown", e => {
-          const ring = sbRing(n.depth), i = ring.indexOf(n);
-          const moves = {
-            ArrowRight: () => ring[(i + 1) % ring.length],
-            ArrowLeft: () => ring[(i - 1 + ring.length) % ring.length],
-            ArrowUp: () => n.parent !== sunburstData ? n.parent : null,
-            ArrowDown: () => n.children ? n.children[0] : null,
-            Home: () => ring[0], End: () => ring[ring.length - 1]
-          };
-          if (!(e.key in moves)) return;
-          e.preventDefault();
-          go(moves[e.key]());
-        });
-      });
-    }
-
-    function renderSunburstTable() {
-      sbNodes.forEach(n => {
-        const tr = document.createElement("tr");
-        const trail = n.path.slice(0, -1);
-        tr.innerHTML = `
-          <th scope="row" style="padding-left:${(n.depth - 1) * 20}px">${trail.length ? `<span class="sr-only">${trail.join(", ")}, </span>` : ""}${n.depth > 1 ? '<span aria-hidden="true">└ </span>' : ""}${n.label}</th>
-          <td class="numeric">${n.value}</td>
-          <td class="numeric">${n.depth > 1 ? pct(n.value, n.parent.value) : "—"}</td>
-          <td class="numeric">${pct(n.value, SB_TOTAL)}</td>`;
-        sunburstTableBody.appendChild(tr);
-      });
-    }
-
-
-    /* ---------------- Radial bar chart ---------------- */
-    // Sample data: training completion for five squadrons, as a percent of each squadron's goal.
-    const RB_MAX = 100, RB_SWEEP = 270, RB_UNIT = "% of goal";
-    const radialRaw = [
-      { label: "Rogue Squadron", value: 64 },
-      { label: "Red Squadron", value: 92 },
-      { label: "Green Squadron", value: 37 },
-      { label: "Gold Squadron", value: 78 },
-      { label: "Blue Squadron", value: 51 }
-    ];
-    const RB_PATTERNS = ["diagonalForward", "dots", "vertical", "horizontal", "checker", "crosshatch"];
-    // Largest value on the innermost ring.
-    const radialData = [...radialRaw].sort((a, b) => b.value - a.value).map((d, i) => ({ ...d, rank: i + 1, pattern: RB_PATTERNS[i % RB_PATTERNS.length] }));
-    const radialChart = document.getElementById("radialChart");
-    const radialTableBody = document.getElementById("radialTableBody");
-    const radialVisibleSummary = document.getElementById("radial-visible-summary");
-    const radialHiddenSummary = document.getElementById("radial-chart-summary");
-
-    function generateRadialSummary() {
-      const top = radialData[0], bottom = radialData[radialData.length - 1];
-      const avg = Math.round(radialData.reduce((t, d) => t + d.value, 0) / radialData.length);
-      const pastThreeQuarters = radialData.filter(d => d.value >= RB_MAX * 0.75).length;
-      const met = radialData.filter(d => d.value >= RB_MAX).length;
-      const visibleText = `This radial bar chart compares training completion for ${radialData.length} sample squadrons, as a percent of each squadron's goal. ${top.label} is furthest along at ${top.value}%, and ${bottom.label} is furthest behind at ${bottom.value}%, a gap of ${top.value - bottom.value} points. The average is ${avg}%. ${met ? `${met} ${met === 1 ? "squadron has" : "squadrons have"} met the goal.` : "No squadron has met the goal yet."} ${pastThreeQuarters} of ${radialData.length} are past three quarters of the way.`;
-      radialVisibleSummary.textContent = visibleText;
-      radialHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move between rings, and every value is in the table that follows.`;
-    }
-
-    function renderRadialChart() {
-      const ns = "http://www.w3.org/2000/svg";
-      const cx = 360, cy = 345, inner = 78, thick = 30, gap = 12;
-      const full = RB_SWEEP / 360 * 2 * Math.PI;
-      const add = (tag, attrs, text, parent = radialChart) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        if (text != null) el.textContent = text;
-        parent.appendChild(el);
-        return el;
-      };
-      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-      const band = (r0, r1, a0, a1) => {
-        const large = a1 - a0 > Math.PI ? 1 : 0;
-        const [x0, y0] = at(r0, a0), [x1, y1] = at(r1, a0), [x2, y2] = at(r1, a1), [x3, y3] = at(r0, a1);
-        return `M ${x0} ${y0} L ${x1} ${y1} A ${r1} ${r1} 0 ${large} 1 ${x2} ${y2} L ${x3} ${y3} A ${r0} ${r0} 0 ${large} 0 ${x0} ${y0} Z`;
-      };
-      const outer = inner + radialData.length * (thick + gap) - gap;
-
-      // Scale: spokes at 0, 25, 50, 75 and 100% of the sweep, labelled just outside the rings.
-      const deco = add("g", { "aria-hidden": "true" });
-      [0, 25, 50, 75, 100].forEach(t => {
-        const a = (t / RB_MAX) * full;
-        const [x1, y1] = at(inner - 6, a), [x2, y2] = at(outer + 6, a);
-        add("line", { x1, y1, x2, y2, class: "rb-scale-line" }, null, deco);
-        const [lx, ly] = at(outer + 24, a);
-        add("text", { x: lx, y: ly + 5, "text-anchor": Math.abs(Math.sin(a)) < 0.2 ? "middle" : Math.sin(a) > 0 ? "start" : "end", class: "rb-scale" }, `${t}%`, deco);
-      });
-
-      const bars = radialData.map((d, i) => {
-        const r0 = inner + i * (thick + gap), r1 = r0 + thick, rm = (r0 + r1) / 2;
-        add("path", { d: band(r0, r1, 0, full), class: "rb-track", "aria-hidden": "true" });
-        const a1 = Math.max(0.02, (d.value / RB_MAX) * full);
-        const bar = add("path", { d: band(r0, r1, 0, a1), class: "rb-bar", fill: `url(#mono-${d.pattern})`, role: "img", tabindex: i === 0 ? "0" : "-1" });
-        const above = radialData[i - 1];
-        bar.setAttribute("aria-label", `${d.label}: ${d.value}${RB_UNIT}. Rank ${d.rank} of ${radialData.length}.${above ? ` ${above.value - d.value} points behind ${above.label}.` : " Furthest along."} Ring ${i + 1} of ${radialData.length}, counting from the center.`);
-        // Name where the bar starts (left of 12 o'clock), value in a chip just past the end of the bar.
-        const name = add("text", { x: cx - 12, y: cy - rm + 5, "text-anchor": "end", class: "rb-name", "aria-hidden": "true" }, d.label);
-        const [vx, vy] = at(rm, a1 + 0.1);
-        makeChip(add("text", { x: vx, y: vy + 5, "text-anchor": "middle", class: "rb-value" }, `${d.value}%`), [6, 2.5]);
-        return { bar, name, d, i };
-      });
-
-      function highlight(b) {
-        bars.forEach(o => { o.bar.classList.toggle("is-active", o === b); o.bar.classList.toggle("is-dimmed", o !== b); o.name.classList.toggle("is-dimmed", o !== b); });
-        tooltip.innerHTML = `<strong>${b.d.label}</strong><span>${b.d.value}${RB_UNIT}</span><span>Rank ${b.d.rank} of ${radialData.length}</span>`;
-        tooltip.classList.add("is-visible");
-      }
-      function clear() {
-        bars.forEach(o => { o.bar.classList.remove("is-active", "is-dimmed"); o.name.classList.remove("is-dimmed"); });
-        hideTooltip();
-      }
-      function go(i) {
-        const n = Math.max(0, Math.min(bars.length - 1, i));
-        bars.forEach((o, j) => o.bar.setAttribute("tabindex", j === n ? "0" : "-1"));
-        bars[n].bar.focus();
-      }
-      bars.forEach(b => {
-        b.bar.addEventListener("focus", () => {
-          bars.forEach(o => o.bar.setAttribute("tabindex", o === b ? "0" : "-1"));
-          highlight(b);
-          const r = b.bar.getBoundingClientRect();
-          moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top });
-        });
-        b.bar.addEventListener("blur", clear);
-        b.bar.addEventListener("mouseenter", e => { highlight(b); moveTooltip(e); });
-        b.bar.addEventListener("mousemove", moveTooltip);
-        b.bar.addEventListener("mouseleave", () => { if (document.activeElement !== b.bar) clear(); });
-        b.bar.addEventListener("click", () => go(b.i));
-        b.bar.addEventListener("keydown", e => {
-          const moves = { ArrowDown: b.i + 1, ArrowRight: b.i + 1, ArrowUp: b.i - 1, ArrowLeft: b.i - 1, Home: 0, End: bars.length - 1 };
-          if (!(e.key in moves)) return;
-          e.preventDefault();
-          go(moves[e.key]);
-        });
-      });
-    }
-
-    function renderRadialTable() {
-      radialData.forEach(d => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<th scope="row">${d.label}</th><td class="numeric">${d.value}%</td><td class="numeric">${d.rank}</td>`;
-        radialTableBody.appendChild(tr);
-      });
-    }
-
-    /* ---------------- Radar chart ---------------- */
-    // Sample data: starfighters scored 0-10 on six measures (not canon figures).
-    const RADAR_AXES = ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"];
-    const RADAR_MAX = 10;
-    const radarSeries = [
-      { label: "X-wing", values: [7, 7, 7, 6, 7, 4], shape: "circle", dash: "", filled: false },
-      { label: "TIE fighter", values: [9, 9, 5, 1, 0, 1], shape: "square", dash: "10 7", filled: true },
-      { label: "Millennium Falcon", values: [8, 4, 6, 8, 9, 9], shape: "triangle", dash: "1.5 7", filled: false }
-    ];
-    const radarChart = document.getElementById("radarChart");
-    const radarLegend = document.getElementById("radarLegend");
-    const radarTableHead = document.getElementById("radarTableHead");
-    const radarTableBody = document.getElementById("radarTableBody");
-    const radarVisibleSummary = document.getElementById("radar-visible-summary");
-    const radarHiddenSummary = document.getElementById("radar-chart-summary");
-    const ORDINAL = ["1st", "2nd", "3rd", "4th", "5th", "6th"];
-
-    // Where a craft ranks on one measure, counting ties honestly.
-    function radarRank(si, ai) {
-      const v = radarSeries[si].values[ai];
-      const better = radarSeries.filter(s => s.values[ai] > v).length;
-      const tied = radarSeries.some((s, j) => j !== si && s.values[ai] === v);
-      return `${tied ? "tied for " : ""}${ORDINAL[better]} of ${radarSeries.length}`;
-    }
-
-    function generateRadarSummary() {
-      const lower = a => a.toLowerCase();
-      const profiles = radarSeries.map(s => {
-        const hi = Math.max(...s.values), lo = Math.min(...s.values);
-        const leads = RADAR_AXES.filter((_, ai) => radarSeries.every(o => o === s || s.values[ai] > o.values[ai]));
-        return { s, hi, lo, range: hi - lo, leads,
-          best: RADAR_AXES.filter((_, ai) => s.values[ai] === hi), worst: RADAR_AXES.filter((_, ai) => s.values[ai] === lo) };
-      });
-      const balanced = profiles.reduce((m, p) => p.range < m.range ? p : m, profiles[0]);
-      const sentences = profiles.map(p => {
-        const lead = p.leads.length ? `leads on ${joinNames(p.leads.map(lower))}` : `leads on nothing outright`;
-        return `The ${p.s.label} ${lead}, and is weakest on ${joinNames(p.worst.map(lower))} (${p.lo}).`;
-      });
-      const visibleText = `This radar chart compares ${radarSeries.length} sample starfighters on ${RADAR_AXES.length} measures, each scored out of ${RADAR_MAX}. ${sentences.join(" ")} The ${balanced.s.label} is the most balanced, scoring between ${balanced.lo} and ${balanced.hi} on every measure.`;
-      radarVisibleSummary.textContent = visibleText;
-      radarHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move around the measures and between craft, and every score is in the table that follows.`;
-    }
-
-    function renderRadarLegend() {
-      radarLegend.innerHTML = radarSeries.map(s => `
-        <div class="line-legend-item">
-          <svg class="legend-symbol" viewBox="0 0 40 20" aria-hidden="true">
-            <line x1="2" y1="10" x2="38" y2="10" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="${s.dash ? s.dash.split(" ").map(n => n * 0.6).join(" ") : ""}"></line>
-            ${legendShapeMarkup({ ...s, color: "currentColor" }, 20, 10)}
-          </svg>
-          <span>${s.label}</span>
-        </div>`).join("");
-    }
-
-    function renderRadarChart() {
-      const ns = "http://www.w3.org/2000/svg";
-      const cx = 450, cy = 304, R = 228;
-      const add = (tag, attrs, text, parent = radarChart) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        if (text != null) el.textContent = text;
-        parent.appendChild(el);
-        return el;
-      };
-      const angle = ai => ai / RADAR_AXES.length * 2 * Math.PI;           // 12 o'clock, clockwise
-      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-      const point = (v, ai) => at((v / RADAR_MAX) * R, angle(ai));
-
-      const grid = add("g", { "aria-hidden": "true" });
-      [2, 4, 6, 8, 10].forEach(t => {
-        add("polygon", { points: RADAR_AXES.map((_, ai) => at(t / RADAR_MAX * R, angle(ai)).join(",")).join(" "), class: t === RADAR_MAX ? "radar-ring is-outer" : "radar-ring" }, null, grid);
-        // Scale labels sit in the gap between the first two spokes, where no data point can land.
-        const gap = Math.PI / RADAR_AXES.length;
-        const [tx, ty] = at(t / RADAR_MAX * R * Math.cos(gap), gap);
-        makeChip(add("text", { x: tx, y: ty + 4, "text-anchor": "middle", class: "radar-tick" }, t, grid), [5, 1.5]);
-      });
-      RADAR_AXES.forEach((name, ai) => {
-        const [x, y] = at(R, angle(ai));
-        add("line", { x1: cx, y1: cy, x2: x, y2: y, class: "radar-spoke" }, null, grid);
-        const [lx, ly] = at(R + 30, angle(ai));
-        const sin = Math.sin(angle(ai));
-        add("text", { x: lx, y: ly + 5, "text-anchor": Math.abs(sin) < 0.2 ? "middle" : sin > 0 ? "start" : "end", class: "radar-axis" }, name, grid);
-      });
-
-      const shapes = radarSeries.map(s => add("polygon", {
-        points: s.values.map((v, ai) => point(v, ai).join(",")).join(" "),
-        class: "radar-shape", "stroke-dasharray": s.dash, "aria-hidden": "true"
-      }));
-
-      // Points: one craft at a time, clockwise from 12 o'clock.
-      const points = [];
-      radarSeries.forEach((s, si) => {
-        s.values.forEach((v, ai) => {
-          const [x, y] = point(v, ai);
-          const el = createPointShape(ns, s, x, y);
-          el.setAttribute("class", `line-point radar-point${s.filled ? " is-filled" : ""}`);
-          el.setAttribute("stroke", "currentColor");
-          el.setAttribute("role", "img");
-          el.setAttribute("tabindex", si === 0 && ai === 0 ? "0" : "-1");
-          const others = radarSeries.filter((_, j) => j !== si).map(o => `${o.label} ${o.values[ai]}`).join(", ");
-          el.setAttribute("aria-label", `${s.label}, ${RADAR_AXES[ai]}: ${v} out of ${RADAR_MAX}. ${radarRank(si, ai)} on ${RADAR_AXES[ai].toLowerCase()}; ${others}. Measure ${ai + 1} of ${RADAR_AXES.length}.`);
-          radarChart.appendChild(el);
-          points.push({ el, si, ai, v });
-        });
-      });
-
-      const find = (si, ai) => points.find(p => p.si === si && p.ai === ai);
-      function highlight(p) {
-        shapes.forEach((sh, i) => sh.classList.toggle("is-dimmed", i !== p.si));
-        points.forEach(q => { q.el.classList.toggle("is-dimmed", q.si !== p.si); q.el.classList.toggle("is-active", q === p); });
-        const s = radarSeries[p.si];
-        tooltip.innerHTML = `<strong>${s.label} · ${RADAR_AXES[p.ai]}</strong><span>${p.v} out of ${RADAR_MAX}</span><span>${radarRank(p.si, p.ai).replace(/^./, c => c.toUpperCase())}</span>`;
-        tooltip.classList.add("is-visible");
-      }
-      function clear() {
-        shapes.forEach(sh => sh.classList.remove("is-dimmed"));
-        points.forEach(q => q.el.classList.remove("is-dimmed", "is-active"));
-        hideTooltip();
-      }
-      function go(si, ai) {
-        const target = find(si, ai);
-        points.forEach(q => q.el.setAttribute("tabindex", q === target ? "0" : "-1"));
-        target.el.focus();
-      }
-      points.forEach(p => {
-        p.el.addEventListener("focus", () => {
-          // Whichever point has focus is the chart's Tab stop, however it got focus.
-          points.forEach(q => q.el.setAttribute("tabindex", q === p ? "0" : "-1"));
-          highlight(p);
-          const r = p.el.getBoundingClientRect();
-          moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top });
-        });
-        p.el.addEventListener("blur", clear);
-        p.el.addEventListener("mouseenter", e => { highlight(p); moveTooltip(e); });
-        p.el.addEventListener("mousemove", moveTooltip);
-        p.el.addEventListener("mouseleave", () => { if (document.activeElement !== p.el) clear(); });
-        p.el.addEventListener("click", () => go(p.si, p.ai));
-        p.el.addEventListener("keydown", e => {
-          const n = RADAR_AXES.length, last = radarSeries.length - 1;
-          const moves = {
-            ArrowRight: [p.si, (p.ai + 1) % n], ArrowLeft: [p.si, (p.ai - 1 + n) % n],   // around the circle, wrapping
-            ArrowDown: [Math.min(last, p.si + 1), p.ai], ArrowUp: [Math.max(0, p.si - 1), p.ai],
-            Home: [p.si, 0], End: [p.si, n - 1]
-          };
-          if (!(e.key in moves)) return;
-          e.preventDefault();
-          go(...moves[e.key]);
-        });
-      });
-    }
-
-    function renderRadarTable() {
-      radarSeries.forEach(s => {
-        const th = document.createElement("th");
-        th.scope = "col"; th.className = "numeric"; th.textContent = s.label;
-        radarTableHead.appendChild(th);
-      });
-      RADAR_AXES.forEach((name, ai) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<th scope="row">${name}</th>` + radarSeries.map(s => `<td class="numeric">${s.values[ai]}</td>`).join("");
-        radarTableBody.appendChild(tr);
-      });
-    }
-
-    /* ---------------- Spiral graph ---------------- */
-    // Sample data: monthly cantina visits (thousands) over four years. One turn of the spiral per year.
-    const SPIRAL_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const SPIRAL_SHORT = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    // Monthly cantina visits (thousands) over four years. One turn of the spiral per year.
     const spiralYears = [
       [13, 13, 16, 20, 24, 28, 31, 31, 28, 24, 21, 17],
       [17, 17, 19, 23, 28, 32, 34, 34, 32, 28, 25, 21],
       [20, 20, 23, 27, 31, 35, 38, 38, 24, 31, 28, 24],
       [24, 24, 26, 30, 35, 39, 41, 41, 39, 35, 32, 28]
     ];
-    const SPIRAL_UNIT = "thousand visits";
-    const spiralChart = document.getElementById("spiralChart");
-    const spiralTableHead = document.getElementById("spiralTableHead");
-    const spiralTableBody = document.getElementById("spiralTableBody");
-    const spiralTableFoot = document.getElementById("spiralTableFoot");
-    const spiralVisibleSummary = document.getElementById("spiral-visible-summary");
-    const spiralHiddenSummary = document.getElementById("spiral-chart-summary");
-    const spiralPoints = spiralYears.flatMap((row, y) => row.map((value, m) => ({
-      y, m, value, index: y * 12 + m,
-      yoy: y > 0 ? value - spiralYears[y - 1][m] : null
-    })));
-    const yearName = y => `Year ${y + 1}`;
-    const signed = v => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v)}`;
-
-    function monthsWith(row, target) {
-      const names = row.map((v, m) => v === target ? SPIRAL_MONTHS[m] : null).filter(Boolean);
-      return joinNames(names);
-    }
-
-    function generateSpiralSummary() {
-      const totals = spiralYears.map(r => r.reduce((a, b) => a + b, 0));
-      const growth = Math.round((totals[totals.length - 1] / totals[0] - 1) * 100);
-      const everyYearUp = totals.every((t, i) => i === 0 || t > totals[i - 1]);
-      const peaks = new Set(spiralYears.map(r => monthsWith(r, Math.max(...r))));
-      const lows = new Set(spiralYears.map(r => monthsWith(r, Math.min(...r))));
-      const peakText = peaks.size === 1 ? `Every year peaks in ${[...peaks][0]}` : "The peak month changes from year to year";
-      const lowText = lows.size === 1 ? ` and is lowest in ${[...lows][0]}` : "";
-      const withYoy = spiralPoints.filter(p => p.yoy !== null);
-      const drop = withYoy.reduce((m, p) => p.yoy < m.yoy ? p : m, withYoy[0]);
-      const breakText = drop.yoy < 0
-        ? ` The ${withYoy.filter(p => p.yoy < 0).length === 1 ? "one" : "biggest"} break in the pattern is ${SPIRAL_MONTHS[drop.m]} of ${yearName(drop.y)}, ${Math.abs(drop.yoy)} thousand below the same month a year earlier${withYoy.every(p => p === drop || p.yoy > 0) ? ", while every other month grew" : ""}.`
-        : "";
-      const visibleText = `This spiral graph shows monthly cantina visits over ${spiralYears.length} sample years, one turn per year from the center out. Yearly totals ${everyYearUp ? "rise every year" : "change from year to year"}, from ${totals[0]} thousand in ${yearName(0)} to ${totals[totals.length - 1]} thousand in ${yearName(spiralYears.length - 1)}, up ${growth}%. ${peakText}${lowText}.${breakText}`;
-      spiralVisibleSummary.textContent = visibleText;
-      spiralHiddenSummary.textContent = `Chart summary. ${visibleText} The chart is one Tab stop: arrow keys move by month and by year, and every value is in the table that follows.`;
-    }
-
-    function renderSpiralChart() {
-      const ns = "http://www.w3.org/2000/svg";
-      const cx = 450, cy = 352, r0 = 66, ring = 54, maxLen = 34;
-      const turns = spiralYears.length;
-      const maxValue = Math.max(...spiralPoints.map(p => p.value));
-      const add = (tag, attrs, text, parent = spiralChart) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        if (text != null) el.textContent = text;
-        parent.appendChild(el);
-        return el;
-      };
-      // t counts turns from the center; angle 0 is 12 o'clock, clockwise.
-      const radius = t => r0 + ring * t;
-      const at = (r, a) => [cx + r * Math.sin(a), cy - r * Math.cos(a)];
-
-      const deco = add("g", { "aria-hidden": "true" });
-      SPIRAL_SHORT.forEach((name, m) => {
-        const a = (m + 0.5) / 12 * 2 * Math.PI;
-        const [x1, y1] = at(r0 - 18, a), [x2, y2] = at(radius(turns) + maxLen, a);
-        add("line", { x1, y1, x2, y2, class: "spiral-spoke" }, null, deco);
-        const [lx, ly] = at(radius(turns) + maxLen + 24, a);
-        add("text", { x: lx, y: ly + 5, "text-anchor": "middle", class: "spiral-month" }, name, deco);
-      });
-      let d = "";
-      for (let i = 0; i <= turns * 120; i++) {
-        const t = i / 120, [x, y] = at(radius(t), t * 2 * Math.PI);
-        d += `${i ? "L" : "M"} ${x.toFixed(1)} ${y.toFixed(1)} `;
-      }
-      add("path", { d, class: "spiral-track" }, null, deco);
-
-      const bars = [];
-      spiralPoints.forEach(p => {
-        const t = p.y + (p.m + 0.5) / 12;
-        const a = (p.m + 0.5) / 12 * 2 * Math.PI, half = (2 * Math.PI / 12) * 0.25;
-        const ri = radius(t) + 2, ro = ri + Math.max(3, (p.value / maxValue) * maxLen);
-        const [ax, ay] = at(ri, a - half), [bx, by] = at(ro, a - half), [qx, qy] = at(ro, a + half), [ex, ey] = at(ri, a + half);
-        const bar = add("path", {
-          d: `M ${ax} ${ay} L ${bx} ${by} A ${ro} ${ro} 0 0 1 ${qx} ${qy} L ${ex} ${ey} A ${ri} ${ri} 0 0 0 ${ax} ${ay} Z`,
-          class: "spiral-bar", role: "img", tabindex: p.index === 0 ? "0" : "-1", "data-index": p.index
-        });
-        const change = p.yoy === null ? "First year, no earlier month to compare." : `${signed(p.yoy)} from ${SPIRAL_MONTHS[p.m]} of ${yearName(p.y - 1)}.`;
-        bar.setAttribute("aria-label", `${SPIRAL_MONTHS[p.m]}, ${yearName(p.y)}: ${p.value} ${SPIRAL_UNIT}. ${change} ${p.index + 1} of ${spiralPoints.length}.`);
-        bars.push(bar);
-      });
-      // Year labels where each turn starts, at 12 o'clock between December and January, with a halo so bars never hide them.
-      spiralYears.forEach((_, y) => {
-        const [x, yy] = at(radius(y) + maxLen * 0.55, 0);
-        makeChip(add("text", { x, y: yy + 5, "text-anchor": "middle", class: "spiral-year" }, yearName(y)));
-      });
-
-      function highlight(p) {
-        bars.forEach((b, i) => {
-          const q = spiralPoints[i];
-          b.classList.toggle("is-active", q === p);
-          b.classList.toggle("is-dimmed", q.m !== p.m);
-        });
-        tooltip.innerHTML = `<strong>${SPIRAL_MONTHS[p.m]} · ${yearName(p.y)}</strong><span>${p.value} ${SPIRAL_UNIT}</span><span>${p.yoy === null ? "First year" : `${signed(p.yoy)} vs ${SPIRAL_SHORT[p.m]}, ${yearName(p.y - 1)}`}</span>`;
-        tooltip.classList.add("is-visible");
-      }
-      function clear() {
-        bars.forEach(b => b.classList.remove("is-active", "is-dimmed"));
-        hideTooltip();
-      }
-      function placeTip(bar) {
-        const r = bar.getBoundingClientRect();
-        moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top });
-      }
-      // One Tab stop: the last focused bar keeps tabindex 0 (roving tabindex).
-      function focusBar(i) {
-        const n = Math.max(0, Math.min(bars.length - 1, i));
-        bars.forEach((b, j) => b.setAttribute("tabindex", j === n ? "0" : "-1"));
-        bars[n].focus();
-      }
-      bars.forEach((bar, i) => {
-        const p = spiralPoints[i];
-        bar.addEventListener("focus", () => {
-          // Whichever bar has focus is the chart's Tab stop, however it got focus.
-          bars.forEach(b => b.setAttribute("tabindex", b === bar ? "0" : "-1"));
-          highlight(p); placeTip(bar);
-        });
-        bar.addEventListener("blur", clear);
-        bar.addEventListener("mouseenter", e => { highlight(p); moveTooltip(e); });
-        bar.addEventListener("mousemove", moveTooltip);
-        bar.addEventListener("mouseleave", () => { if (document.activeElement !== bar) clear(); });
-        bar.addEventListener("click", () => focusBar(i));
-        bar.addEventListener("keydown", e => {
-          const moves = { ArrowRight: i + 1, ArrowLeft: i - 1, ArrowDown: i + 12, ArrowUp: i - 12, Home: 0, End: bars.length - 1 };
-          if (!(e.key in moves)) return;
-          e.preventDefault();
-          const target = moves[e.key];
-          if (target < 0 || target >= bars.length) return;   // stay put at the edges
-          focusBar(target);
-        });
-      });
-    }
-
-    function renderSpiralTable() {
-      spiralYears.forEach((_, y) => {
-        const th = document.createElement("th");
-        th.scope = "col"; th.className = "numeric"; th.textContent = yearName(y);
-        spiralTableHead.appendChild(th);
-      });
-      SPIRAL_MONTHS.forEach((name, m) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<th scope="row">${name}</th>` + spiralYears.map(r => `<td class="numeric">${r[m]}</td>`).join("");
-        spiralTableBody.appendChild(tr);
-      });
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<th scope="row">Total</th>` + spiralYears.map(r => `<td class="numeric">${r.reduce((a, b) => a + b, 0)}</td>`).join("");
-      spiralTableFoot.appendChild(tr);
-    }
-
-    /* ---------------- Arc diagram ---------------- */
-    // Sample data: scenes each pair of characters shares. Nodes are ordered by faction along the line.
-    const arcGroups = [
-      { key: "rebels", label: "Rebels", shape: "circle", filled: false },
-      { key: "independent", label: "Independent", shape: "triangle", filled: false },
-      { key: "empire", label: "Empire", shape: "square", filled: true }
-    ];
-    const arcNodes = [
-      { id: "obiwan", label: "Obi-Wan Kenobi", short: "Obi-Wan", group: "rebels" },
-      { id: "luke", label: "Luke Skywalker", short: "Luke", group: "rebels" },
-      { id: "leia", label: "Leia Organa", short: "Leia", group: "rebels" },
-      { id: "han", label: "Han Solo", short: "Han", group: "rebels" },
-      { id: "chewie", label: "Chewbacca", short: "Chewbacca", group: "rebels" },
-      { id: "lando", label: "Lando Calrissian", short: "Lando", group: "independent" },
-      { id: "boba", label: "Boba Fett", short: "Boba Fett", group: "independent" },
-      { id: "vader", label: "Darth Vader", short: "Vader", group: "empire" },
-      { id: "tarkin", label: "Grand Moff Tarkin", short: "Tarkin", group: "empire" },
-      { id: "palpatine", label: "Emperor Palpatine", short: "Palpatine", group: "empire" }
-    ];
-    const arcLinks = [
-      { source: "han", target: "chewie", value: 15 },
-      { source: "luke", target: "leia", value: 14 },
-      { source: "leia", target: "han", value: 13 },
-      { source: "luke", target: "han", value: 12 },
-      { source: "luke", target: "chewie", value: 9 },
-      { source: "leia", target: "chewie", value: 8 },
-      { source: "obiwan", target: "luke", value: 7 },
-      { source: "luke", target: "vader", value: 6 },
-      { source: "vader", target: "palpatine", value: 5 },
-      { source: "vader", target: "tarkin", value: 4 },
-      { source: "han", target: "lando", value: 4 },
-      { source: "obiwan", target: "han", value: 3 },
-      { source: "leia", target: "vader", value: 3 },
-      { source: "leia", target: "lando", value: 3 },
-      { source: "han", target: "boba", value: 3 },
-      { source: "leia", target: "tarkin", value: 2 },
-      { source: "luke", target: "palpatine", value: 2 },
-      { source: "lando", target: "vader", value: 2 },
-      { source: "boba", target: "vader", value: 2 },
-      { source: "obiwan", target: "vader", value: 1 }
-    ];
-    const arcChart = document.getElementById("arcChart");
-    const arcLegend = document.getElementById("arcLegend");
-    const arcTableBody = document.getElementById("arcTableBody");
-    const arcVisibleSummary = document.getElementById("arc-visible-summary");
-    const arcHiddenSummary = document.getElementById("arc-chart-summary");
-    const arcNodeById = Object.fromEntries(arcNodes.map(n => [n.id, n]));
-    const arcGroupOf = key => arcGroups.find(g => g.key === key);
-    const isCross = l => arcNodeById[l.source].group !== arcNodeById[l.target].group;
-    const scenesWord = n => `${n} shared ${n === 1 ? "scene" : "scenes"}`;
-
-    // Each node's connections, strongest first, plus how many other factions it reaches.
-    arcNodes.forEach(n => {
-      n.links = arcLinks
-        .filter(l => l.source === n.id || l.target === n.id)
-        .map(l => ({ other: arcNodeById[l.source === n.id ? l.target : l.source], value: l.value }))
-        .sort((a, b) => b.value - a.value || a.other.label.localeCompare(b.other.label));
-      n.total = n.links.reduce((t, l) => t + l.value, 0);
-      n.reaches = new Set(n.links.map(l => l.other.group).filter(g => g !== n.group));
+    spiralGraph("#demo-spiral", {
+      title: "Monthly cantina visits",
+      unit: "thousand visits",
+      data: spiralYears.flatMap((row, y) => row.map((value, m) => ({ period: `${2023 + y}-${String(m + 1).padStart(2, "0")}`, value }))),
+      cycle: 12,
+      cycleLabel: "Year"
     });
 
-    function joinNames(names) {
-      return names.length < 2 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
-    }
+    // Starfighters scored 0-10 on six measures (not canon figures).
+    radarChart("#demo-radar", {
+      title: "Starfighters compared",
+      axes: ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"],
+      series: [
+        { label: "X-wing", values: [7, 7, 7, 6, 7, 4] },
+        { label: "TIE fighter", values: [9, 9, 5, 1, 0, 1] },
+        { label: "Millennium Falcon", values: [8, 4, 6, 8, 9, 9] }
+      ],
+      max: 10,
+      unit: "out of 10"
+    });
 
-    function generateArcSummary() {
-      const mostConnected = arcNodes.reduce((m, n) => n.links.length > m.links.length || (n.links.length === m.links.length && n.total > m.total) ? n : m, arcNodes[0]);
-      const busiest = arcNodes.reduce((m, n) => n.total > m.total ? n : m, arcNodes[0]);
-      const strongest = arcLinks.reduce((m, l) => l.value > m.value ? l : m, arcLinks[0]);
-      const cross = arcLinks.filter(isCross).length;
-      const bridges = arcNodes.filter(n => n.reaches.size >= arcGroups.length - 1).map(n => n.label);
-      const busiestNote = busiest === mostConnected ? "" : ` ${busiest.label} shares the most scenes overall, ${busiest.total}.`;
-      const visibleText = `This arc diagram shows ${arcLinks.length} connections between ${arcNodes.length} sample characters in ${arcGroups.length} factions. ${mostConnected.label} has the most connections, ${mostConnected.links.length}.${busiestNote} The strongest pair is ${arcNodeById[strongest.source].label} and ${arcNodeById[strongest.target].label}, with ${scenesWord(strongest.value)}. ${cross} of the ${arcLinks.length} connections cross factions${bridges.length ? `, and ${joinNames(bridges)} each connect to both other factions` : ""}.`;
-      arcVisibleSummary.textContent = visibleText;
-      arcHiddenSummary.textContent = `Chart summary. ${visibleText} Each character can be focused by keyboard to hear its connections, and every connection is in the table that follows.`;
-    }
+    radialBarChart("#demo-radial", {
+      title: "Training completion by squadron",
+      unit: "% of goal",
+      data: [
+        { label: "Rogue Squadron", value: 64 },
+        { label: "Red Squadron", value: 92 },
+        { label: "Green Squadron", value: 37 },
+        { label: "Gold Squadron", value: 78 },
+        { label: "Blue Squadron", value: 51 }
+      ],
+      max: 100,
+      sweep: 270
+    });
 
-    function renderArcLegend() {
-      const items = arcGroups.map(g => `
-        <div class="line-legend-item">
-          <svg class="legend-symbol" viewBox="10 0 20 20" style="width:20px" aria-hidden="true">${legendShapeMarkup({ ...g, color: "currentColor" }, 20, 10)}</svg>
-          <span>${g.label}</span>
-        </div>`);
-      items.push(`
-        <div class="line-legend-item">
-          <svg class="legend-arc" viewBox="0 0 34 14" aria-hidden="true"><path d="M2 12 A 15 10 0 0 1 32 12" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>
-          <span>Same faction</span>
-        </div>`, `
-        <div class="line-legend-item">
-          <svg class="legend-arc" viewBox="0 0 34 14" aria-hidden="true"><path d="M2 12 A 15 10 0 0 1 32 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="5 4"/></svg>
-          <span>Across factions</span>
-        </div>`, `
-        <div class="line-legend-item">
-          <svg class="legend-arc" viewBox="0 0 34 14" aria-hidden="true"><path d="M2 4 H32" stroke="currentColor" stroke-width="1.5"/><path d="M2 11 H32" stroke="currentColor" stroke-width="5"/></svg>
-          <span>Thicker means more shared scenes</span>
-        </div>`);
-      arcLegend.innerHTML = items.join("");
-    }
+    arcDiagram("#demo-arc", {
+      title: "Characters who share scenes",
+      unit: "shared scenes",
+      shapes: ["hollow circle", "hollow triangle", "filled square"],
+      nodes: [
+        { id: "obiwan", label: "Obi-Wan Kenobi", short: "Obi-Wan", group: "Rebels" },
+        { id: "luke", label: "Luke Skywalker", short: "Luke", group: "Rebels" },
+        { id: "leia", label: "Leia Organa", short: "Leia", group: "Rebels" },
+        { id: "han", label: "Han Solo", short: "Han", group: "Rebels" },
+        { id: "chewie", label: "Chewbacca", short: "Chewie", group: "Rebels" },
+        { id: "lando", label: "Lando Calrissian", short: "Lando", group: "Independent" },
+        { id: "boba", label: "Boba Fett", short: "Boba", group: "Independent" },
+        { id: "vader", label: "Darth Vader", short: "Vader", group: "Empire" },
+        { id: "tarkin", label: "Grand Moff Tarkin", short: "Tarkin", group: "Empire" },
+        { id: "palpatine", label: "Emperor Palpatine", short: "Palpatine", group: "Empire" }
+      ],
+      links: [
+        { source: "han", target: "chewie", value: 15 }, { source: "luke", target: "leia", value: 14 },
+        { source: "leia", target: "han", value: 13 }, { source: "luke", target: "han", value: 12 },
+        { source: "luke", target: "chewie", value: 9 }, { source: "leia", target: "chewie", value: 8 },
+        { source: "obiwan", target: "luke", value: 7 }, { source: "luke", target: "vader", value: 6 },
+        { source: "vader", target: "palpatine", value: 5 }, { source: "vader", target: "tarkin", value: 4 },
+        { source: "han", target: "lando", value: 4 }, { source: "obiwan", target: "han", value: 3 },
+        { source: "leia", target: "vader", value: 3 }, { source: "leia", target: "lando", value: 3 },
+        { source: "han", target: "boba", value: 3 }, { source: "leia", target: "tarkin", value: 2 },
+        { source: "luke", target: "palpatine", value: 2 }, { source: "lando", target: "vader", value: 2 },
+        { source: "boba", target: "vader", value: 2 }, { source: "obiwan", target: "vader", value: 1 }
+      ]
+    });
 
-    function setActiveArcNode(node) {
-      const linked = new Set([node.id, ...node.links.map(l => l.other.id)]);
-      arcChart.querySelectorAll(".arc-link").forEach(a => {
-        const on = a.dataset.source === node.id || a.dataset.target === node.id;
-        a.classList.toggle("is-active", on);
-        a.classList.toggle("is-dimmed", !on);
-      });
-      arcChart.querySelectorAll(".line-point").forEach(pt => {
-        pt.classList.toggle("is-active", pt.dataset.node === node.id);
-        pt.classList.toggle("is-sibling", pt.dataset.node !== node.id && linked.has(pt.dataset.node));
-        pt.classList.toggle("is-dimmed", !linked.has(pt.dataset.node));
-      });
-      arcChart.querySelectorAll(".arc-node-label").forEach(t => t.classList.toggle("is-dimmed", !linked.has(t.dataset.node)));
-    }
-    function clearActiveArcNode() {
-      arcChart.querySelectorAll(".arc-link, .line-point, .arc-node-label").forEach(el => el.classList.remove("is-active", "is-dimmed", "is-sibling"));
-      hideTooltip();
-    }
+    // Training hours and mission success (%) for 24 pilots.
+    const pilot = (group, list) => list.map(([label, x, y]) => ({ label, group, x, y }));
+    scatterPlot("#demo-scatter", {
+      title: "Training hours and mission success",
+      unit: "pilots",
+      data: [
+        ...pilot("Rebels", [["Red Two", 60, 48], ["Red Three", 95, 55], ["Red Five", 120, 71], ["Blue Four", 130, 58], ["Gold Two", 150, 63], ["Gold Five", 185, 70], ["Rogue Three", 210, 79], ["Rogue Nine", 240, 84]]),
+        ...pilot("Empire", [["Black Two", 80, 44], ["Scimitar Four", 100, 47], ["Black Six", 115, 52], ["Obsidian One", 140, 55], ["Obsidian Four", 170, 64], ["Titan Three", 200, 67], ["Titan Five", 230, 74], ["Onyx Two", 255, 77]]),
+        ...pilot("Independent", [["Kestrel", 45, 82], ["Nomad", 70, 39], ["Drifter", 105, 53], ["Courier Vex", 140, 62], ["Rask", 160, 58], ["Tal", 195, 74], ["Pell", 220, 70], ["Brin", 248, 83]])
+      ],
+      x: { label: "Training hours", unit: "hours", max: 300 },
+      y: { label: "Mission success", unit: "%", max: 100 },
+      trendLine: true
+    });
 
-    function renderArcChart() {
-      const width = 900, baseline = 330, left = 70, right = 830;
-      const ns = "http://www.w3.org/2000/svg";
-      const add = (tag, attrs, text, parent = arcChart) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        if (text != null) el.textContent = text;
-        parent.appendChild(el);
-        return el;
-      };
-      const step = (right - left) / (arcNodes.length - 1);
-      arcNodes.forEach((n, i) => { n.x = left + i * step; });
-      const maxValue = Math.max(...arcLinks.map(l => l.value));
-      const widthFor = v => 1.5 + (v / maxValue) * 6;
-
-      add("line", { x1: left - 30, x2: right + 30, y1: baseline, y2: baseline, class: "arc-baseline", "aria-hidden": "true" });
-
-      // Thick arcs first, so thin ones stay visible on top.
-      const arcLayer = add("g", { "aria-hidden": "true" });
-      [...arcLinks].sort((a, b) => b.value - a.value).forEach(l => {
-        const a = arcNodeById[l.source], b = arcNodeById[l.target];
-        const x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x);
-        const rx = (x2 - x1) / 2, ry = Math.min(rx, 290) * 0.95;
-        add("path", {
-          d: `M ${x1} ${baseline} A ${rx} ${ry} 0 0 1 ${x2} ${baseline}`,
-          class: "arc-link", "stroke-width": widthFor(l.value).toFixed(2),
-          "stroke-dasharray": isCross(l) ? "7 6" : "", "data-source": l.source, "data-target": l.target
-        }, null, arcLayer);
-      });
-
-      // Faction rules and labels under the names.
-      arcGroups.forEach(g => {
-        const members = arcNodes.filter(n => n.group === g.key);
-        const x1 = members[0].x - step * 0.38, x2 = members[members.length - 1].x + step * 0.38;
-        add("line", { x1, x2, y1: 418, y2: 418, class: "arc-group-rule", "aria-hidden": "true" });
-        add("text", { x: (x1 + x2) / 2, y: 444, "text-anchor": "middle", class: "arc-group-label", "aria-hidden": "true" }, g.label);
-      });
-
-      // Nodes, left to right, so keyboard order follows reading order.
-      arcNodes.forEach((n, i) => {
-        const group = arcGroupOf(n.group);
-        add("text", { x: n.x, y: baseline + 40, "text-anchor": "middle", class: "arc-node-label", "data-node": n.id, "aria-hidden": "true" }, n.short);
-        const point = createPointShape(ns, group, n.x, baseline);
-        point.setAttribute("class", group.filled ? "line-point is-filled" : "line-point");
-        point.setAttribute("stroke", "currentColor");
-        point.setAttribute("tabindex", "0");
-        point.setAttribute("role", "listitem");
-        point.dataset.node = n.id;
-        const list = n.links.map(l => `${l.other.label} ${l.value}`).join(", ");
-        point.setAttribute("aria-label", `${n.label}, ${group.label}. ${n.links.length} ${n.links.length === 1 ? "connection" : "connections"}, ${n.total} shared scenes in all. Strongest first: ${list}. ${i + 1} of ${arcNodes.length}.`);
-        const tip = () => `
-          <strong>${n.label} · ${group.label}</strong>
-          <span>${n.links.length} connections, ${n.total} shared scenes</span>
-          <span>${n.links.slice(0, 3).map(l => `${l.other.short} ${l.value}`).join(" · ")}${n.links.length > 3 ? " · …" : ""}</span>`;
-        point.addEventListener("mouseenter", e => { setActiveArcNode(n); tooltip.innerHTML = tip(); tooltip.classList.add("is-visible", "is-below"); moveTooltip({ clientX: e.clientX, clientY: point.getBoundingClientRect().bottom }); });
-        point.addEventListener("mouseleave", clearActiveArcNode);
-        point.addEventListener("focus", () => {
-          setActiveArcNode(n);
-          const r = point.getBoundingClientRect();
-          tooltip.innerHTML = tip(); tooltip.classList.add("is-visible", "is-below");
-          // Below the line, so the tooltip never covers the arcs being highlighted.
-          moveTooltip({ clientX: r.left + r.width / 2, clientY: r.bottom });
-        });
-        point.addEventListener("blur", clearActiveArcNode);
-        arcChart.appendChild(point);
-      });
-    }
-
-    function renderArcTable() {
-      [...arcLinks].sort((a, b) => b.value - a.value || arcNodeById[a.source].label.localeCompare(arcNodeById[b.source].label)).forEach(l => {
-        const a = arcNodeById[l.source], b = arcNodeById[l.target];
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <th scope="row">${a.label}</th>
-          <td>${b.label}</td>
-          <td class="numeric">${l.value}</td>
-          <td>${isCross(l) ? `Across: ${arcGroupOf(a.group).label} and ${arcGroupOf(b.group).label}` : `Same: ${arcGroupOf(a.group).label}`}</td>`;
-        arcTableBody.appendChild(tr);
-      });
-    }
-
-    /* ---------------- Scatter plot ---------------- */
-    // Sample data: training hours and mission success (%) for 24 pilots.
-    const scatterSeries = [
-      { key: "rebels", label: "Rebels", shape: "circle", filled: false },
-      { key: "empire", label: "Empire", shape: "square", filled: true },
-      { key: "independent", label: "Independent", shape: "triangle", filled: false }
-    ];
-    const scatterData = [
-      { label: "Red Two", group: "rebels", x: 60, y: 48 },
-      { label: "Red Three", group: "rebels", x: 95, y: 55 },
-      { label: "Red Five", group: "rebels", x: 120, y: 71 },
-      { label: "Blue Four", group: "rebels", x: 130, y: 58 },
-      { label: "Gold Two", group: "rebels", x: 150, y: 63 },
-      { label: "Gold Five", group: "rebels", x: 185, y: 70 },
-      { label: "Rogue Three", group: "rebels", x: 210, y: 79 },
-      { label: "Rogue Nine", group: "rebels", x: 240, y: 84 },
-      { label: "Black Two", group: "empire", x: 80, y: 44 },
-      { label: "Scimitar Four", group: "empire", x: 100, y: 47 },
-      { label: "Black Six", group: "empire", x: 115, y: 52 },
-      { label: "Obsidian One", group: "empire", x: 140, y: 55 },
-      { label: "Obsidian Four", group: "empire", x: 170, y: 64 },
-      { label: "Titan Three", group: "empire", x: 200, y: 67 },
-      { label: "Titan Five", group: "empire", x: 230, y: 74 },
-      { label: "Onyx Two", group: "empire", x: 255, y: 77 },
-      { label: "Kestrel", group: "independent", x: 45, y: 82 },
-      { label: "Nomad", group: "independent", x: 70, y: 39 },
-      { label: "Drifter", group: "independent", x: 105, y: 53 },
-      { label: "Courier Vex", group: "independent", x: 140, y: 62 },
-      { label: "Rask", group: "independent", x: 160, y: 58 },
-      { label: "Tal", group: "independent", x: 195, y: 74 },
-      { label: "Pell", group: "independent", x: 220, y: 70 },
-      { label: "Brin", group: "independent", x: 248, y: 83 }
-    ];
-    const SCATTER_X = { label: "Training hours", unit: "hours", max: 300, ticks: [0, 50, 100, 150, 200, 250, 300] };
-    const SCATTER_Y = { label: "Mission success", unit: "%", max: 100, ticks: [0, 25, 50, 75, 100] };
-    const scatterChart = document.getElementById("scatterChart");
-    const scatterLegend = document.getElementById("scatterLegend");
-    const scatterTableBody = document.getElementById("scatterTableBody");
-    const scatterVisibleSummary = document.getElementById("scatter-visible-summary");
-    const scatterHiddenSummary = document.getElementById("scatter-chart-summary");
-
-    // Least-squares trend and correlation, computed once and shared by the chart, labels, summary, and table.
-    const scatterStats = (() => {
-      const n = scatterData.length;
-      const mx = scatterData.reduce((s, d) => s + d.x, 0) / n;
-      const my = scatterData.reduce((s, d) => s + d.y, 0) / n;
-      let sxy = 0, sxx = 0, syy = 0;
-      scatterData.forEach(d => { sxy += (d.x - mx) * (d.y - my); sxx += (d.x - mx) ** 2; syy += (d.y - my) ** 2; });
-      const slope = sxy / sxx, intercept = my - slope * mx, r = sxy / Math.sqrt(sxx * syy);
-      const predict = x => intercept + slope * x;
-      scatterData.forEach(d => { d.residual = d.y - predict(d.x); });
-      return { n, slope, intercept, r, predict };
-    })();
-    const seriesOf = key => scatterSeries.find(s => s.key === key);
-    const fmtSigned = v => `${v > 0 ? "+" : v < 0 ? "−" : ""}${Math.abs(v)}`;
-
-    function trendPhrase(residual) {
-      const r = Math.round(residual);
-      if (Math.abs(r) <= 2) return "Close to the trend.";
-      return `${Math.abs(r)} percentage ${Math.abs(r) === 1 ? "point" : "points"} ${r > 0 ? "above" : "below"} the trend.`;
-    }
-
-    function generateScatterSummary() {
-      const { r, slope } = scatterStats;
-      const a = Math.abs(r);
-      const strength = a >= 0.7 ? "strong" : a >= 0.4 ? "moderate" : a >= 0.2 ? "weak" : "little to no";
-      const direction = r > 0 ? "positive" : "negative";
-      const per50 = Math.round(Math.abs(slope) * 50);
-      const relation = a < 0.2
-        ? "There is little to no relationship between training hours and mission success."
-        : `The relationship is ${strength} and ${direction} (correlation ${r.toFixed(2)}): on average, every 50 more training hours goes with about ${per50} percentage points ${slope > 0 ? "higher" : "lower"} mission success.`;
-      const avgs = scatterSeries.map(s => {
-        const pts = scatterData.filter(d => d.group === s.key);
-        return `${s.label} ${Math.round(pts.reduce((t, d) => t + d.y, 0) / pts.length)}%`;
-      }).join(", ");
-      const outlier = scatterData.reduce((m, d) => Math.abs(d.residual) > Math.abs(m.residual) ? d : m, scatterData[0]);
-      const visibleText = `This scatter plot compares training hours with mission success for ${scatterStats.n} sample pilots in ${scatterSeries.length} factions. ${relation} Average success by faction: ${avgs}. The biggest exception is ${outlier.label} (${seriesOf(outlier.group).label}), at ${outlier.y}% success with only ${outlier.x} training hours, ${Math.abs(Math.round(outlier.residual))} percentage points ${outlier.residual > 0 ? "above" : "below"} the trend.`;
-      scatterVisibleSummary.textContent = visibleText;
-      scatterHiddenSummary.textContent = `Chart summary. ${visibleText} Each point can be focused by keyboard and every value is in the data table that follows.`;
-    }
-
-    function renderScatterLegend() {
-      scatterSeries.forEach(series => {
-        const count = scatterData.filter(d => d.group === series.key).length;
-        const item = document.createElement("div");
-        item.className = "line-legend-item";
-        item.innerHTML = `
-          <svg class="legend-symbol" viewBox="10 0 20 20" style="width:20px" aria-hidden="true">${legendShapeMarkup({ ...series, color: "currentColor" }, 20, 10)}</svg>
-          <span>${series.label} <span class="legend-count">(${count})</span></span>`;
-        scatterLegend.appendChild(item);
-      });
-    }
-
-    function setActiveScatterPoint(active) {
-      scatterChart.querySelectorAll(".line-point").forEach(pt => {
-        const same = pt.dataset.series === active.dataset.series;
-        pt.classList.toggle("is-active", pt === active);
-        pt.classList.toggle("is-sibling", pt !== active && same);
-        pt.classList.toggle("is-dimmed", !same);
-      });
-    }
-    function clearActiveScatterPoint() {
-      scatterChart.querySelectorAll(".line-point").forEach(pt => pt.classList.remove("is-active", "is-sibling", "is-dimmed"));
-      hideTooltip();
-    }
-
-    function renderScatterChart() {
-      const width = 900, height = 460;
-      const margin = { top: 30, right: 40, bottom: 84, left: 84 };
-      const cw = width - margin.left - margin.right, ch = height - margin.top - margin.bottom;
-      const x = v => margin.left + (v / SCATTER_X.max) * cw;
-      const y = v => margin.top + ch - (v / SCATTER_Y.max) * ch;
-      const ns = "http://www.w3.org/2000/svg";
-      const add = (tag, attrs, text) => {
-        const el = document.createElementNS(ns, tag);
-        Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v));
-        if (text != null) el.textContent = text;
-        scatterChart.appendChild(el);
-        return el;
-      };
-
-      SCATTER_Y.ticks.forEach(t => {
-        add("line", { x1: margin.left, x2: width - margin.right, y1: y(t), y2: y(t), class: t === 0 ? "axis-line" : "grid-line" });
-        add("text", { x: margin.left - 14, y: y(t) + 5, "text-anchor": "end", class: "axis-label", "aria-hidden": "true" }, `${t}%`);
-      });
-      SCATTER_X.ticks.forEach(t => {
-        add("line", { x1: x(t), x2: x(t), y1: margin.top, y2: margin.top + ch, class: t === 0 ? "axis-line" : "grid-line" });
-        add("text", { x: x(t), y: margin.top + ch + 26, "text-anchor": "middle", class: "axis-label", "aria-hidden": "true" }, t);
-      });
-      add("text", { x: margin.left + cw / 2, y: height - 18, "text-anchor": "middle", class: "axis-title", "aria-hidden": "true" }, `${SCATTER_X.label} →`);
-      add("text", { x: 22, y: margin.top + ch / 2, "text-anchor": "middle", class: "axis-title", transform: `rotate(-90 22 ${margin.top + ch / 2})`, "aria-hidden": "true" }, `${SCATTER_Y.label} →`);
-
-      // Trend line across the range of the data, labelled at its right end.
-      const xs = scatterData.map(d => d.x), x0 = Math.min(...xs), x1 = Math.max(...xs);
-      add("line", { x1: x(x0), y1: y(scatterStats.predict(x0)), x2: x(x1), y2: y(scatterStats.predict(x1)), class: "trend-line", "aria-hidden": "true" });
-      makeChip(add("text", { x: x(x1) + 16, y: y(scatterStats.predict(x1)) + 5, "text-anchor": "start", class: "trend-label" }, "Trend"));
-
-      // Points: one group at a time, left to right, so keyboard order follows reading order.
-      scatterSeries.forEach(series => {
-        const pts = scatterData.filter(d => d.group === series.key).sort((a, b) => a.x - b.x);
-        pts.forEach((d, i) => {
-          const point = createPointShape(ns, series, x(d.x), y(d.y));
-          point.setAttribute("class", series.filled ? "line-point is-filled" : "line-point");
-          point.setAttribute("stroke", "currentColor");
-          point.setAttribute("tabindex", "0");
-          point.setAttribute("role", "listitem");
-          point.dataset.series = series.key;
-          const trend = scatterStats ? trendPhrase(d.residual) : "";
-          point.setAttribute("aria-label", `${d.label}, ${series.label}: ${d.x} ${SCATTER_X.unit} of training, ${d.y} percent mission success. ${trend} ${i + 1} of ${pts.length} in ${series.label}.`);
-          const tip = () => `
-            <strong>${d.label} · ${series.label}</strong>
-            <span>${SCATTER_X.label}: ${d.x}</span>
-            <span>${SCATTER_Y.label}: ${d.y}%</span>
-            <span>${trend.replace("percentage points", "pts").replace("percentage point", "pt").replace(".", "")}</span>`;
-          point.addEventListener("mouseenter", e => { setActiveScatterPoint(point); tooltip.innerHTML = tip(); tooltip.classList.add("is-visible"); moveTooltip(e); });
-          point.addEventListener("mousemove", moveTooltip);
-          point.addEventListener("mouseleave", clearActiveScatterPoint);
-          point.addEventListener("focus", () => {
-            setActiveScatterPoint(point);
-            const r = point.getBoundingClientRect();
-            tooltip.innerHTML = tip(); tooltip.classList.add("is-visible");
-            moveTooltip({ clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 });
-          });
-          point.addEventListener("blur", clearActiveScatterPoint);
-          scatterChart.appendChild(point);
-        });
-      });
-    }
-
-    function renderScatterTable() {
-      scatterSeries.forEach(series => {
-        scatterData.filter(d => d.group === series.key).sort((a, b) => a.x - b.x).forEach(d => {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <th scope="row">${d.label}</th>
-            <td>${series.label}</td>
-            <td class="numeric">${d.x}</td>
-            <td class="numeric">${d.y}%</td>
-            <td class="numeric">${fmtSigned(Math.round(d.residual))}</td>`;
-          scatterTableBody.appendChild(tr);
-        });
-      });
-    }
+    // Each demo card: the "Screen reader hears" strip sits between the chart and its summary.
+    document.querySelectorAll(".preview").forEach(card => {
+      const details = card.querySelector(".ac-details");
+      if (details) details.before(card.querySelector(".hears"));
+    });
 
     function setupMobileMenu() {
       const menuButton = document.getElementById("menuButton");
@@ -4628,10 +2174,8 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
         if (hiddenList) setNavGroup(document.querySelector(`[aria-controls="${hiddenList.id}"]`), true);
         const heading = document.getElementById(`panel-${route}`).querySelector(".page-title");
         document.title = route === "overview" ? "Accessible Charts" : `${heading.textContent} · Accessible Charts`;
-        hideTooltip();
         window.scrollTo({ top: 0 });
         if (tab) selectTab(tab);
-        sizeChips(document.getElementById(`panel-${route}`));
         // Move focus to the new page's heading so screen readers start reading there.
         if (focus) heading.focus({ preventScroll: true });
       }
@@ -4749,7 +2293,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     // Mirrors each mark's accessible name so sighted developers can see what assistive tech announces.
     function setupHearsStrip() {
       function mirror(target) {
-        const mark = target.closest && target.closest("figure [tabindex][aria-label]");
+        const mark = target.closest && target.closest(".ac-mark");
         if (!mark) return;
         const strip = mark.closest(".preview").querySelector(".hears-text");
         strip.textContent = mark.getAttribute("aria-label");
@@ -4759,67 +2303,12 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
       document.addEventListener("mouseover", e => mirror(e.target));
     }
 
-    function setupTooltipDismiss() {
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") hideTooltip();
-      });
-    }
-
-    generateChartSummary();
-    generateBarChartSummary();
-    generateVerticalSummary();
-    generateSegmentedSummary();
-    generateSegmentedVerticalSummary();
-    generateLineSummary();
-    generateSunburstSummary();
-    generateRadarSummary();
-    generateRadialSummary();
-    generateSpiralSummary();
-    generateArcSummary();
-    generateScatterSummary();
-    renderPatterns();
-    renderVerticalPatterns();
-    renderSegmentedVerticalPatterns();
-    renderChart();
-    renderLegend();
-    renderTable();
-    renderBarChart();
-    renderBarTable();
-    renderVerticalChart();
-    renderVerticalTable();
-    renderSegmentedVerticalChart();
-    renderSegmentedVerticalLegend();
-    renderSegmentedVerticalTable();
-    renderSegmentedChart();
-    renderSegmentedLegend();
-    renderSegmentedTable();
-    renderLineLegend();
-    renderLineChart();
-    renderLineTable();
-    renderSunburstLegend();
-    renderSunburstChart();
-    renderSunburstTable();
-    renderRadarLegend();
-    renderRadarChart();
-    renderRadarTable();
-    renderRadialChart();
-    renderRadialTable();
-    renderSpiralChart();
-    renderSpiralTable();
-    renderArcLegend();
-    renderArcChart();
-    renderArcTable();
-    renderScatterLegend();
-    renderScatterChart();
-    renderScatterTable();
     highlightCode();
     setupCopyButtons();
     setupHearsStrip();
-    setupTooltipDismiss();
     setupTheme();
     setupMobileMenu();
     setupRouting();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => sizeChips(document.querySelector(".panel:not([hidden])") || document));
   
   </script>
 </body>

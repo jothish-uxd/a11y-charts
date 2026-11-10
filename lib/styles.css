@@ -34,6 +34,11 @@
 .ac-title { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 6px; }
 .ac-keys { margin: 0 0 14px; font-size: 13px; color: var(--ac-ink-soft); }
 .ac-keys strong { color: var(--ac-ink); font-weight: 500; margin-right: 6px; }
+.ac-keys kbd {
+  display: inline-block; min-width: 22px; padding: 1px 6px; margin: 0 1px;
+  border: 1px solid var(--ac-rule-strong); border-radius: 5px; background: var(--ac-bg);
+  font: 500 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: center; color: var(--ac-ink);
+}
 
 .ac-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0 0 14px; font-size: 13.5px; }
 .ac-legend[hidden] { display: none; }
@@ -102,6 +107,16 @@
 .ac-table thead th { font-size: 12.5px; color: var(--ac-ink-soft); }
 .ac-table .ac-num { text-align: right; padding-right: 0; padding-left: 12px; }
 @media (max-width: 640px) { .ac-details { grid-template-columns: 1fr; gap: 20px; } }
+
+/* Donut: legend sits beside the ring when there is room. */
+@media (min-width: 720px) {
+  .ac-chart-donut { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 40px; align-items: center; }
+  .ac-chart-donut > .ac-title, .ac-chart-donut > .ac-keys, .ac-chart-donut > .ac-details { grid-column: 1 / -1; }
+  .ac-chart-donut > .ac-plot { grid-column: 1; grid-row: 3; }
+  .ac-chart-donut > .ac-legend { grid-column: 2; grid-row: 3; flex-direction: column; flex-wrap: nowrap; gap: 14px; margin: 0; }
+  .ac-chart-donut .ac-svg { max-width: 340px !important; }
+  .ac-chart-donut .ac-legend-note { display: block; }
+}
 
 /* Windows High Contrast: system colours, and textures keep doing the telling-apart. */
 @media (forced-colors: active) {

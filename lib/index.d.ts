@@ -76,7 +76,7 @@ export interface RadialBarChartOptions extends BaseOptions {
   /** "descending" (default) puts the largest value on the innermost ring. */
   sort?: "descending" | "input";
 }
-export interface TreeNode { label: string; value?: number; children?: TreeNode[] }
+export interface TreeNode { label: string; short?: string; value?: number; children?: TreeNode[] }
 export interface SunburstChartOptions extends BaseOptions {
   data: TreeNode;
   /** How many rings to draw. Deeper levels stay in the table. */
