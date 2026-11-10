@@ -79,7 +79,11 @@
 
 /* One Tab stop per chart; arrow keys move the focus ring between marks. */
 .ac-mark { cursor: pointer; outline: none; }
-.ac-mark:focus-visible { outline: 3px solid var(--ac-focus); outline-offset: 3px; border-radius: 2px; }
+/* The focus ring follows the mark's own outline, so a wedge gets a wedge-shaped ring. */
+.ac-mark:focus-visible { outline: none; }
+.ac-mark.ac-shape:focus-visible { stroke: var(--ac-focus); stroke-width: 4.5; paint-order: fill; }
+.ac-mark:focus-visible .ac-marker { stroke: var(--ac-focus); stroke-width: 4; }
+.ac-mark.is-solid:focus-visible { stroke: var(--ac-focus); stroke-width: 4.5; }
 .ac-mark.is-dimmed, .ac-arc.is-dimmed { opacity: 0.28; }
 .ac-mark.is-active.ac-shape { stroke-width: 2.6; }
 .ac-mark.is-active .ac-marker { stroke-width: 3.2; }
@@ -105,6 +109,7 @@
 .ac-table table { width: 100%; border-collapse: collapse; font-size: 13.5px; font-variant-numeric: tabular-nums; }
 .ac-table th, .ac-table td { padding: 8px 12px 8px 0; text-align: left; border-bottom: 1px solid var(--ac-rule); font-weight: 400; }
 .ac-table thead th { font-size: 12.5px; color: var(--ac-ink-soft); }
+.ac-table tbody th { white-space: nowrap; }
 .ac-table .ac-num { text-align: right; padding-right: 0; padding-left: 12px; }
 @media (max-width: 640px) { .ac-details { grid-template-columns: 1fr; gap: 20px; } }
 
@@ -124,4 +129,5 @@
   .ac-svg { forced-color-adjust: none; }
   .ac-track { stroke: GrayText; stroke-width: 1; }
   .ac-tip { border: 1px solid CanvasText; }
+  .ac-mark:focus-visible { outline: 3px solid Highlight; outline-offset: 3px; }
 }
