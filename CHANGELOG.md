@@ -2,6 +2,22 @@
 
 Notable changes to Accessible Charts. Versions follow [semantic versioning](https://semver.org/); while the version is below 1.0, minor releases may change the API.
 
+## 0.2.1 (2026-11-10)
+
+No change to how the charts look or behave.
+
+### Added
+
+- `npm run typecheck`: checks `lib/index.js` against `lib/index.d.ts`, so the code cannot read an option the types do not declare.
+- `npm run check`: rebuild, type check and accessibility audit in one command.
+- The audit runs in Firefox and WebKit as well as Chromium (`BROWSER=firefox npm run audit`).
+- A GitHub Actions workflow runs all of the above on every push and pull request.
+
+### Removed
+
+- Two undocumented aliases found by the type check: `cycleLabels` on `spiralGraph` (use `labels`), and `label` in place of `period` in spiral data.
+- About 190 unused style rules left in the docs site from the hand-built charts.
+
 ## 0.2.0 (2026-11-09)
 
 First installable release.

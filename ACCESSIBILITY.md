@@ -2,7 +2,7 @@
 
 Accessible Charts aims to meet **WCAG 2.2 Level AA**. This page says what each chart does, what has been tested, and what has not. It is meant to be honest, not flattering: please read the "Not yet tested" section before relying on this in production.
 
-Last updated: 9 November 2026, for v0.2.0.
+Last updated: 10 November 2026, for v0.2.1.
 
 ## What every chart does
 
@@ -19,8 +19,8 @@ Last updated: 9 November 2026, for v0.2.0.
 
 ## What has been tested
 
-- **Automated checks.** axe-core 4.14 run in Chrome against the overview and all twelve chart pages of the docs site, in light and dark themes (26 page states), with the WCAG 2.0, 2.1 and 2.2 A and AA rules plus best practices. Result on 9 November 2026: **0 violations**. Three issues found on the first run were fixed: an invalid role on the chart's `<figure>`, a skipped heading level, and low-contrast comments in code samples. The full results, page by page, are in the [audit report](docs/accessibility-audit.md).
-- **Scripted keyboard checks.** In Chrome, eleven checks on each of the twelve charts, driven with real key presses: one Tab stop, a label on every mark, arrow keys and Home and End moving focus, a visible focus ring, Escape closing the tooltip, and a captioned table and a summary. All pass.
+- **Automated checks.** axe-core 4.14 run against the overview and all twelve chart pages of the docs site, in light and dark themes (26 page states), with the WCAG 2.0, 2.1 and 2.2 A and AA rules plus best practices. The same checks run in three browser engines, Chromium, Firefox and WebKit (the engine behind Safari), on every push to GitHub. Result on 10 November 2026: **0 violations in all three**. Three issues found on the first run were fixed: an invalid role on the chart's `<figure>`, a skipped heading level, and low-contrast comments in code samples. The full results, page by page, are in the [audit report](docs/accessibility-audit.md).
+- **Scripted keyboard checks.** In all three engines, eleven checks on each of the twelve charts, driven with real key presses: one Tab stop, a label on every mark, arrow keys and Home and End moving focus, a visible focus ring, Escape closing the tooltip, and a captioned table and a summary. All pass.
 - **Layout.** Checked at 1440 px and 390 px wide, in light and dark.
 
 Automated tools find only a portion of accessibility problems. They cannot tell whether a summary is useful, whether a label makes sense when heard, or whether the arrow-key model works with a given screen reader. Passing them is a floor, not a result.
@@ -29,7 +29,7 @@ Automated tools find only a portion of accessibility problems. They cannot tell 
 
 - **Screen readers.** No testing with VoiceOver, NVDA, JAWS, TalkBack or Narrator has been done. The spoken labels and summaries are written to be heard, but nobody has listened to them through assistive technology yet.
 - **People.** No testing with disabled users.
-- **Browsers.** Only Chrome. Firefox and Safari are unchecked.
+- **Browsers by hand.** The automated checks run in Firefox and WebKit, but nobody has used the charts by hand in Firefox or Safari yet.
 - **Windows High Contrast.** The styles are written but have not been checked on Windows.
 - **Touch and voice control.** Unchecked.
 - **Zoom.** 200% and 400% zoom and text-spacing overrides are unchecked beyond the 390 px layout.

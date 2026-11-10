@@ -90,4 +90,10 @@ Colors follow light and dark automatically; override the `--ac-*` custom propert
 
 ## Status
 
-v0.2.0. Not on the npm registry yet, so install from GitHub as shown above. Automated accessibility checks pass, but the charts have not been tested with screen readers yet. See the [accessibility statement](ACCESSIBILITY.md); reports are welcome.
+v0.2.1. Not on the npm registry yet, so install from GitHub as shown above. To pin this version:
+
+```sh
+npm install github:jothish-uxd/a11y-charts#v0.2.1
+```
+
+Automated accessibility checks pass in Chromium, Firefox and WebKit on every change. Screen reader testing is in progress; see the [accessibility statement](ACCESSIBILITY.md). Reports are welcome.

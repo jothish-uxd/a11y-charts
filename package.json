@@ -1,6 +1,6 @@
 {
   "name": "accessible-charts",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Chart components that work beyond sight: plain-language summaries, keyboard access, a texture for every category, and a real data table.",
   "keywords": [
     "charts",
