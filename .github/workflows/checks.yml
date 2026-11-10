@@ -1,0 +1,65 @@
+name: Checks
+
+# Runs on every push to main and every pull request: the script build must be
+# up to date, the types must match the code, and the accessibility audit must
+# pass in all three browser engines.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-types:
+    name: Build and types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - name: Script build is up to date
+        run: |
+          npm run build
+          git diff --exit-code lib/accessible-charts.global.js || {
+            echo "::error::lib/accessible-charts.global.js is out of date. Run npm run build and commit the result."
+            exit 1
+          }
+      - name: Types match the code
+        run: npm run typecheck
+
+  audit:
+    name: Accessibility audit (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Audit
+        run: npm run audit
+        env:
+          BROWSER: ${{ matrix.browser }}
+          WRITE_REPORT: "1"
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-audit-${{ matrix.browser }}
+          path: docs/accessibility-audit.md
