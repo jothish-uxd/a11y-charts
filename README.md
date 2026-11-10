@@ -96,4 +96,4 @@ v0.2.1. Not on the npm registry yet, so install from GitHub as shown above. To p
 npm install github:jothish-uxd/a11y-charts#v0.2.1
 ```
 
-Automated accessibility checks pass in Chromium, Firefox and WebKit on every change. Screen reader testing is in progress; see the [accessibility statement](ACCESSIBILITY.md). Reports are welcome.
+Automated accessibility checks pass in Chromium, Firefox and WebKit on every change. A first VoiceOver pass on macOS found no problems; other screen readers are untested. See the [accessibility statement](ACCESSIBILITY.md), and please report what you find.
