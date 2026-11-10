@@ -41,10 +41,13 @@
   ],
   "scripts": {
     "build": "node scripts/build-global.mjs",
-    "audit": "node scripts/audit.mjs"
+    "typecheck": "tsc -p .",
+    "audit": "node scripts/audit.mjs",
+    "check": "npm run build && npm run typecheck && npm run audit"
   },
   "devDependencies": {
     "axe-core": "^4.14.0",
-    "playwright": "^1.50.0"
+    "playwright": "^1.50.0",
+    "typescript": "^5.9.3"
   }
 }
