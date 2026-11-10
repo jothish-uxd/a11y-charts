@@ -30,7 +30,7 @@
       --code-ink: #171717;
       --code-string: #107d32;
       --code-keyword: #c41562;
-      --code-comment: #8f8f8f;
+      --code-comment: #6b6b6b;
       --code-num: #0068d6;
       --font: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -989,7 +989,7 @@
     .preview .ac-plot { padding: 12px 0 var(--pad); }
     .preview .ac-chart > .hears { margin: 0 calc(var(--pad) * -1); grid-column: 1 / -1; }
     .preview .ac-details { margin: 0 calc(var(--pad) * -1); padding: clamp(24px, 4vw, 40px) var(--pad); gap: 48px; grid-column: 1 / -1; }
-    .preview .ac-details h3 { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
+    .preview .ac-details h2 { margin: 0 0 12px; font-size: 14px; font-weight: 500; }
   </style>
 </head>
 <body>
@@ -1911,14 +1911,15 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
       { label: "Other / unknown", segments: [{ label: "Droids / other", value: 2 }] }
     ];
 
-    barChart("#demo-bar", { title: "Character groups by count", unit: "characters", data: groups, orientation: "horizontal", axisMax: 20 });
-    barChart("#demo-vertical-bars", { title: "Character groups by count", unit: "characters", data: groups, orientation: "vertical" });
-    donutChart("#demo-donut", { title: "Star Wars character groups", unit: "characters", data: groups, centerLabel: "Total characters" });
-    stackedBarChart("#demo-segmented-bar", { title: "Factions by character type", unit: "characters", data: factions, orientation: "horizontal", axisMax: 20 });
-    stackedBarChart("#demo-segmented-vertical", { title: "Factions by character type", unit: "characters", data: factions, orientation: "vertical" });
+    barChart("#demo-bar", { headingLevel: 2, title: "Character groups by count", unit: "characters", data: groups, orientation: "horizontal", axisMax: 20 });
+    barChart("#demo-vertical-bars", { headingLevel: 2, title: "Character groups by count", unit: "characters", data: groups, orientation: "vertical" });
+    donutChart("#demo-donut", { headingLevel: 2, title: "Star Wars character groups", unit: "characters", data: groups, centerLabel: "Total characters" });
+    stackedBarChart("#demo-segmented-bar", { headingLevel: 2, title: "Factions by character type", unit: "characters", data: factions, orientation: "horizontal", axisMax: 20 });
+    stackedBarChart("#demo-segmented-vertical", { headingLevel: 2, title: "Factions by character type", unit: "characters", data: factions, orientation: "vertical" });
 
     sunburstChart("#demo-sunburst", {
       title: "Characters by faction and role",
+      headingLevel: 2,
       unit: "characters",
       data: {
         label: "All characters",
@@ -1942,6 +1943,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 
     lineChart("#demo-line", {
       title: "Faction activity by saga period",
+      headingLevel: 2,
       unit: "activity score",
       categories: ["Episode I", "Episode II", "Episode III", "Episode IV", "Episode V", "Episode VI", "Episode VII"],
       series: [
@@ -1960,6 +1962,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     ];
     spiralGraph("#demo-spiral", {
       title: "Monthly cantina visits",
+      headingLevel: 2,
       unit: "thousand visits",
       data: spiralYears.flatMap((row, y) => row.map((value, m) => ({ period: `${2023 + y}-${String(m + 1).padStart(2, "0")}`, value }))),
       cycle: 12,
@@ -1969,6 +1972,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     // Starfighters scored 0-10 on six measures (not canon figures).
     radarChart("#demo-radar", {
       title: "Starfighters compared",
+      headingLevel: 2,
       axes: ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"],
       series: [
         { label: "X-wing", values: [7, 7, 7, 6, 7, 4] },
@@ -1981,6 +1985,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 
     radialBarChart("#demo-radial", {
       title: "Training completion by squadron",
+      headingLevel: 2,
       unit: "% of goal",
       data: [
         { label: "Rogue Squadron", value: 64 },
@@ -1995,6 +2000,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
 
     arcDiagram("#demo-arc", {
       title: "Characters who share scenes",
+      headingLevel: 2,
       unit: "shared scenes",
       shapes: ["hollow circle", "hollow triangle", "filled square"],
       nodes: [
@@ -2027,6 +2033,7 @@ scatterPlot(document.querySelector(&quot;#pilots&quot;), {
     const pilot = (group, list) => list.map(([label, x, y]) => ({ label, group, x, y }));
     scatterPlot("#demo-scatter", {
       title: "Training hours and mission success",
+      headingLevel: 2,
       unit: "pilots",
       data: [
         ...pilot("Rebels", [["Red Two", 60, 48], ["Red Three", 95, 55], ["Red Five", 120, 71], ["Blue Four", 130, 58], ["Gold Two", 150, 63], ["Gold Five", 185, 70], ["Rogue Three", 210, 79], ["Rogue Nine", 240, 84]]),

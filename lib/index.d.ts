@@ -10,6 +10,8 @@ export interface BaseOptions {
   summary?: "auto" | string | false;
   /** Render the semantic data table. Default true. */
   table?: boolean;
+  /** Heading level for "Summary" and "Data table", 2 to 6. Default 3. Match your page outline. */
+  headingLevel?: number;
   /** Texture per category, by name: see the exported `textures`. */
   patterns?: string[];
   /** Marker per series or group, e.g. "hollow circle", "filled square". */

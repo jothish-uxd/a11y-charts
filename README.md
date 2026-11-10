@@ -72,12 +72,21 @@ Every chart is one Tab stop with arrow keys between marks. As focus moves, the c
 
 Colors follow light and dark automatically; override the `--ac-*` custom properties in `lib/styles.css` to match your product.
 
+## Documentation
+
+- [Docs site](https://jothish-uxd.github.io/a11y-charts/): a page per chart with a live example, usage, options and accessibility notes.
+- [Accessibility statement](ACCESSIBILITY.md): what every chart does, what has been tested, and what has not.
+- [Theming](docs/theming.md): the color and font properties, light and dark, and the contrast to keep.
+- [Methods and events](docs/methods-and-events.md): `update()`, `destroy()`, the `ac:announce` event, and the shared options.
+- [Changelog](CHANGELOG.md) and [contributing guide](CONTRIBUTING.md).
+
 ## In this repo
 
 - `index.html`: the docs site. Its live examples are rendered by the package.
 - `lib/`: the package. `accessible-charts.global.js` is generated from `index.js` by `node scripts/build-global.mjs`.
 - `examples/index.html`: every chart on one page, imported as an ES module (needs a local server, e.g. `npx serve`).
+- `docs/`: the guides linked above.
 
 ## Status
 
-v0.2.0. Not on the npm registry yet, so install from GitHub as shown above. Not yet tested with every screen reader and browser pairing; issues and reports are welcome.
+v0.2.0. Not on the npm registry yet, so install from GitHub as shown above; add `#v0.2.0` to pin this version. Automated accessibility checks pass, but the charts have not been tested with screen readers yet. See the [accessibility statement](ACCESSIBILITY.md); reports are welcome.

@@ -47,13 +47,14 @@ const factions = [
   { label: "Other / unknown", segments: [{ label: "Droids / other", value: 2 }] },
 ];
 
-barChart("#c0", { title: "Character groups by count", unit: "characters", data: groups, axisMax: 20 });
-barChart("#c1", { title: "Character groups by count (columns)", unit: "characters", data: groups, orientation: "vertical" });
-donutChart("#c2", { title: "Star Wars character groups", unit: "characters", data: groups, centerLabel: "Total characters" });
-stackedBarChart("#c3", { title: "Factions by character type", unit: "characters", data: factions, orientation: "horizontal", axisMax: 20 });
-stackedBarChart("#c4", { title: "Factions by character type (columns)", unit: "characters", data: factions });
+barChart("#c0", { headingLevel: 2, title: "Character groups by count", unit: "characters", data: groups, axisMax: 20 });
+barChart("#c1", { headingLevel: 2, title: "Character groups by count (columns)", unit: "characters", data: groups, orientation: "vertical" });
+donutChart("#c2", { headingLevel: 2, title: "Star Wars character groups", unit: "characters", data: groups, centerLabel: "Total characters" });
+stackedBarChart("#c3", { headingLevel: 2, title: "Factions by character type", unit: "characters", data: factions, orientation: "horizontal", axisMax: 20 });
+stackedBarChart("#c4", { headingLevel: 2, title: "Factions by character type (columns)", unit: "characters", data: factions });
 
 sunburstChart("#c5", {
+  headingLevel: 2,
   title: "Characters by faction and role",
   unit: "characters",
   data: {
@@ -77,6 +78,7 @@ sunburstChart("#c5", {
 });
 
 lineChart("#c6", {
+  headingLevel: 2,
   title: "Faction activity by saga period",
   unit: "activity score",
   categories: ["Ep I", "Ep II", "Ep III", "Ep IV", "Ep V", "Ep VI", "Ep VII"],
@@ -92,9 +94,10 @@ const visits = [];
 for (let y = 0; y < 4; y++) for (let m = 0; m < 12; m++) {
   visits.push({ period: `${2023 + y}-${String(m + 1).padStart(2, "0")}`, value: Math.round(13 + y * 4 + 9 * Math.sin(((m - 3) / 12) * 2 * Math.PI) + (m === 11 ? 5 : 0)) });
 }
-spiralGraph("#c7", { title: "Monthly cantina visits", unit: "thousand visits", data: visits, cycle: 12, cycleLabel: "Year" });
+spiralGraph("#c7", { headingLevel: 2, title: "Monthly cantina visits", unit: "thousand visits", data: visits, cycle: 12, cycleLabel: "Year" });
 
 radarChart("#c8", {
+  headingLevel: 2,
   title: "Starfighters compared",
   axes: ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"],
   series: [
@@ -107,6 +110,7 @@ radarChart("#c8", {
 });
 
 radialBarChart("#c9", {
+  headingLevel: 2,
   title: "Training completion by squadron",
   unit: "% of goal",
   data: [
@@ -118,6 +122,7 @@ radialBarChart("#c9", {
 });
 
 arcDiagram("#c10", {
+  headingLevel: 2,
   title: "Characters who share scenes",
   unit: "shared scenes",
   nodes: [
@@ -153,6 +158,7 @@ Object.keys(names).forEach((group, g) => {
 });
 pilots.push({ label: "Kestrel rookie", group: "Independent", x: 45, y: 82 });
 scatterPlot("#c11", {
+  headingLevel: 2,
   title: "Training hours and mission success",
   unit: "pilots",
   data: pilots,
