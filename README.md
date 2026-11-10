@@ -89,4 +89,4 @@ Colors follow light and dark automatically; override the `--ac-*` custom propert
 
 ## Status
 
-v0.2.0. Not on the npm registry yet, so install from GitHub as shown above; add `#v0.2.0` to pin this version. Automated accessibility checks pass, but the charts have not been tested with screen readers yet. See the [accessibility statement](ACCESSIBILITY.md); reports are welcome.
+v0.2.0. Not on the npm registry yet, so install from GitHub as shown above. Automated accessibility checks pass, but the charts have not been tested with screen readers yet. See the [accessibility statement](ACCESSIBILITY.md); reports are welcome.
