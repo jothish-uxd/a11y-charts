@@ -19,7 +19,6 @@ Every chart page has a live example rendered by the package, with a "Screen read
 
 - Black and white: categories are told apart by pattern (sunburst subgroups inherit their parent's), line and radar series by dash style and marker shape, scatter and arc groups by marker shape and fill, and arcs by thickness and dash style. Geist and Geist Mono.
 - Light, dark, and Windows High Contrast; reduced motion respected.
-- Shares its navigation and page layout with [Enterprise Library](https://github.com/jothish-uxd/enterprise-library).
 
 ## Install
 
