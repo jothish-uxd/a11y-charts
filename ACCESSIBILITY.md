@@ -19,8 +19,8 @@ Last updated: 9 November 2026, for v0.2.0.
 
 ## What has been tested
 
-- **Automated checks.** axe-core 4.14 run in Chrome against the overview and all twelve chart pages of the docs site, in light and dark themes (26 page states), with the WCAG 2.0, 2.1 and 2.2 A and AA rules plus best practices. Result on 9 November 2026: **0 violations**. Three issues found on the first run were fixed: an invalid role on the chart's `<figure>`, a skipped heading level, and low-contrast comments in code samples.
-- **Scripted keyboard checks.** In Chrome: every chart has exactly one Tab stop, every mark has a label, arrow keys move focus, and each chart has a captioned table and a summary.
+- **Automated checks.** axe-core 4.14 run in Chrome against the overview and all twelve chart pages of the docs site, in light and dark themes (26 page states), with the WCAG 2.0, 2.1 and 2.2 A and AA rules plus best practices. Result on 9 November 2026: **0 violations**. Three issues found on the first run were fixed: an invalid role on the chart's `<figure>`, a skipped heading level, and low-contrast comments in code samples. The full results, page by page, are in the [audit report](docs/accessibility-audit.md).
+- **Scripted keyboard checks.** In Chrome, eleven checks on each of the twelve charts, driven with real key presses: one Tab stop, a label on every mark, arrow keys and Home and End moving focus, a visible focus ring, Escape closing the tooltip, and a captioned table and a summary. All pass.
 - **Layout.** Checked at 1440 px and 390 px wide, in light and dark.
 
 Automated tools find only a portion of accessibility problems. They cannot tell whether a summary is useful, whether a label makes sense when heard, or whether the arrow-key model works with a given screen reader. Passing them is a floor, not a result.

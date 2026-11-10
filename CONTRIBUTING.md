@@ -41,11 +41,12 @@ npx serve .                # then visit /examples/ for every chart on one page
 ## Make a change
 
 1. Edit `lib/index.js` (and `lib/styles.css` or `lib/index.d.ts` if needed).
-2. Regenerate the script build: `node scripts/build-global.mjs`. The docs site loads this file, so skipping the step means the site will not show your change.
+2. Regenerate the script build: `npm run build`. The docs site loads this file, so skipping the step means the site will not show your change.
 3. Check the docs site and `examples/` in light and dark themes.
 4. Check with the keyboard: one Tab stop per chart, arrow keys between marks, a visible focus ring.
 5. If you changed an option, update the options table on that chart's page in `index.html` and the types.
-6. Add a line to `CHANGELOG.md`.
+6. Run the accessibility audit: `npm install` once, then `npm run audit`. It checks every page with axe-core, drives every chart with the keyboard, and rewrites `docs/accessibility-audit.md`. It must finish with no failures.
+7. Add a line to `CHANGELOG.md`.
 
 ## What a chart must do
 

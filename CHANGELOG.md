@@ -15,6 +15,7 @@ First installable release.
 - Options shared by all charts: `summary`, `table`, `patterns`, `shapes`, `legend`, `headingLevel`.
 - `examples/index.html`, with every chart rendered from the package.
 - Accessibility statement, contributing guide, theming guide, and a guide to methods and events.
+- `npm run audit`: a repeatable accessibility audit (axe-core plus scripted keyboard checks) that writes `docs/accessibility-audit.md`.
 
 ### Changed
 
