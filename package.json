@@ -1,0 +1,23 @@
+{
+  "name": "accessible-charts",
+  "version": "0.2.0",
+  "description": "Chart components that work beyond sight: plain-language summaries, keyboard access, a texture for every category, and a real data table.",
+  "keywords": ["charts", "accessibility", "a11y", "wcag", "svg", "data-visualization", "screen-reader", "keyboard"],
+  "homepage": "https://jothish-uxd.github.io/a11y-charts/",
+  "repository": { "type": "git", "url": "git+https://github.com/jothish-uxd/a11y-charts.git" },
+  "bugs": "https://github.com/jothish-uxd/a11y-charts/issues",
+  "license": "MIT",
+  "author": "Jothish",
+  "type": "module",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": { "types": "./lib/index.d.ts", "default": "./lib/index.js" },
+    "./styles.css": "./lib/styles.css",
+    "./package.json": "./package.json"
+  },
+  "style": "./lib/styles.css",
+  "sideEffects": ["*.css"],
+  "files": ["lib"]
+}

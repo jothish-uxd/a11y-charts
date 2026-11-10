@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>accessible-charts: every chart, from the package</title>
+<link rel="stylesheet" href="../lib/styles.css" />
+<style>
+  body { margin: 0; padding: 48px 24px; font-family: Geist, system-ui, sans-serif; background: #fff; color: #171717; }
+  main { max-width: 860px; margin: 0 auto; display: grid; gap: 72px; }
+  h1 { font-size: 32px; letter-spacing: -0.04em; margin: 0; }
+  @media (prefers-color-scheme: dark) { body { background: #0a0a0a; color: #ededed; } }
+</style>
+</head>
+<body>
+<main>
+<h1>Every chart, rendered by the package</h1>
+<div id="c0"></div>
+<div id="c1"></div>
+<div id="c2"></div>
+<div id="c3"></div>
+<div id="c4"></div>
+<div id="c5"></div>
+<div id="c6"></div>
+<div id="c7"></div>
+<div id="c8"></div>
+<div id="c9"></div>
+<div id="c10"></div>
+<div id="c11"></div>
+</main>
+<script type="module">
+import { barChart, stackedBarChart, donutChart, lineChart, radarChart, radialBarChart, sunburstChart, spiralGraph, arcDiagram, scatterPlot } from "../lib/index.js";
+
+const groups = [
+  { label: "Rebel / Resistance, non-Jedi", value: 9 },
+  { label: "Imperial officer / trooper", value: 6 },
+  { label: "Rebel / Resistance Jedi", value: 5 },
+  { label: "Sith / dark side", value: 4 },
+  { label: "Scoundrel / independent", value: 3 },
+  { label: "Droid ally", value: 3 },
+  { label: "Other / unknown", value: 2 },
+];
+const factions = [
+  { label: "Rebel Alliance", segments: [{ label: "Force users", value: 5 }, { label: "Non-Force users", value: 9 }] },
+  { label: "Galactic Empire", segments: [{ label: "Force users", value: 4 }, { label: "Non-Force users", value: 6 }] },
+  { label: "Independent / Scoundrels", segments: [{ label: "Non-Force users", value: 3 }, { label: "Droids / other", value: 3 }] },
+  { label: "Other / unknown", segments: [{ label: "Droids / other", value: 2 }] },
+];
+
+barChart("#c0", { title: "Character groups by count", unit: "characters", data: groups, axisMax: 20 });
+barChart("#c1", { title: "Character groups by count (columns)", unit: "characters", data: groups, orientation: "vertical" });
+donutChart("#c2", { title: "Star Wars character groups", unit: "characters", data: groups, centerLabel: "Total characters" });
+stackedBarChart("#c3", { title: "Factions by character type", unit: "characters", data: factions, orientation: "horizontal", axisMax: 20 });
+stackedBarChart("#c4", { title: "Factions by character type (columns)", unit: "characters", data: factions });
+
+sunburstChart("#c5", {
+  title: "Characters by faction and role",
+  unit: "characters",
+  data: {
+    label: "All characters",
+    children: [
+      { label: "Rebel Alliance", children: [
+        { label: "Force users", value: 5 },
+        { label: "Non-Force", children: [{ label: "Pilots", value: 4 }, { label: "Leaders", value: 3 }, { label: "Soldiers", value: 2 }] },
+      ] },
+      { label: "Galactic Empire", children: [
+        { label: "Sith", value: 4 },
+        { label: "Non-Force", children: [{ label: "Officers", value: 4 }, { label: "Troopers", value: 2 }] },
+      ] },
+      { label: "Independent", children: [
+        { label: "Scoundrels", children: [{ label: "Smugglers", value: 2 }, { label: "Hunters", value: 1 }] },
+        { label: "Droids", value: 3 },
+      ] },
+      { label: "Other", value: 2 },
+    ],
+  },
+});
+
+lineChart("#c6", {
+  title: "Faction activity by saga period",
+  unit: "activity score",
+  categories: ["Ep I", "Ep II", "Ep III", "Ep IV", "Ep V", "Ep VI", "Ep VII"],
+  series: [
+    { label: "Rebels", values: [18, 24, 31, 52, 68, 74, 61] },
+    { label: "Empire", values: [34, 38, 52, 46, 58, 49, 43] },
+    { label: "Independent", values: [12, 18, 24, 32, 40, 47, 55] },
+  ],
+});
+
+// Three years of monthly visits with a summer peak that grows each year.
+const visits = [];
+for (let y = 0; y < 4; y++) for (let m = 0; m < 12; m++) {
+  visits.push({ period: `${2023 + y}-${String(m + 1).padStart(2, "0")}`, value: Math.round(13 + y * 4 + 9 * Math.sin(((m - 3) / 12) * 2 * Math.PI) + (m === 11 ? 5 : 0)) });
+}
+spiralGraph("#c7", { title: "Monthly cantina visits", unit: "thousand visits", data: visits, cycle: 12, cycleLabel: "Year" });
+
+radarChart("#c8", {
+  title: "Starfighters compared",
+  axes: ["Speed", "Maneuverability", "Firepower", "Shields", "Hyperdrive", "Cargo"],
+  series: [
+    { label: "X-wing", values: [7, 7, 7, 6, 7, 4] },
+    { label: "TIE fighter", values: [9, 9, 5, 1, 0, 1] },
+    { label: "Millennium Falcon", values: [8, 4, 6, 8, 9, 9] },
+  ],
+  max: 10,
+  unit: "out of 10",
+});
+
+radialBarChart("#c9", {
+  title: "Training completion by squadron",
+  unit: "% of goal",
+  data: [
+    { label: "Rogue Squadron", value: 64 }, { label: "Red Squadron", value: 92 }, { label: "Green Squadron", value: 37 },
+    { label: "Gold Squadron", value: 78 }, { label: "Blue Squadron", value: 51 },
+  ],
+  max: 100,
+  sweep: 270,
+});
+
+arcDiagram("#c10", {
+  title: "Characters who share scenes",
+  unit: "shared scenes",
+  nodes: [
+    { id: "obi", label: "Obi-Wan Kenobi", short: "Obi-Wan", group: "Rebels" },
+    { id: "luke", label: "Luke Skywalker", short: "Luke", group: "Rebels" },
+    { id: "leia", label: "Leia Organa", short: "Leia", group: "Rebels" },
+    { id: "han", label: "Han Solo", short: "Han", group: "Rebels" },
+    { id: "chewie", label: "Chewbacca", short: "Chewie", group: "Rebels" },
+    { id: "lando", label: "Lando Calrissian", short: "Lando", group: "Independent" },
+    { id: "boba", label: "Boba Fett", short: "Boba Fett", group: "Independent" },
+    { id: "vader", label: "Darth Vader", short: "Vader", group: "Empire" },
+    { id: "tarkin", label: "Grand Moff Tarkin", short: "Tarkin", group: "Empire" },
+    { id: "palpatine", label: "Emperor Palpatine", short: "Palpatine", group: "Empire" },
+  ],
+  links: [
+    { source: "luke", target: "leia", value: 9 }, { source: "luke", target: "han", value: 10 }, { source: "han", target: "chewie", value: 12 },
+    { source: "leia", target: "han", value: 11 }, { source: "obi", target: "luke", value: 6 }, { source: "luke", target: "chewie", value: 7 },
+    { source: "leia", target: "chewie", value: 6 }, { source: "luke", target: "vader", value: 6 }, { source: "obi", target: "vader", value: 3 },
+    { source: "leia", target: "vader", value: 3 }, { source: "han", target: "lando", value: 5 }, { source: "lando", target: "vader", value: 3 },
+    { source: "boba", target: "vader", value: 3 }, { source: "han", target: "boba", value: 2 }, { source: "vader", target: "tarkin", value: 4 },
+    { source: "vader", target: "palpatine", value: 5 }, { source: "leia", target: "tarkin", value: 2 }, { source: "luke", target: "palpatine", value: 3 },
+  ],
+});
+
+// 24 pilots: more training hours, more mission success, with one standout rookie.
+const pilots = [];
+const names = { Rebels: "Red", Empire: "Black", Independent: "Kestrel" };
+Object.keys(names).forEach((group, g) => {
+  for (let i = 0; i < 8; i++) {
+    const x = 50 + i * 27 + g * 9;
+    pilots.push({ label: `${names[group]} ${i + 1}`, group, x, y: Math.round(34 + x * 0.2 + ((i * 7 + g * 5) % 11) - 5) });
+  }
+});
+pilots.push({ label: "Kestrel rookie", group: "Independent", x: 45, y: 82 });
+scatterPlot("#c11", {
+  title: "Training hours and mission success",
+  unit: "pilots",
+  data: pilots,
+  x: { label: "Training hours", unit: "hours", max: 300 },
+  y: { label: "Mission success", unit: "%", max: 100 },
+  trendLine: true,
+});
+</script>
+</body>
+</html>
